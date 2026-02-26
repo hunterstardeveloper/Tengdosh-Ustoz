@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v4.1.1";
+const CACHE_VERSION = "tengdosh-v6.1.1";
 const CACHE_NAME = `tengdosh-cache-${CACHE_VERSION}`;
 
 const SCOPE = self.registration ? self.registration.scope : (self.location.origin + "/");
