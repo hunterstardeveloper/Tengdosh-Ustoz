@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register • Tengdosh Ustoz</title>
+  <link rel="ico" href="/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: radial-gradient(circle at top, #111827, #030712);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:rgba(255,255,255,0.10);
+      --card:linear-gradient(135deg, rgba(31,41,55,0.82), rgba(17,24,39,0.62));
+      --input:rgba(2,6,23,0.55);
+      --primary:#7c8cff;
+      --danger:#fca5a5;
+      --ok:#86efac;
+      --shadow:0 20px 40px rgba(0,0,0,0.35);
+    }
+    [data-theme="light"]{
+      --bg: radial-gradient(circle at top, #f4f9ffd3, #fbfbfb);
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:rgba(17,24,39,0.10);
+      --card:linear-gradient(135deg, rgba(255,255,255,0.82), rgba(255,255,255,0.55));
+      --input:rgba(255,255,255,0.85);
+      --primary:#4f7cff;
+      --shadow:0 20px 40px rgba(0,0,0,0.12);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      overflow-x:hidden;
+    }
+
+    .wrap{width:100%;max-width:470px;position:relative}
+    .card{
+      width:100%;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+    }
+
+    .brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+    .logo{width:36px;height:36px;border-radius:12px;border:1px solid var(--border);background:rgba(124,140,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary)}
+    h1{margin:0;font-size:20px;letter-spacing:0.2px}
+    .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    label{display:block;font-size:13px;margin-top:14px;color:var(--muted)}
+    input, select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--input);
+      color:var(--text);
+      margin-top:8px;
+      outline:none;
+      transition:border-color .15s ease;
+      font-family:inherit;
+      font-size:14px;
+      box-sizing:border-box;
+    }
+    input:focus, select:focus{border-color:rgba(124,140,255,0.65)}
+
+    /* Password field wrapper — flex so the button is a true sibling */
+    .field{
+      display:flex;
+      align-items:center;
+      margin-top:8px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--input);
+      transition:border-color .15s ease;
+    }
+    .field:focus-within{border-color:rgba(124,140,255,0.65)}
+    .field input{
+      flex:1;
+      margin-top:0;
+      border:none;
+      background:transparent;
+      border-radius:14px;
+      padding-right:4px;
+    }
+    .field input:focus{border-color:transparent}
+
+    .toggle-pass{
+      flex-shrink:0;
+      background:transparent;
+      border:0;
+      color:var(--muted);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:40px;
+      height:40px;
+      border-radius:10px;
+      margin-top:0px;
+      margin-right:4px;
+      padding:0;
+    }
+    .toggle-pass:hover{background:rgba(124,140,255,0.12);color:var(--text)}
+
+    select{appearance:none;-webkit-appearance:none;cursor:pointer}
+    .select-wrap{position:relative}
+    .select-wrap::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(calc(-50% + 4px));color:var(--muted);pointer-events:none;font-size:14px}
+
+    button{
+      width:100%;
+      margin-top:16px;
+      padding:12px;
+      border:0;
+      border-radius:14px;
+      background:var(--primary);
+      color:white;
+      font-weight:800;
+      letter-spacing:0.2px;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .2s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+
+    .google-btn{
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+    }
+    .google-btn:hover{border-color:rgba(124,140,255,0.75)}
+    .google-ico{width:18px;height:18px}
+    button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+    .row{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:14px}
+    .row a{color:var(--primary);text-decoration:none;font-size:13px}
+    .row a:hover{text-decoration:underline}
+
+    .err{color:var(--danger);font-size:13px;min-height:18px;margin-top:10px}
+    .ok{color:var(--ok);font-size:13px;min-height:18px;margin-top:10px}
+    .hint{font-size:12px;color:var(--muted);margin-top:10px}
+
+    .pw-meter{margin-top:8px;display:flex;gap:8px;align-items:center}
+    .bar{height:8px;border-radius:999px;flex:1;border:1px solid var(--border);background:rgba(124,140,255,0.12);overflow:hidden}
+    .bar > i{display:block;height:100%;width:0;background:var(--primary);transition:width .2s ease}
+    .pw-label{font-size:12px;color:var(--muted);min-width:90px;text-align:right}
+
+    #theme-toggle{
+      position:absolute;
+      right:10px;
+      top:-64px;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition:transform .12s ease;
+    }
+    #theme-toggle:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+
+    <div class="card">
+      <div class="brand">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+                <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5" />
+          </svg>
+        </div>
+        <div>
+          <h1>Create account</h1>
+          <p class="sub">Email/password signup</p>
+        </div>
+      </div>
+
+      <div class="err" id="err"></div>
+      <div class="ok" id="ok"></div>
+
+      <label for="name">Display name</label>
+      <input id="name" type="text" autocomplete="name" placeholder="Your name" />
+
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="yourname@gmail.com" />
+
+      <label for="phone">Phone number</label>
+      <input id="phone" type="tel" autocomplete="tel" placeholder="+998 12-345-67-89" />
+
+      <label for="group">Group / Class</label>
+      <div class="select-wrap">
+        <select id="group">
+          <option value="" disabled selected>Select your group…</option>
+          <option value="101">Group : 25 - 101</option>
+          <option value="102">Group : 25 - 102</option>
+          <option value="103">Group : 25 - 103</option>
+          <option value="201">Group : 25 - 201</option>
+          <option value="202">Group : 25 - 202</option>
+          <option value="203">Group : 25 - 203</option>
+          <option value="204">Group : 25 - 204</option>
+          <option value="205">Group : 25 - 205</option>
+          <option value="206">Group : 25 - 206</option>
+          <option value="207">Group : 25 - 207</option>
+          <option value="208">Group : 25 - 208</option>
+          <option value="209">Group : 25 - 209</option>
+          <option value="210">Group : 25 - 210</option>
+          <option value="211">Group : 25 - 211</option>
+          <option value="212">Group : 25 - 212</option>
+          <option value="213">Group : 25 - 213</option>
+          <option value="214">Group : 25 - 214</option>
+          <option value="215">Group : 25 - 215</option>
+          <option value="216">Group : 25 - 216</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <label for="pass">Password</label>
+      <div class="field">
+        <input id="pass" type="password" autocomplete="new-password" placeholder="Min 6 characters" />
+        <button class="toggle-pass" id="togglePass" type="button" aria-label="Show password" title="Show password">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+
+      <div class="pw-meter" aria-hidden="true">
+        <div class="bar"><i id="pwBar"></i></div>
+        <div class="pw-label" id="pwLabel">Weak</div>
+      </div>
+
+      <label for="pass2">Confirm password</label>
+      <input id="pass2" type="password" autocomplete="new-password" placeholder="Repeat password" />
+
+      <button id="btn">Sign up</button>
+
+      <button id="googleBtn" class="google-btn" type="button">
+        <svg class="google-ico" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.651 32.657 29.13 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z">
+          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.313 6.306 14.691z">
+          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.197l-6.191-5.238C29.166 35.091 26.715 36 24 36c-5.109 0-9.618-3.317-11.283-7.946l-6.52 5.02C9.505 39.556 16.227 44 24 44z">
+          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.07 12.07 0 0 1-4.087 5.565l.003-.002 6.191 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z">
+        </svg>
+        Sign up with Google
+      </button>
+
+      <div class="row">
+        <a href="/auth/login.html">Already have an account?</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script src="/assets/firebase-config.js"></script>
+  <script src="/assets/tu-firebase.js"></script>
+  <script>
+    TU.init();
+
+    // theme
+    (function initTheme(){
+      let saved = null;
+      try { saved = sessionStorage.getItem('tu_theme'); } catch(e) {}
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
+    });
+
+    const err = document.getElementById('err');
+    const ok = document.getElementById('ok');
+    const btn = document.getElementById('btn');
+    const googleBtn = document.getElementById('googleBtn');
+    const togglePass = document.getElementById('togglePass');
+    const pwBar = document.getElementById('pwBar');
+    const pwLabel = document.getElementById('pwLabel');
+
+    function setErr(e){ err.textContent = e || ''; }
+    function setOk(t){ ok.textContent = t || ''; }
+
+    togglePass.addEventListener('click', () => {
+      const pass = document.getElementById('pass');
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+      togglePass.setAttribute('aria-label', pass.type === 'password' ? 'Show password' : 'Hide password');
+      togglePass.setAttribute('title', pass.type === 'password' ? 'Show password' : 'Hide password');
+    });
+
+    function pwStrength(p){
+      // simple, client-side hint (Auth enforces >= 6)
+      let score = 0;
+      if (p.length >= 6) score++;
+      if (p.length >= 10) score++;
+      if (/[A-Z]/.test(p)) score++;
+      if (/[0-9]/.test(p)) score++;
+      if (/[^A-Za-z0-9]/.test(p)) score++;
+      const pct = Math.min(100, Math.round((score / 5) * 100));
+      pwBar.style.width = pct + '%';
+      const label = pct < 40 ? 'Weak' : (pct < 75 ? 'Good' : 'Strong');
+      pwLabel.textContent = label;
+    }
+    document.getElementById('pass').addEventListener('input', (e) => pwStrength(e.target.value));
+    pwStrength('');
+
+    async function doRegister(){
+      setErr(''); setOk('');
+      btn.disabled = true;
+      try {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const group = document.getElementById('group').value;
+        const pass = document.getElementById('pass').value;
+        const pass2 = document.getElementById('pass2').value;
+
+        if (!email || !pass) throw new Error('Enter email and password');
+        if (!/^[^\s@]+@gmail\.com$/i.test(email)) throw new Error('Only Gmail addresses are allowed (example@gmail.com)');
+        if (pass.length < 6) throw new Error('Password must be at least 6 characters');
+        if (pass !== pass2) throw new Error('Passwords do not match');
+
+        const cred = await TU.auth.createUserWithEmailAndPassword(email, pass);
+        if (name) await cred.user.updateProfile({ displayName: name });
+
+        // Create users/{uid} if missing (role=user)
+        await TU.ensureUserDoc(TU.db, cred.user);
+
+        // Save phone & group to DB
+        if (phone || group) {
+          await TU.db.ref(`users/${cred.user.uid}`).update({
+            ...(phone && { phone }),
+            ...(group && { group }),
+          });
+        }
+
+        // Optional: send verification (won't fail flow if disabled)
+        try {
+          await cred.user.sendEmailVerification();
+          setOk('Account created. Verification email sent (if enabled).');
+        } catch (e) {
+          setOk('Account created.');
+        }
+
+        const back = TU.popReturnUrl('/home.html');
+        window.location.href = back;
+      } catch (e) {
+        setErr(e?.message || 'Registration failed');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', doRegister);
+
+
+    googleBtn.addEventListener('click', async () => {
+      setErr('');
+      googleBtn.disabled = true;
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const res = await TU.auth.signInWithPopup(provider);
+        await TU.ensureUserDoc(TU.db, res.user);
+        const ret = TU.popReturnUrl(`${TU.getRootPath()}/home.html`);
+        window.location.href = ret;
+      } catch(e){
+        setErr(e?.message || 'Google sign-up failed');
+      } finally {
+        googleBtn.disabled = false;
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doRegister();
+    });
+
+    // If user is already logged in (e.g., session restored), don't trap them here.
+    document.addEventListener('tu-auth-changed', (ev) => {
+      const u = ev.detail && ev.detail.user;
+      try {
+        const pending = sessionStorage.getItem('tu_return_url');
+        if (u && pending) {
+          const back = TU.popReturnUrl('/home.html');
+          window.location.href = back;
+        }
+      } catch(e) {}
+    });
+  </script>
+
+  
+  <script>
+    // Phone mask: +998 12-345-67-89
+    function attachUzPhoneMask(input) {
+      if (!input) return;
+
+      const PREFIX = "+998 ";
+      const MAX_DIGITS = 9; // after +998
+
+      function onlyDigits(s) { return (s || "").replace(/\D/g, ""); }
+
+      function formatUzPhone(rawDigits) {
+        const d = rawDigits.slice(0, MAX_DIGITS);
+        const p1 = d.slice(0, 2);
+        const p2 = d.slice(2, 5);
+        const p3 = d.slice(5, 7);
+        const p4 = d.slice(7, 9);
+
+        let out = PREFIX;
+        if (p1) out += p1;
+        if (p2) out += (p1 ? "-" : "") + p2;
+        if (p3) out += (p2 ? "-" : "") + p3;
+        if (p4) out += (p3 ? "-" : "") + p4;
+        return out;
+      }
+
+      function setCaretToEnd(el) {
+        requestAnimationFrame(() => {
+          const len = el.value.length;
+          el.setSelectionRange(len, len);
+        });
+      }
+
+      function handleInput() {
+        const allDigits = onlyDigits(input.value);
+        let after998 = allDigits;
+        if (after998.startsWith("998")) after998 = after998.slice(3);
+        input.value = formatUzPhone(after998);
+        setCaretToEnd(input);
+      }
+
+      input.addEventListener("focus", () => {
+        if (!input.value.startsWith(PREFIX)) input.value = PREFIX;
+        setCaretToEnd(input);
+      });
+
+      input.addEventListener("input", handleInput);
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace") {
+          const pos = input.selectionStart || 0;
+          if (pos <= PREFIX.length) {
+            e.preventDefault();
+            input.value = PREFIX;
+            setCaretToEnd(input);
+          }
+        }
+      });
+
+      if (!input.value) input.value = PREFIX;
+      handleInput();
+    }
+
+    // ✅ Gmail CHECK only (does NOT auto-write anything)
+function isValidGmail(email) {
+  email = (email || "").trim();
+  // must be something@gmail.com
+  // simple & safe: no spaces, must contain @gmail.com at the end
+  return /^[^\s@]+@gmail\.com$/i.test(email);
+}
+
+function attachGmailCheck(input) {
+  if (!input) return;
+
+  const form = input.closest("form") || document.querySelector("form");
+  const ERROR_ID = "emailError";
+
+  function ensureErrorBox() {
+    let box = document.getElementById(ERROR_ID);
+    if (!box) {
+      box = document.createElement("div");
+      box.id = ERROR_ID;
+      box.style.marginTop = "10px";
+      box.style.padding = "10px";
+      box.style.borderRadius = "12px";
+      box.style.border = "1px solid rgba(239,68,68,.35)";
+      box.style.background = "rgba(239,68,68,.10)";
+      box.style.fontSize = "13px";
+      box.style.lineHeight = "1.4";
+      box.style.display = "none";
+      // put right after the email input
+      input.insertAdjacentElement("afterend", box);
+    }
+    return box;
+  }
+
+  function setError(msg) {
+    const box = ensureErrorBox();
+    if (msg) {
+      box.textContent = msg;
+      box.style.display = "block";
+      input.setAttribute("aria-invalid", "true");
+    } else {
+      box.textContent = "";
+      box.style.display = "none";
+      input.removeAttribute("aria-invalid");
+    }
+  }
+
+  function validate() {
+    const ok = isValidGmail(input.value);
+    setError(ok ? "" : "Please enter a valid Gmail address (example@gmail.com).");
+    return ok;
+  }
+
+  input.addEventListener("blur", validate);
+  input.addEventListener("input", () => {
+    if (isValidGmail(input.value)) setError("");
+  });
+
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      if (!validate()) {
+        e.preventDefault();
+        input.focus();
+      }
+    });
+  }
+}
+
+    // Auto attach if the page has #phone input
+    (function () {
+      const email = document.getElementById("email");
+      if (email) attachGmailCheck(email);
+
+      const phone = document.getElementById("phone");
+      if (phone) attachUzPhoneMask(phone);
+    })();
+</script>
+
+  <script src="/assets/UI.js"></script>
+</body>
+</html>

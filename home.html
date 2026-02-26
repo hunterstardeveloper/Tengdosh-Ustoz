@@ -1,0 +1,948 @@
+﻿<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tengdosh-Ustoz | Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="ico" href="/icon.png">
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <div class="page-scroll" id="page-scroll">
+
+  <nav class="navbar" id="main-navbar">
+    <a href="/home.html" class="navbar-brand">
+      <div class="navbar-brand-logo">
+        <img src="/logo.png" alt="logo">
+      </div>
+      <span class="navbar-wordmark">
+        <span class="w1">Tengdosh</span><span class="w2">Ustoz</span>
+      </span>
+    </a>
+      <ul class="navbar-links" id="navbar-links" role="list">
+          <li>
+            <a href="/home.html" class="active" aria-current="page">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/pages/contact/contact.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Contact us
+            </a>
+          </li>
+          <li>
+            <a href="/pages/account/account.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Account
+            </a>
+          </li>
+        </ul>
+
+    <div class="navbar-right">
+      <a href="/pages/account/account.html" class="navbar-avatar" id="navbar-avatar" aria-label="Account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" aria-label="Toggle Dark Mode">
+        <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navbar-links">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+
+  <div class="copy-toast" id="copy-toast">Copied to clipboard</div>
+  <div class="top">
+    <img src="/logo.png" class="icon-top" id="main-logo" alt="Logo" tabindex="0" draggable="false">
+  </div>
+
+  <section class="hero">
+    <span class="pill"><i data-lucide="sparkles" class="pill-icon"></i> Welcome to Tengdosh Ustoz</span>
+    <h1>A Space for Your<br>Educational Journey</h1>
+    <p>Discover a sanctuary for learning where knowledge grows and focus is naturally restored.</p>
+  </section>
+
+  <section class="site-stats" aria-label="Site statistics">
+    <div class="stat-card glass">
+      <div class="stat-label">Registered users</div>
+      <div class="stat-value" id="users-count">0</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="stat-label">Teachers</div>
+      <div class="stat-value" id="teachers-count">0</div>
+    </div>
+  </section>
+
+  <section class="quote-section" aria-label="Daily Inspiration">
+    <div class="quote-section-label">
+      <span class="pill"><i data-lucide="quote" class="pill-icon"></i> Daily Inspiration</span>
+    </div>
+    <div style="display: flex; gap: 24px; align-items: stretch;">
+      <div class="quote-card glass" style="flex: 1; min-width: 0;">
+        <div class="quote-accent-bar"></div>
+        <p class="quote-text" id="quote-text">Loading inspiration</p>
+        <p class="quote-author" id="quote-author"></p>
+
+        <div class="quote-controls">
+          <button class="q-btn" id="like-btn" aria-label="Like quote" title="Like">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span id="like-count">0</span>
+          </button>
+
+          <button class="q-btn" id="copy-btn" aria-label="Copy quote" title="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy
+          </button>
+
+          <button class="q-btn" id="share-btn" aria-label="Share quote" title="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            Share
+          </button>
+
+          <button class="q-btn q-auto-btn" id="auto-btn" aria-label="Auto-advance quotes" title="Auto-advance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;position:relative;z-index:1">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg class="ring-icon" viewBox="0 0 44 44" aria-hidden="true">
+              <circle cx="22" cy="22" r="20" id="ring-progress"></circle>
+            </svg>
+          </button>
+
+          <div class="quote-nav">
+            <button class="q-nav-btn" id="prev-btn" aria-label="Previous quote">&#8592;</button>
+            <span class="quote-counter" id="quote-counter"> / </span>
+            <button class="q-nav-btn" id="next-btn" aria-label="Next quote">&#8594;</button>
+          </div>
+        </div>
+      </div>
+      <img id="anim2" alt="animation" style="width: 340px; min-width: 260px; max-width: 40%; border-radius: 24px; object-fit: cover; flex-shrink: 0;">
+    </div>
+  </section>
+
+  <h1 class="section-title">Schedule</h1>
+  <div class="toggle-container">
+    <button id="toggle-schedule-btn" type="button">Hide Schedule</button>
+  </div>
+
+  <section id="upcoming-classes-container" class="features visible">
+    <div class="card glass" style="grid-column: 1/-1; text-align: center;">
+      <p>Checking for live sessions...</p>
+    </div>
+  </section>
+
+  <h1 class="section-title" id="coding-skills">Special</h1>
+  <section class="special-group">
+    <div class="card glass" id="special-card">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/prodev?updatedAt=1771909961755" alt="Full-stack" draggable="false">
+      </div>
+      <h3>ProDev’s Master Course</h3>
+      <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.
+
+      Kurs davomida siz quyidagilarni o‘rganashingiz mumkin: <br>
+
+      • Architecture: Monolith, Modular Monolith, Microservices <br>
+      • System Design va production-level engineering thinking  <br>
+      • Design Patterns, scalability, real backend architecture  <br>
+      • Docker, Kubernetes va infrastructure fundamentals  <br>
+      • AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br>
+
+      Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o’rganamiz.</p>
+
+      Savollar uchun👇: <br>
+      
+      <a href="https://t.me/abdumalik_prodev" target="_blank" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
+      <a href="/clubs/prodev/Abdumalik/index.html">View Club</a>
+    </div>
+  </section>
+
+  <h1 class="section-title" id="coding-skills">Coding Skills</h1>
+  <section class="features">
+    <div class="card glass">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/fullstack.png" alt="Full-stack" draggable="false">
+      </div>
+      <h3>Full-stack</h3>
+      <p>Transform static designs into interactive digital experiences. Master React, modern CSS, and performance optimization.</p>
+      <a href="/clubs/full-stack/teachers-sec-FS.html">View Club</a>
+    </div>
+    <div class="card glass">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/py.png" alt="Python" draggable="false">
+      </div>
+      <h3>Python</h3>
+      <p>Go beyond basic syntax. Learn to architect scalable systems, automate complex workflows, and dive into the foundations of Data Science and AI.</p>
+      <a href="/clubs/py/teachers-sec-py.html">View Club</a>
+    </div>
+
+    <div class="card glass">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/java.png" alt="Java" draggable="false">
+      </div>
+      <h3>Java</h3>
+      <p>Build the backbone of enterprise software. Master Object-Oriented Programming (OOP) and robust backend structures used globally.</p>
+      <a href="/clubs/java/teachers-sec-Json.html">View Club</a>
+    </div>
+    <div class="card glass">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/c++.png" alt="C++" draggable="false">
+      </div>
+      <h3>C++</h3>
+      <p>Master C++ for competitive programming and real-world software: algorithms, OOP, STL, and performance-focused coding.</p>
+      <a href="/clubs/c++/teachers-sec-c++.html">View Club</a>
+    </div>
+  </section>
+
+  <section class="principles">
+    <h1 class="section-title">Essential Soft Skills</h1>
+    <div class="principles-grid">
+      <div class="principle-card glass">
+        <div class="card-img-container" style="height: 160px;">
+          <img src="https://ik.imagekit.io/yefypajb8v/Elements/eng.webp" alt="English" draggable="false">
+        </div>
+        <h3>English</h3>
+        <p>Break the language barrier. Focus on professional communication and technical terminology for global opportunities.</p>
+        <a href="/clubs/english/teachers-sec-eng.html">View Club</a>
+      </div>
+
+      <div class="principle-card glass">
+        <div class="card-img-container" style="height: 160px;">
+          <img src="https://ik.imagekit.io/yefypajb8v/Elements/si.webp" alt="Self Improvement" draggable="false">
+        </div>
+        <h3>Self Improvement</h3>
+        <p>Upgrade your mental OS. Develop high-performance habits and the psychological resilience needed in tech.</p>
+        <a href="/clubs/SI/teachers-sec-SI.html">View Club</a>
+      </div>
+      <div class="principle-card glass">
+        <div class="card-img-container" style="height: 160px;">
+          <img src="https://ik.imagekit.io/yefypajb8v/Elements/math.webp" alt="Mathematics" draggable="false">
+        </div>
+        <h3>Mathematics</h3>
+        <p>Level up with functions, limits, derivatives, integrals, and proofs—perfect for olympiad-style thinking and STEM success.</p>
+        <a href="/clubs/mathematics/teachers-sec-mathematic.html">View Club</a>
+      </div>
+    </div>
+  </section>
+  <footer class="edu-footer" aria-label="Footer">
+    <div class="edu-footer-wrap">
+      <div class="edu-footer-grid">
+        <div class="edu-footer-brand">
+          <div class="edu-footer-brandline">
+            <span class="edu-footer-cap" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+                <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5" />
+              </svg>
+            </span>
+            <div class="edu-footer-title">TENGDOSH<span> USTOZ</span></div>
+          </div>
+          <p class="edu-footer-desc">
+            Connecting students with peer teachers across Uzbekistan a community-driven
+            platform for shared knowledge, growth, and academic excellence since 2026.
+          </p>
+        </div>
+
+        <div class="edu-footer-col">
+          <h4 class="edu-footer-h">Contact Us</h4>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.86.3 1.7.54 2.5a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.58-1.06a2 2 0 0 1 2.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">STUDENT SUPPORT</div>
+              <div class="edu-contact-value">+998 90 855 75 85</div>
+            </div>
+          </div>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16v16H4z" />
+                <path d="m4 4 8 8 8-8" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">EMAIL</div>
+              <div>
+                <p><a target="_blank" href="mailto:kyuter789@gmail.com" class="edu-contact-value">kyuter789@gmail.com</a></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 2 11 13" />
+                <path d="M22 2 15 22 11 13 2 9 22 2Z" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">TELEGRAM</div>
+              <p><a href="https://t.me/Hunters1ar" target="_blank" class="edu-contact-value">@Hunters1ar</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-footer-col">
+          <h4 class="edu-footer-h">Support</h4>
+          <ul class="edu-footer-list">
+            <li><span class="chev"></span> <a href="https://t.me/akhmadjonova_8" target="_blank">Assistant</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/zimiDev" target="_blank">Support Developer 1</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/Reality_ae" target="_blank">Support Developer 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="edu-footer-bottom">
+        <div class="edu-footer-rule" aria-hidden="true"></div>
+        <p class="edu-footer-copy">© <span id="footer-year"></span> Tengdosh Ustoz &middot; All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="/assets/firebase-config.js"></script>
+  <script src="/assets/tu-firebase.js"></script>
+  <script src="/assets/quote-likes.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/script.js"></script>
+  <script src="/assets.js"></script>
+  <script src="/script-internet-checker.js"></script>
+  <script src="/sw.js"></script>
+  <script type="module">
+    import { animations } from "/assets/base64.js"; 
+    const img = document.getElementById("anim2");
+    img.src = animations["2 animation"]; 
+  </script>
+  <script>
+    function renderLucideIcons() {
+      if (window.lucide && typeof lucide.createIcons === "function") {
+        lucide.createIcons();
+      }
+    }
+  </script>
+  <script>
+    TU.init();
+    const db = TU.db;
+
+    const usersCountEl = document.getElementById('users-count');
+    const teachersCountEl = document.getElementById('teachers-count');
+
+    function animateCount(el, toValue, opts = {}) {
+      if (!el) return;
+      const duration = Number(opts.duration ?? 1100);
+      const formatter = opts.formatter ?? ((n) => n.toLocaleString());
+
+      const fromRaw = el.dataset.value ?? el.textContent;
+      const from = Number(String(fromRaw).replace(/[^0-9]/g, '')) || 0;
+      const to = Number(toValue) || 0;
+      if (from === to) {
+        el.textContent = formatter(to);
+        el.dataset.value = String(to);
+        return;
+      }
+
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      const start = performance.now();
+
+      if (el._raf) cancelAnimationFrame(el._raf);
+
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const v = Math.round(from + (to - from) * ease(t));
+        el.textContent = formatter(v);
+        if (t < 1) el._raf = requestAnimationFrame(tick);
+        else { el.dataset.value = String(to); el._raf = null; }
+      };
+      el._raf = requestAnimationFrame(tick);
+    }
+
+    db.ref('users').on('value', (snap) => {
+      const val = snap.val();
+      const count = val ? Object.keys(val).length : 0;
+      animateCount(usersCountEl, count);
+    }, () => animateCount(usersCountEl, 0));
+
+    const ROOT = window.location.pathname.includes('clubs')
+      ? window.location.pathname.split('clubs')[0]
+      : window.location.pathname.replace(/\/[^\/]*$/, '');
+
+    const toggleBtn = document.getElementById('toggle-schedule-btn');
+    const classesContainer = document.getElementById('upcoming-classes-container');
+
+    toggleBtn?.addEventListener('click', () => {
+      const isHidden = !classesContainer.classList.contains('visible');
+      if (isHidden) {
+        classesContainer.classList.add('visible');
+        toggleBtn.textContent = 'Hide Schedule';
+      } else {
+        classesContainer.classList.remove('visible');
+        toggleBtn.textContent = 'Show Upcoming Classes';
+      }
+    });
+
+    db.ref('teachers').on('value', (snapshot) => {
+      const teachersData = snapshot.val();
+
+      const tCount = teachersData ? Object.keys(teachersData).length : 0;
+      animateCount(teachersCountEl, tCount);
+
+      const container = document.getElementById('upcoming-classes-container');
+      const now = new Date();
+
+      if (!teachersData) {
+        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1;"><p>No classes scheduled.</p></div>';
+        refreshReveal();
+        renderLucideIcons();
+        return;
+      }
+
+      let activeClasses = [];
+      const LIVE_DURATION = 60 * 60 * 1000;
+
+      for (let teacherName in teachersData) {
+        const data = teachersData[teacherName]?.classData;
+        if (data && data.hasClass && data.date && data.time) {
+          const formattedDate = data.date.includes('.')
+            ? data.date.split('.').reverse().join('-')
+            : data.date;
+
+          const classStartTime = new Date(`${formattedDate}T${data.time}`);
+          const classEndTime = new Date(classStartTime.getTime() + LIVE_DURATION);
+
+          if (now < classEndTime) {
+            const isLive = now >= classStartTime && now < classEndTime;
+            activeClasses.push({
+              teacher: teacherName,
+              ...data,
+              timestamp: classStartTime.getTime(),
+              isLive
+            });
+          }
+        }
+      }
+
+      activeClasses.sort((a, b) => a.timestamp - b.timestamp);
+
+      if (activeClasses.length === 0) {
+        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1; text-align: center;"><p>No upcoming sessions at the moment.</p></div>';
+      } else {
+        container.innerHTML = activeClasses.map(cls => {
+          const path = cls.club || 'SI';
+          const displayTime = formatTo12Hour(cls.time);
+          const clubNames = { 'py': 'Python', 'java': 'Java', 'full-stack': 'Front-end', 'english': 'English', 'SI': 'Self Improvement','c++':'C++' ,'mathematics':'Mathematics' , 'prodev':'ProDev'};
+          const fullClubName = clubNames[path] || 'Educational Club';
+          const statusText = cls.isLive
+            ? `<span class="live-pulse"><i data-lucide="radio" class="inline-icon"></i> LIVE NOW</span>`
+            : `Next class: ${cls.date}`;
+
+          return `
+            <div class="card glass" style="text-align: center; padding: 40px 20px;">
+              <div style="margin-bottom: 25px;">
+                <div class="pill" style="margin-bottom: 15px;">${fullClubName}</div>
+                <h2 style="font-size: 24px; margin-bottom: 12px;">${statusText}</h2>
+                <h3 style="font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--primary);">Teacher: ${cls.teacher}</h3>
+                <h3 style="font-size: 22px; margin-bottom: 8px;">Time: ${displayTime}</h3>
+                <p style="font-size: 18px; color: var(--text);">Room: ${cls.room || 'TBD'}</p>
+              </div>
+              <a href="./clubs/${path}/${cls.teacher}/offline.html"
+                 style="${cls.isLive ? 'border: 2px solid #ff4d4d; color: #ff4d4d; background: rgba(255,77,77,0.1);' : ''}">
+                ${cls.isLive ? 'Join Live Session' : 'View Details'}
+              </a>
+            </div>
+          `;
+        }).join('');
+      }
+
+      refreshReveal();
+      renderLucideIcons();
+    });
+
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const mainLogo = document.getElementById('main-logo');
+    const htmlEl = document.documentElement;
+
+    const moonSVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    const sunSVG = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+
+    function updateLogo(isDark) {
+      if (typeof SITE_IMAGES !== 'undefined' && mainLogo) {
+        mainLogo.src = isDark ? SITE_IMAGES.dark : SITE_IMAGES.light;
+      }
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      htmlEl.setAttribute('data-theme', 'dark');
+      themeIcon.innerHTML = sunSVG;
+      updateLogo(true);
+    } else {
+      updateLogo(false);
+    }
+
+    themeBtn?.addEventListener('click', () => {
+      const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        htmlEl.removeAttribute('data-theme');
+        themeIcon.innerHTML = moonSVG;
+        localStorage.setItem('theme', 'light');
+        updateLogo(false);
+      } else {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeIcon.innerHTML = sunSVG;
+        localStorage.setItem('theme', 'dark');
+        updateLogo(true);
+      }
+    });
+
+    function formatTo12Hour(timeString) {
+      if (!timeString || !timeString.includes(':')) return timeString;
+      let [hour, minute] = timeString.split(':');
+      let h = parseInt(hour, 10);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${minute} ${ampm}`;
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    function refreshReveal() {
+      const cards = document.querySelectorAll('.card, .principle-card');
+      cards.forEach(el => {
+        if (el.style.opacity !== "1") {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(30px)";
+        }
+        revealObserver.observe(el);
+        el.onmouseenter = () => el.style.transform = "translateY(-10px)";
+        el.onmouseleave = () => el.style.transform = "translateY(0)";
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshReveal();
+      renderLucideIcons();
+    });
+  </script>
+  <script>
+  const setAvatarLoggedOut = () => {
+    const avatarEl = document.getElementById('navbar-avatar');
+    if (!avatarEl) return;
+    avatarEl.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>`;
+  };
+
+  const setAvatarLoggedIn = (u, profileDoc) => {
+    const avatarEl = document.getElementById('navbar-avatar');
+    if (!avatarEl) return;
+
+    const url = (profileDoc && (profileDoc.avatarURL || profileDoc.photoURL)) || u.photoURL || '';
+    const name = (u.displayName || profileDoc?.displayName || u.email || '').trim();
+    const initial = (name ? name[0] : '').toUpperCase();
+
+    if (url) {
+      const src = String(url).startsWith('http') ? url : `/${String(url).replace(/^\/+/, '')}`;
+      avatarEl.innerHTML = `<img src="${src}" alt="Avatar" referrerpolicy="no-referrer">`;
+    } else {
+      avatarEl.textContent = initial || '';
+    }
+  };
+
+  document.addEventListener('tu-auth-changed', async (ev) => {
+    const u = ev?.detail?.user;
+    if (!u) return setAvatarLoggedOut();
+
+    try {
+      const db = firebase.database();
+      const snap = await db.ref(`users/${u.uid}`).once('value');
+      const doc = snap.val() || null;
+      setAvatarLoggedIn(u, doc);
+    } catch (e) {
+      setAvatarLoggedIn(u, null);
+    }
+  });
+
+  setAvatarLoggedOut();
+  </script>
+  <script>
+    const y = document.getElementById('footer-year');
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+  <script>
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let W, H;
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function randomBetween(a, b) { return a + Math.random() * (b - a); }
+
+      function createParticle() {
+        return {
+          x: randomBetween(0, W),
+          y: randomBetween(0, H),
+          r: randomBetween(1, 3),
+          dx: randomBetween(-0.15, 0.15),
+          dy: randomBetween(-0.25, -0.05),
+          opacity: randomBetween(0.2, 0.7),
+          opacityDir: Math.random() > 0.5 ? 1 : -1
+        };
+      }
+
+      for (let i = 0; i < 60; i++) particles.push(createParticle());
+
+      function getColor() {
+        return document.documentElement.getAttribute('data-theme') === 'dark'
+          ? '165, 180, 252' : '124, 140, 255';
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const color = getColor();
+        particles.forEach(p => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.opacity += p.opacityDir * 0.003;
+          if (p.opacity > 0.7 || p.opacity < 0.1) p.opacityDir *= -1;
+          if (p.y < -10) { p.y = H + 10; p.x = randomBetween(0, W); }
+          if (p.x < 0 || p.x > W) p.dx *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    (function() {
+      if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) return;
+
+      try { TU.init(); } catch(e) {}
+      const auth = window.TU?.auth || null;
+      const db   = window.TU?.db   || null;
+
+      let quoteIndex = Math.floor(Math.random() * quotes.length);
+      let autoStart = null;
+      let animFrame = null;
+      const AUTO_DURATION = 8000;
+
+      const qText   = document.getElementById('quote-text');
+      const qAuthor = document.getElementById('quote-author');
+      const qCounter= document.getElementById('quote-counter');
+      const likeBtn = document.getElementById('like-btn');
+      const likeCount = document.getElementById('like-count');
+      const copyBtn  = document.getElementById('copy-btn');
+      const shareBtn = document.getElementById('share-btn');
+      const autoBtn  = document.getElementById('auto-btn');
+      const prevBtn  = document.getElementById('prev-btn');
+      const nextBtn  = document.getElementById('next-btn');
+      const ringEl   = document.getElementById('ring-progress');
+      const toast    = document.getElementById('copy-toast');
+
+      const CIRCUMFERENCE = 2 * Math.PI * 20;
+
+      if (ringEl) {
+        ringEl.style.strokeDasharray = String(CIRCUMFERENCE);
+        ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
+      }
+
+      let currentQuoteId = null;
+      let currentLiked = false;
+      let currentCount = 0;
+      let unsubCount = null;
+      let unsubUserLike = null;
+
+      function parseQuote(raw) {
+        if (window.TUQuoteLikes?.parseQuote) return window.TUQuoteLikes.parseQuote(raw);
+        const lastDash = raw.lastIndexOf(' - ');
+        if (lastDash === -1) return { raw, text: raw, author: '' };
+        return { raw, text: raw.slice(0, lastDash).trim(), author: raw.slice(lastDash + 3).trim() };
+      }
+
+      function quoteId(raw) {
+        if (window.TUQuoteLikes?.quoteIdFromRaw) return window.TUQuoteLikes.quoteIdFromRaw(raw);
+        return String(raw).length ? String(raw).length.toString(36) : 'q';
+      }
+
+      function updateLikeUI() {
+        likeBtn?.classList.toggle('active-like', currentLiked);
+        if (likeCount) likeCount.textContent = String(currentCount);
+
+        const heartPath = likeBtn?.querySelector('path');
+        if (heartPath) heartPath.setAttribute('fill', currentLiked ? 'currentColor' : 'none');
+      }
+
+      function detachLikeWatchers() {
+        try { unsubCount && unsubCount(); } catch(e) {}
+        try { unsubUserLike && unsubUserLike(); } catch(e) {}
+        unsubCount = null;
+        unsubUserLike = null;
+      }
+
+      function attachLikeWatchers() {
+        detachLikeWatchers();
+        if (!db || !currentQuoteId) {
+          currentLiked = false;
+          currentCount = 0;
+          updateLikeUI();
+          return;
+        }
+
+        if (window.TUQuoteLikes?.watchQuoteCount) {
+          unsubCount = window.TUQuoteLikes.watchQuoteCount(db, currentQuoteId, (c) => {
+            currentCount = c;
+            updateLikeUI();
+          });
+        }
+
+        const u = auth?.currentUser;
+        if (u && window.TUQuoteLikes?.watchUserLike) {
+          unsubUserLike = window.TUQuoteLikes.watchUserLike(db, u.uid, currentQuoteId, (liked) => {
+            currentLiked = liked;
+            updateLikeUI();
+          });
+        } else {
+          currentLiked = false;
+          updateLikeUI();
+        }
+      }
+
+      function showQuote(idx) {
+        quoteIndex = (idx + quotes.length) % quotes.length;
+        const raw = quotes[quoteIndex];
+        const { text, author } = parseQuote(raw);
+
+        currentQuoteId = quoteId(raw);
+        attachLikeWatchers();
+
+        qText?.classList.add('fading');
+        qAuthor?.classList.add('fading');
+
+        setTimeout(() => {
+          if (qText) qText.textContent = `"${text}"`;
+          if (qAuthor) qAuthor.textContent = author ? ` ${author}` : '';
+          if (qCounter) qCounter.textContent = `${quoteIndex + 1} / ${quotes.length}`;
+          qText?.classList.remove('fading');
+          qAuthor?.classList.remove('fading');
+        }, 350);
+      }
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      }
+
+      likeBtn?.addEventListener('click', async () => {
+        if (!db || !auth || !currentQuoteId || !window.TUQuoteLikes?.toggleLike) {
+          return;
+        }
+        const raw = quotes[quoteIndex];
+        const meta = parseQuote(raw);
+
+        try {
+          await window.TUQuoteLikes.toggleLike(db, auth, currentQuoteId, meta);
+          likeBtn.classList.remove('like-pop');
+          void likeBtn.offsetWidth;
+          likeBtn.classList.add('like-pop');
+          likeBtn.addEventListener('animationend', () => likeBtn.classList.remove('like-pop'), { once: true });
+        } catch (e) {
+          showToast('Could not update like');
+        }
+      });
+
+      document.addEventListener('tu-auth-changed', () => attachLikeWatchers());
+
+      copyBtn?.addEventListener('click', () => {
+        const raw = quotes[quoteIndex];
+        const { text, author } = parseQuote(raw);
+        const full = `"${text}"${author ? "  " + author : ""}`;
+        navigator.clipboard.writeText(full)
+          .then(() => showToast('✅ Copied to clipboard'))
+          .catch(() => showToast('Could not copy'));
+      });
+
+      shareBtn?.addEventListener('click', () => {
+        const raw = quotes[quoteIndex];
+        const { text, author } = parseQuote(raw);
+        const full = `"${text}"${author ? "  " + author : ""}`;
+        if (navigator.share) {
+          navigator.share({ title: 'Inspirational Quote', text: full }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(full)
+            .then(() => showToast('✅ Copied to clipboard'))
+            .catch(() => showToast('Could not copy'));
+        }
+      });
+
+      function startAuto() {
+        autoBtn?.classList.add('auto-on');
+        autoStart = performance.now();
+        function tick(now) {
+          const elapsed = now - autoStart;
+          const progress = Math.min(elapsed / AUTO_DURATION, 1);
+          const offset = CIRCUMFERENCE * (1 - progress);
+          if (ringEl) ringEl.style.strokeDashoffset = String(offset);
+          if (progress >= 1) {
+            showQuote(quoteIndex + 1);
+            autoStart = performance.now();
+          }
+          animFrame = requestAnimationFrame(tick);
+        }
+        animFrame = requestAnimationFrame(tick);
+      }
+
+      function stopAuto() {
+        if (animFrame) cancelAnimationFrame(animFrame);
+        if (ringEl) ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
+        autoBtn?.classList.remove('auto-on');
+        autoStart = null;
+      }
+
+      prevBtn?.addEventListener('click', () => { stopAuto(); showQuote(quoteIndex - 1); });
+      nextBtn?.addEventListener('click', () => { stopAuto(); showQuote(quoteIndex + 1); });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft')  { stopAuto(); showQuote(quoteIndex - 1); }
+        if (e.key === 'ArrowRight') { stopAuto(); showQuote(quoteIndex + 1); }
+      });
+
+      autoBtn?.addEventListener('click', () => {
+        if (autoBtn.classList.contains('auto-on')) stopAuto();
+        else startAuto();
+      });
+
+      const card = document.querySelector('.quote-card');
+      let touchStartX = 0;
+      card?.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      card?.addEventListener('touchend', e => {
+        const diff = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          stopAuto();
+          showQuote(diff < 0 ? quoteIndex + 1 : quoteIndex - 1);
+        }
+      });
+
+      showQuote(quoteIndex);
+    })();
+  </script>  
+  <script>
+  (function () {
+    const nav = document.getElementById('main-navbar');
+    const ham = document.getElementById('navbar-hamburger');
+    const links = document.getElementById('navbar-links');
+    if (!nav || !links) return;
+
+    const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+
+    function setOpen(open) {
+      links.classList.toggle('open', open);
+      ham?.classList.toggle('open', open);
+      ham?.setAttribute('aria-expanded', String(open));
+      document.body.classList.toggle('nav-open', open && isMobile());
+    }
+
+    const onScroll = () => nav.classList.toggle('navbar--scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    ham?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(!links.classList.contains('open'));
+    });
+
+    links.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => setOpen(false));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      if (!links.classList.contains('open')) return;
+      if (nav.contains(e.target)) return;
+      setOpen(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    window.addEventListener('resize', () => {
+      if (!isMobile()) setOpen(false);
+    });
+
+    links.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          e.preventDefault();
+          setOpen(false);
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  })();
+  </script>
+  <script src="/assets/UI.js"></script>
+</body>
+</html>

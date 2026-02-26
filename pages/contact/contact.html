@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Tengdosh-Ustoz | Contact</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages/contact/contact.css" />
+  <link rel="ico" href="/icon.png" />
+</head>
+
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <div class="page-scroll" id="page-scroll">
+    <nav class="navbar" id="main-navbar">
+      <a class="navbar-brand" href="/home.html">
+        <div class="navbar-brand-logo">
+          <img src="/logo.png" alt="logo" />
+        </div>
+        <span class="navbar-wordmark">
+          <span class="w1">Tengdosh</span><span class="w2">Ustoz</span>
+        </span>
+      </a>
+
+      <ul class="navbar-links" id="navbar-links" role="list">
+        <li>
+          <a href="/home.html">
+            <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Home
+          </a>
+        </li>
+
+        <li>
+          <a class="active" aria-current="page" href="/pages/contact/contact.html">
+            <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Contact us
+          </a>
+        </li>
+
+        <li>
+          <a href="/pages/account/account.html">
+            <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Account
+          </a>
+        </li>
+      </ul>
+
+      <div class="navbar-right">
+        <a class="navbar-avatar" id="navbar-avatar" href="/pages/account/account.html" title="Account" aria-label="Account">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+
+        <button id="theme-toggle" aria-label="Toggle Dark Mode">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle menu" aria-controls="navbar-links" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="contact-hero">
+        <h1>Contact</h1>
+        <p>Send a message to the team. If you are logged in, your name, surname and group are auto-filled from your account.</p>
+      </section>
+
+      <section class="contact-wrap">
+        <div class="glass contact-card">
+          <div class="contact-section-title">
+            <div class="dot" aria-hidden="true"></div>
+            <h2>Message</h2>
+          </div>
+
+          <form id="contactForm" autocomplete="off">
+            <div class="inline-toggle">
+              <input type="checkbox" id="anonymousToggle" />
+              <span>Send anonymously</span>
+            </div>
+
+            <div id="personalBlock">
+              <div class="form-grid">
+                <div>
+                  <label class="contact-label" for="firstName">Name</label>
+                  <input class="contact-input" id="firstName" name="firstName" placeholder="Your name" />
+                </div>
+                <div>
+                  <label class="contact-label" for="surname">Surname</label>
+                  <input class="contact-input" id="surname" name="surname" placeholder="Your surname" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label class="contact-label" for="group">Group</label>
+                <input class="contact-input" id="group" name="group" placeholder="e.g. 1-A" />
+              </div>
+
+              <div class="small-note" id="autofillHint"></div>
+            </div>
+
+            <div class="form-row">
+              <label class="contact-label" for="message">Message</label>
+              <textarea class="contact-input contact-textarea" id="message" name="message" placeholder="Write your message here..."></textarea>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-btn" id="submitBtn" type="submit">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                Send message
+              </button>
+
+              <div class="cooldown-pill" id="cooldownPill">Cooldown: ready</div>
+            </div>
+
+            <div class="status-line" id="statusLine" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <aside class="glass helper-card">
+          <h3>Rules</h3>
+          <p>
+            To reduce spam, you can send a message only once every <strong>6–7 hours</strong>.
+            If you are registered, your identity fields are auto-filled.
+          </p>
+          <ul>
+            <li>Use anonymous mode if needed.</li>
+            <li>Paste links for video / images / documents.</li>
+            <li>Be specific (what happened, where, and when).</li>
+          </ul>
+        </aside>
+      </section>
+    </main>
+
+  <footer class="edu-footer" aria-label="Footer">
+    <div class="edu-footer-wrap">
+      <div class="edu-footer-grid">
+        <div class="edu-footer-brand">
+          <div class="edu-footer-brandline">
+            <span class="edu-footer-cap" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+                <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5" />
+              </svg>
+            </span>
+            <div class="edu-footer-title">TENGDOSH<span> USTOZ</span></div>
+          </div>
+          <p class="edu-footer-desc">
+            Connecting students with peer teachers across Uzbekistan a community-driven
+            platform for shared knowledge, growth, and academic excellence since 2026.
+          </p>
+        </div>
+
+        <div class="edu-footer-col">
+          <h4 class="edu-footer-h">Contact Us</h4>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.86.3 1.7.54 2.5a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.58-1.06a2 2 0 0 1 2.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">STUDENT SUPPORT</div>
+              <div class="edu-contact-value">+998 90 855 75 85</div>
+            </div>
+          </div>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16v16H4z" />
+                <path d="m4 4 8 8 8-8" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">EMAIL</div>
+              <div>
+                <p><a target="_blank" href="mailto:kyuter789@gmail.com" class="edu-contact-value">kyuter789@gmail.com</a></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="edu-contact">
+            <div class="edu-contact-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 2 11 13" />
+                <path d="M22 2 15 22 11 13 2 9 22 2Z" />
+              </svg>
+            </div>
+            <div class="edu-contact-text">
+              <div class="edu-contact-label">TELEGRAM</div>
+              <p><a href="https://t.me/Hunters1ar" target="_blank" class="edu-contact-value">@Hunters1ar</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-footer-col">
+          <h4 class="edu-footer-h">Support</h4>
+          <ul class="edu-footer-list">
+            <li><span class="chev"></span> <a href="https://t.me/akhmadjonova_8" target="_blank">Assistant</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/zimiDev" target="_blank">Support Developer 1</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/Reality_ae" target="_blank">Support Developer 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="edu-footer-bottom">
+        <div class="edu-footer-rule" aria-hidden="true"></div>
+        <p class="edu-footer-copy">© <span id="footer-year"></span> Tengdosh Ustoz &middot; All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  </div>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="/assets/firebase-config.js"></script>
+  <script src="/assets/tu-firebase.js"></script>
+
+  <script src="/pages/contact/contact.js"></script>
+</body>
+</html>

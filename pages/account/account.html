@@ -1,0 +1,853 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account • Tengdosh Ustoz</title>
+  <link rel="ico" href="/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="page-scroll" id="page-scroll">
+
+
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <nav class="navbar" id="main-navbar">
+    <a href="/home.html" class="navbar-brand">
+      <div class="navbar-brand-logo">
+        <img src="/logo.png" alt="logo">
+      </div>
+      <span class="navbar-wordmark">
+        <span class="w1">Tengdosh</span><span class="w2">Ustoz</span>
+      </span>
+    </a>
+
+      <ul class="navbar-links" id="navbar-links" role="list">
+          <li>
+            <a href="/home.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/pages/contact/contact.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Contact us
+            </a>
+          </li>
+          <li>
+            <a href="/pages/account/account.html" class="active" aria-current="page">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Account
+            </a>
+          </li>
+        </ul>
+    <div class="navbar-right">
+      <a href="/pages/account/account.html" class="navbar-avatar" id="navbar-avatar" aria-label="Account" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" aria-label="Toggle Dark Mode">
+        <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navbar-links">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+  (function () {
+    const nav = document.getElementById('main-navbar');
+    const ham = document.getElementById('navbar-hamburger');
+    const links = document.getElementById('navbar-links');
+    if (!nav || !links) return;
+
+    const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+
+    function setOpen(open) {
+      links.classList.toggle('open', open);
+      ham?.classList.toggle('open', open);
+      ham?.setAttribute('aria-expanded', String(open));
+      document.body.classList.toggle('nav-open', open && isMobile());
+    }
+
+    const onScroll = () => {
+      const scroller = document.getElementById('page-scroll');
+      const scrolled = scroller ? scroller.scrollTop > 40 : window.scrollY > 40;
+      nav.classList.toggle('navbar--scrolled', scrolled);
+    };
+    const scrollTarget = document.getElementById('page-scroll') || window;
+    scrollTarget.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    ham?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(!links.classList.contains('open'));
+    });
+
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+
+    document.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      if (!links.classList.contains('open')) return;
+      if (nav.contains(e.target)) return;
+      setOpen(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    window.addEventListener('resize', () => {
+      if (!isMobile()) setOpen(false);
+    });
+  })();
+  </script>
+
+
+  <div class="account-wrap">
+
+    <aside class="account-sidebar glass">
+      <div class="account-userbox">
+        <div class="account-avatar" id="avatar">
+          <span id="avatarInitials">--</span>
+        </div>
+        <p class="account-name" id="displayName">Loading…</p>
+        <p class="account-email" id="email">&nbsp;</p>
+        <div class="account-badge" id="subTag">
+          <span class="account-badge-dot" id="badgeDot"></span>
+          <span id="subText">Subscribed</span>
+        </div>
+      </div>
+
+      <nav class="account-menu">
+        <button class="account-menu-btn active" data-tab="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Overview
+        </button>
+        <button class="account-menu-btn" data-tab="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button>
+        <button class="account-menu-btn" data-tab="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+      
+        <button class="account-menu-btn" data-tab="liked">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          Liked
+        </button>
+</nav>
+
+      <button class="account-btn danger" id="logoutBtn" style="width:100%;margin-top:auto;">
+        Sign Out
+      </button>
+    </aside>
+
+    <main class="account-main glass">
+
+      <div id="tab-overview">
+        <p class="account-tab-title">Learning Dashboard</p>
+        <p class="account-tab-sub">Your subscriptions and activity at a glance.</p>
+        <div class="account-stats">
+          <div class="account-stat">
+            <div class="account-stat-icon">★</div>
+            <div>
+              <b id="subsCount">0</b>
+              <small>Teachers subscribed</small>
+            </div>
+          </div>
+          <div class="account-stat">
+            <div class="account-stat-icon">⏱</div>
+            <div>
+              <b id="lastSub">—</b>
+              <small>Last subscription</small>
+            </div>
+          </div>
+        </div>
+        <div class="account-section">
+          <h3>Active Subscriptions</h3>
+          <div class="account-msg" id="subsMsg"></div>
+          <div id="subsList"></div>
+        </div>
+      </div>
+
+      <div id="tab-profile" style="display:none">
+        <p class="account-tab-title">Profile</p>
+        <p class="account-tab-sub">Update your display name, phone number, and university group.</p>
+
+        <div class="account-section">
+          <label class="account-label" for="nameInput">Display name</label>
+          <input class="account-input" id="nameInput" type="text" placeholder="Your name" />
+
+          <div class="account-input-row">
+            <div>
+              <label class="account-label" for="surnameInput">Surname <span style="opacity:.5;font-size:11px">(optional)</span></label>
+              <input class="account-input" id="surnameInput" type="text" placeholder="Your surname" />
+            </div>
+            <div>
+              <label class="account-label" for="phoneInput">Phone number <span style="opacity:.65;font-size:11px">(required)</span></label>
+              <input class="account-input" id="phoneInput" type="tel" placeholder="+998901234567" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label class="account-label" for="groupInput">Group <span style="opacity:.65;font-size:11px">(required)</span></label>
+            <input class="account-input" id="groupInput" type="text" placeholder="e.g. 102" />
+          </div>
+
+          <div style="margin-top:18px">
+            <button class="account-btn" id="saveProfile" type="button">Save changes</button>
+          </div>
+          <div class="account-msg" id="profileMsg"></div>
+        </div>
+      </div>
+      <div id="tab-settings" style="display:none">
+        <p class="account-tab-title">Settings</p>
+        <p class="account-tab-sub">Manage your account and subscriptions.</p>
+
+        <div class="account-section">
+          <h3>Danger Zone</h3>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:16px">
+            These actions are irreversible. Please proceed carefully.
+          </p>
+          <button class="account-btn danger" id="clearSubs" type="button">
+            Unsubscribe from all teachers
+          </button>
+          <div class="account-msg" id="settingsMsg"></div>
+        </div>
+      </div>
+
+      <div id="tab-liked" style="display:none">
+        <p class="account-tab-title">Liked Quotes</p>
+        <p class="account-tab-sub">Quotes you liked on the Home page. Visible only to you.</p>
+
+        <div class="account-section">
+          <h3>Your likes</h3>
+          <div class="account-msg" id="likesMsg"></div>
+          <div id="likesList"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="/assets/firebase-config.js"></script>
+  <script src="/assets/tu-firebase.js"></script>
+  <script src="/assets/quote-likes.js"></script>
+  <script>
+
+    (function () {
+      const root = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+      const icon = document.getElementById("theme-icon");
+
+      const MOON =
+        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+
+      const SUN = `
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      `;
+
+      const saved = localStorage.getItem("theme") || "light";
+      if (saved === "dark") {
+        root.setAttribute("data-theme", "dark");
+        if (icon) icon.innerHTML = SUN;
+      }
+
+      btn?.addEventListener("click", () => {
+        const isDark = root.getAttribute("data-theme") === "dark";
+        root.setAttribute("data-theme", isDark ? "light" : "dark");
+        if (icon) icon.innerHTML = isDark ? MOON : SUN;
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      });
+    })();
+
+    (function () {
+      const canvas = document.getElementById("particles-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let W, H,
+        particles = [];
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      function rand(a, b) {
+        return Math.random() * (b - a) + a;
+      }
+
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: rand(0, W),
+          y: rand(0, H),
+          r: rand(1, 2.5),
+          dx: rand(-0.2, 0.2),
+          dy: rand(-0.4, -0.1),
+          opacity: rand(0.1, 0.6),
+          od: 1,
+        });
+      }
+
+      function col() {
+        return document.documentElement.getAttribute("data-theme") === "dark"
+          ? "165,180,252"
+          : "124,140,255";
+      }
+
+      (function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const c = col();
+        particles.forEach((p) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.opacity += p.od * 0.003;
+
+          if (p.opacity > 0.7 || p.opacity < 0.1) p.od *= -1;
+          if (p.y < -10) {
+            p.y = H + 10;
+            p.x = rand(0, W);
+          }
+          if (p.x < 0 || p.x > W) p.dx *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${c},${p.opacity})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      })();
+    })();
+
+    TU.init();
+    const auth = TU.auth;
+    const db = TU.db;
+
+    const rootPath =
+      (window.location.pathname.includes("/clubs")
+        ? window.location.pathname.split("/clubs")[0]
+        : window.location.pathname.replace(/\/[^\/]*$/, "")) || "";
+
+    const qp = new URLSearchParams(window.location.search);
+    const FORCE_COMPLETE = qp.get("complete") === "1";
+
+    const avatarEl = document.getElementById("avatar");
+    const displayNameEl = document.getElementById("displayName");
+    const emailEl = document.getElementById("email");
+
+    const subsCountEl = document.getElementById("subsCount");
+    const lastSubEl = document.getElementById("lastSub");
+    const subTextEl = document.getElementById("subText");
+    const badgeDotEl = document.getElementById("badgeDot");
+
+    const subsMsgEl = document.getElementById("subsMsg");
+    const subsListEl = document.getElementById("subsList");
+
+    const roleEl = document.getElementById("role");
+
+    function initialsFrom(u) {
+      if (u?.displayName) {
+        const p = u.displayName.trim().split(" ");
+        return (p[0]?.[0] + (p[1]?.[0] || "")).toUpperCase();
+      }
+      return (u?.email || "?")[0].toUpperCase();
+    }
+
+    function fmtTime(ts) {
+      if (!ts) return "—";
+      return new Date(ts).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    function setMsg(el, text, ok) {
+      if (!el) return;
+      el.textContent = text;
+      el.className = "account-msg" + (text ? " " + (ok ? "ok" : "err") : "");
+    }
+
+    function openProfileTab() {
+      document
+        .querySelectorAll(".account-menu-btn")
+        .forEach((b) => b.classList.remove("active"));
+      const profileBtn = document.querySelector(
+        '.account-menu-btn[data-tab="profile"]'
+      );
+      if (profileBtn) profileBtn.classList.add("active");
+
+      ["overview", "profile", "settings", "liked"].forEach((x) => {
+        const el = document.getElementById(`tab-${x}`);
+        if (el) el.style.display = x === "profile" ? "" : "none";
+      });
+    }
+
+    function setNavbarAvatar(u) {
+      const navAv = document.getElementById("navbar-avatar");
+      if (!navAv) return;
+
+      navAv.replaceChildren();
+
+      if (u?.photoURL) {
+        const img = document.createElement("img");
+        img.src = u.photoURL; 
+        img.alt = "Avatar";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+
+        img.onerror = () => {
+          navAv.replaceChildren();
+          navAv.textContent = initialsFrom(u);
+        };
+
+        navAv.appendChild(img);
+      } else {
+        navAv.textContent = initialsFrom(u);
+      }
+    }
+
+    function setSidebarAvatar(u) {
+      if (!avatarEl) return;
+
+      avatarEl.replaceChildren();
+
+      if (u?.photoURL) {
+        const img = document.createElement("img");
+        img.src = u.photoURL;
+        img.alt = "Avatar";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+
+        img.onerror = () => {
+          avatarEl.replaceChildren();
+          const span = document.createElement("span");
+          span.textContent = initialsFrom(u);
+          avatarEl.appendChild(span);
+        };
+
+        avatarEl.appendChild(img);
+      } else {
+        const span = document.createElement("span");
+        span.textContent = initialsFrom(u);
+        avatarEl.appendChild(span);
+      }
+    }
+
+    async function renderSubscriptions(u) {
+      subsListEl.innerHTML = "";
+      subsMsgEl.textContent = "";
+
+      const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
+      const val = snap.val() || {};
+      const items = [];
+
+      Object.entries(val).forEach(([k, v]) => {
+        if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
+          items.push({
+            ...v,
+            teacher: v.teacher || k,
+            teacherUid: k,
+            __path: `subscriptions/index/${u.uid}/${k}`,
+            __listPath: `subscriptions/${k}/attendants/${u.uid}`,
+          });
+          return;
+        }
+
+        if (v && typeof v === "object") {
+          Object.entries(v).forEach(([teacherName, sub]) => {
+            if (!sub || typeof sub !== "object") return;
+            const teacherUid = sub.teacherUid || k;
+            items.push({
+              ...sub,
+              teacher: sub.teacher || teacherName,
+              teacherUid,
+              __path: `subscriptions/index/${u.uid}/${k}/${teacherName}`,
+              __listPath: `subscriptions/${teacherUid}/${teacherName}/attendants/${u.uid}`,
+            });
+          });
+        }
+      });
+
+      subsCountEl.textContent = items.length;
+      subsMsgEl.textContent = items.length
+        ? ""
+        : "No subscriptions yet. Visit a teacher page and press Subscribe.";
+
+      const last = items.map((x) => x?.subscribedAt || 0).sort((a, b) => b - a)[0];
+      lastSubEl.textContent = last ? fmtTime(last) : "—";
+
+      if (items.length) {
+        subTextEl.textContent = "Subscribed";
+        badgeDotEl.classList.remove("inactive");
+      } else {
+        subTextEl.textContent = "Not subscribed";
+        badgeDotEl.classList.add("inactive");
+      }
+
+      items
+        .sort((a, b) => (b?.subscribedAt || 0) - (a?.subscribedAt || 0))
+        .forEach((s) => {
+          const teacher = s?.teacher || "Teacher";
+          const club = s?.club || "club";
+          const when = fmtTime(s?.subscribedAt);
+
+          const row = document.createElement("div");
+          row.className = "sub-item";
+          row.innerHTML = `
+            <div class="sub-item-left">
+              <span class="sub-item-name">${teacher}</span>
+              <span class="sub-item-meta">${club} &middot; ${when}</span>
+              <span class="sub-item-pill">&#10003; Subscribed</span>
+            </div>
+            <button class="account-btn danger" type="button">Unsubscribe</button>
+          `;
+
+          row.querySelector("button").addEventListener("click", async () => {
+            if (!confirm(`Unsubscribe from ${teacher}?`)) return;
+            if (s?.__path) await db.ref(s.__path).remove();
+            if (s?.__listPath) await db.ref(s.__listPath).remove();
+            await renderSubscriptions(u);
+              try { await renderLikedQuotes(u); } catch(e) {}
+          });
+
+          subsListEl.appendChild(row);
+        });
+
+    }
+
+    const likesListEl = document.getElementById("likesList");
+    const likesMsgEl = document.getElementById("likesMsg");
+
+    function escapeHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    let likesUnsub = null;
+
+    function clearLikesUI() {
+      if (likesListEl) likesListEl.innerHTML = "";
+      setMsg(likesMsgEl, "", true);
+    }
+
+    function renderLikesEmpty() {
+      if (!likesListEl) return;
+      likesListEl.innerHTML = `
+        <div class="account-msg" style="margin-top:10px">
+          You haven't liked any quotes yet. Go to <a href="/home.html">Home</a> and tap the ❤ button.
+        </div>`;
+    }
+
+    async function renderLikedQuotes(u) {
+      clearLikesUI();
+      if (!u) return;
+
+      try { likesUnsub && likesUnsub(); } catch(e) {}
+      likesUnsub = null;
+
+      const ref = db.ref(`userLikes/${u.uid}`);
+      const handler = async (snap) => {
+        const likedMap = snap.val() || {};
+        const ids = Object.keys(likedMap);
+
+        if (!likesListEl) return;
+
+        if (ids.length === 0) {
+          renderLikesEmpty();
+          return;
+        }
+
+        const metas = await Promise.all(
+          ids.map(async (id) => {
+            const metaSnap = await db.ref(`quoteMeta/${id}`).once("value");
+            return { id, meta: metaSnap.val() || null };
+          })
+        );
+
+        metas.sort((a, b) => {
+          const at = Number(a.meta?.updatedAt || a.meta?.createdAt || 0);
+          const bt = Number(b.meta?.updatedAt || b.meta?.createdAt || 0);
+          return bt - at;
+        });
+
+        likesListEl.innerHTML = "";
+
+        metas.forEach(({ id, meta }) => {
+          const text = meta?.text || meta?.raw || "(missing quote)";
+          const author = meta?.author || "";
+          const row = document.createElement("div");
+          row.className = "card glass";
+          row.style.marginBottom = "12px";
+          row.innerHTML = `
+            <p style="font-weight:700;margin:0 0 8px 0">${escapeHtml('\"' + text + '\"')}</p>
+            <p style="opacity:.75;margin:0 0 14px 0">${escapeHtml(author)}</p>
+            <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+              <small style="opacity:.7">Quote ID: ${escapeHtml(id)}</small>
+              <button class="account-btn danger" type="button">Remove like</button>
+            </div>
+          `;
+
+          row.querySelector("button").addEventListener("click", async () => {
+            try {
+              await db.ref(`userLikes/${u.uid}/${id}`).remove();
+              await new Promise((resolve, reject) => {
+                db.ref(`quoteLikes/${id}/count`).transaction(
+                  (c) => {
+                    const next = (Number(c || 0) - 1);
+                    return next < 0 ? 0 : next;
+                  },
+                  (err) => (err ? reject(err) : resolve())
+                );
+              });
+            } catch (e) {
+              setMsg(likesMsgEl, "Could not remove like.", false);
+            }
+          });
+
+          likesListEl.appendChild(row);
+        });
+      };
+
+      ref.on("value", handler);
+      likesUnsub = () => ref.off("value", handler);
+    }
+
+
+    document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+      await auth.signOut();
+      window.location.href = `/auth/login.html`;
+    });
+
+    const TABS = ["overview", "profile", "settings", "liked"];
+    if (FORCE_COMPLETE) openProfileTab();
+
+    document.querySelectorAll(".account-menu-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".account-menu-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const t = btn.dataset.tab;
+
+        TABS.forEach((x) => {
+          const el = document.getElementById(`tab-${x}`);
+          if (el) el.style.display = x === t ? "" : "none";
+        });
+      });
+    });
+
+    document.getElementById("saveProfile")?.addEventListener("click", async () => {
+      const msgEl = document.getElementById("profileMsg");
+      setMsg(msgEl, "", true);
+
+      try {
+        const u = auth.currentUser;
+        if (!u) throw new Error("Not logged in");
+
+        const name = document.getElementById("nameInput")?.value.trim() || "";
+        const surename = document.getElementById("surnameInput")?.value.trim() || "";
+        const phone = document.getElementById("phoneInput")?.value.trim() || "";
+        const group = document.getElementById("groupInput")?.value.trim() || "";
+
+        const phoneNorm = phone.replace(/[^0-9+]/g, "");
+        if (!phoneNorm) throw new Error("Phone number is required");
+        if (phoneNorm.length < 9) throw new Error("Enter a valid phone number");
+        if (!group) throw new Error("Group is required");
+
+        await u.updateProfile({ displayName: name || null });
+
+        await db.ref(`users/${u.uid}`).update({
+          displayName: name || null,
+          surename: surename || null,
+          phone: phoneNorm,
+          groupInUniversity: group || null,
+          updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+
+        setMsg(msgEl, "✓ Saved successfully.", true);
+
+        displayNameEl.textContent = u.displayName || u.email || "User";
+        setNavbarAvatar(u);
+        setSidebarAvatar(u);
+
+        if (FORCE_COMPLETE) {
+          const back = TU.popReturnUrl(`${rootPath}/home.html`);
+          window.location.href = back;
+        }
+      } catch (e) {
+        setMsg(document.getElementById("profileMsg"), e?.message || "Failed", false);
+      }
+    });
+
+    document.getElementById("clearSubs")?.addEventListener("click", async () => {
+      const msgEl = document.getElementById("settingsMsg");
+      setMsg(msgEl, "", true);
+
+      try {
+        const u = auth.currentUser;
+        if (!u) throw new Error("Not logged in");
+        if (!confirm("Unsubscribe from ALL teachers? This cannot be undone.")) return;
+
+        const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
+        const val = snap.val() || {};
+        const paths = [];
+
+        Object.entries(val).forEach(([k, v]) => {
+          if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
+            paths.push(`subscriptions/${k}/attendants/${u.uid}`);
+            return;
+          }
+          if (v && typeof v === "object") {
+            Object.entries(v).forEach(([tn, sub]) => {
+              if (!sub || typeof sub !== "object") return;
+              const tid = sub.teacherUid || k;
+              paths.push(`subscriptions/${tid}/${tn}/attendants/${u.uid}`);
+            });
+          }
+        });
+
+        await db.ref(`subscriptions/index/${u.uid}`).remove();
+        await Promise.all(paths.map((p) => db.ref(p).remove()));
+
+        setMsg(msgEl, "✓ All subscriptions removed.", true);
+        await renderSubscriptions(u);
+      } catch (e) {
+        setMsg(document.getElementById("settingsMsg"), e?.message || "Failed", false);
+      }
+    });
+
+    document.addEventListener("tu-auth-changed", async (ev) => {
+      const u = ev.detail.user;
+      if (!u) {
+        TU.requireLogin(auth);
+        return;
+      }
+
+      displayNameEl.textContent = u.displayName || u.email || "User";
+      emailEl.textContent = u.email || "";
+
+      const nameInput = document.getElementById("nameInput");
+      if (nameInput) nameInput.value = u.displayName || "";
+
+      setNavbarAvatar(u);
+      setSidebarAvatar(u);
+
+      try {
+        const snap = await db.ref(`users/${u.uid}`).once("value");
+        const doc = snap.val() || {};
+
+        document.getElementById("surnameInput").value = doc.surename || "";
+        document.getElementById("phoneInput").value = doc.phone || doc["phone number"] || "";
+        document.getElementById("groupInput").value =
+          doc.groupInUniversity || doc.group || "";
+
+        if (FORCE_COMPLETE) {
+          const phoneOk = String(doc.phone || doc["phone number"] || "")
+            .replace(/[^0-9+]/g, "")
+            .trim();
+          const groupOk = String(doc.groupInUniversity || doc.group || "").trim();
+
+          if (!phoneOk || !groupOk) {
+            openProfileTab();
+            setMsg(
+              document.getElementById("profileMsg"),
+              "Please add your phone number and group to continue.",
+              false
+            );
+          }
+        }
+      } catch (e) {}
+
+      try {
+        const role = await TU.getRole(db, u.uid);
+        if (roleEl) roleEl.textContent = role;
+      } catch (e) {}
+
+      await renderSubscriptions(u);
+        await renderLikedQuotes(u);
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const phoneInput = document.getElementById("phoneInput");
+    if (!phoneInput) return;
+
+    if (!phoneInput.value) {
+      phoneInput.value = "+998 ";
+    }
+
+    phoneInput.addEventListener("input", function () {
+      let numbers = this.value.replace(/\D/g, "");
+
+      if (!numbers.startsWith("998")) {
+        numbers = "998" + numbers;
+      }
+
+      numbers = numbers.substring(0, 12);
+
+      let formatted = "+998 ";
+
+      if (numbers.length > 3) {
+        formatted += numbers.substring(3, 5);
+      }
+      if (numbers.length >= 6) {
+        formatted += "-" + numbers.substring(5, 8);
+      }
+      if (numbers.length >= 9) {
+        formatted += "-" + numbers.substring(8, 10);
+      }
+      if (numbers.length >= 11) {
+        formatted += "-" + numbers.substring(10, 12);
+      }
+
+      this.value = formatted;
+    });
+
+    phoneInput.addEventListener("keydown", function (e) {
+      if (this.selectionStart <= 5 && (e.key === "Backspace" || e.key === "Delete")) {
+        e.preventDefault();
+      }
+    });
+  });
+  </script>
+
+  </div>
+</body>
+</html>
