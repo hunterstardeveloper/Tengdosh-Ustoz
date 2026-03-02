@@ -66,7 +66,6 @@
     onScroll();
   }
 
-  
   function initNavbarAvatar() {
     const avatar = $("navbar-avatar");
     if (!avatar) return;
@@ -219,7 +218,6 @@
           return;
         }
 
-        // Attempt to read profile
         try {
           const snap = await TU.db.ref(`users/${user.uid}`).once("value");
           const profile = snap && snap.exists() ? snap.val() : {};
@@ -284,31 +282,30 @@
     }
   }
 
-
-function initResetCombo() {
-  let buf = "";
-  const target = "RESET";
-  document.addEventListener("keydown", (e) => {
-    if (!(e.ctrlKey && e.altKey && e.shiftKey)) {
-      buf = "";
-      return;
-    }
-    if (e.key && e.key.length === 1) {
-      buf += e.key.toUpperCase();
-      if (buf.length > target.length) buf = buf.slice(-target.length);
-      if (buf === target) {
-        try {
-          localStorage.removeItem(STORAGE_KEY);
-        } catch (_) {}
-        updateCooldownUI();
-        setStatus("Cooldown reset (test mode).", "ok");
+  function initResetCombo() {
+    let buf = "";
+    const target = "RESET";
+    document.addEventListener("keydown", (e) => {
+      if (!(e.ctrlKey && e.altKey && e.shiftKey)) {
         buf = "";
+        return;
       }
-    } else if (e.key === "Backspace") {
-      buf = buf.slice(0, -1);
-    }
-  });
-}
+      if (e.key && e.key.length === 1) {
+        buf += e.key.toUpperCase();
+        if (buf.length > target.length) buf = buf.slice(-target.length);
+        if (buf === target) {
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+          } catch (_) {}
+          updateCooldownUI();
+          setStatus("Cooldown reset (test mode).", "ok");
+          buf = "";
+        }
+      } else if (e.key === "Backspace") {
+        buf = buf.slice(0, -1);
+      }
+    });
+  }
 
   function initForm() {
     const form = $("contactForm");
@@ -418,7 +415,8 @@ function initResetCombo() {
       anonymous.addEventListener("change", toggleAnon);
       toggleAnon();
     }
-updateCooldownUI();
+    
+    updateCooldownUI();
     setInterval(updateCooldownUI, 1000);
 
     form.addEventListener("submit", async (e) => {
@@ -459,7 +457,7 @@ updateCooldownUI();
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v9h-9"/></svg> Sending...`;
+        btn.innerHTML = `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v9h-9"/></svg> <span data-i18n="contact_send">Sending...</span>`;
       }
       setStatus("", null);
 
@@ -488,7 +486,10 @@ updateCooldownUI();
         setStatus("Network error. Please try again later.", "err");
       } finally {
         if (btn) {
-          btn.innerHTML = `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Send message`;
+          btn.innerHTML = `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> <span data-i18n="contact_send">Send message</span>`;
+          if (window.TU_i18n && typeof window.TU_i18n.applyTranslations === "function") {
+            window.TU_i18n.applyTranslations();
+          }
           updateCooldownUI();
         }
       }
