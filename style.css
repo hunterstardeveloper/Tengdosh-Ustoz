@@ -1705,3 +1705,75 @@ main:not(.account-main) {
     box-sizing: border-box;
   }
 }
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .lang-switcher,
+.lang-switcher {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html:not([data-theme="dark"]) .lang-switcher {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.lang-btn {
+  position: relative;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.25s, background 0.25s, box-shadow 0.25s;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+html:not([data-theme="dark"]) .lang-btn {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.lang-btn.active {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
+}
+
+html:not([data-theme="dark"]) .lang-btn.active {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+}
+
+.lang-btn:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+html:not([data-theme="dark"]) .lang-btn:hover:not(.active) {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 700px) {
+  .lang-switcher {
+    order: -1;
+  }
+  .lang-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="uz" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
-  <link rel="ico" href="/icon.png">
+  <link rel="icon" href="/icon.png">
 </head>
 <body>
   <div class="bg-orbs" aria-hidden="true">
@@ -33,19 +33,19 @@
           <li>
             <a href="/home.html" class="active" aria-current="page">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              Home
+              <span data-i18n="nav_home">Home</span>
             </a>
           </li>
           <li>
             <a href="/pages/contact/contact.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Contact us
+              <span data-i18n="nav_contact">Contact us</span>
             </a>
           </li>
           <li>
             <a href="/pages/account/account.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Account
+              <span data-i18n="nav_account">Account</span>
             </a>
           </li>
         </ul>
@@ -77,25 +77,25 @@
   </div>
 
   <section class="hero">
-    <span class="pill"><i data-lucide="sparkles" class="pill-icon"></i> Welcome to Tengdosh Ustoz</span>
-    <h1>A Space for Your<br>Educational Journey</h1>
-    <p>Discover a sanctuary for learning where knowledge grows and focus is naturally restored.</p>
+    <span class="pill"><i data-lucide="sparkles" class="pill-icon"></i> <span data-i18n="hero_pill">Welcome to Tengdosh Ustoz</span></span>
+    <h1 data-i18n="hero_title">A Space for Your<br>Educational Journey</h1>
+    <p data-i18n="hero_desc">Discover a sanctuary for learning where knowledge grows and focus is naturally restored.</p>
   </section>
 
   <section class="site-stats" aria-label="Site statistics">
     <div class="stat-card glass">
-      <div class="stat-label">Registered users</div>
+      <div class="stat-label" data-i18n="stat_users">Registered users</div>
       <div class="stat-value" id="users-count">0</div>
     </div>
     <div class="stat-card glass">
-      <div class="stat-label">Teachers</div>
+      <div class="stat-label" data-i18n="stat_teachers">Teachers</div>
       <div class="stat-value" id="teachers-count">0</div>
     </div>
   </section>
 
   <section class="quote-section" aria-label="Daily Inspiration">
     <div class="quote-section-label">
-      <span class="pill"><i data-lucide="quote" class="pill-icon"></i> Daily Inspiration</span>
+      <span class="pill"><i data-lucide="quote" class="pill-icon"></i> <span data-i18n="quote_pill">Daily Inspiration</span></span>
     </div>
     <div style="display: flex; gap: 24px; align-items: stretch;">
       <div class="quote-card glass" style="flex: 1; min-width: 0;">
@@ -116,7 +116,7 @@
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            Copy
+            <span data-i18n="quote_copy">Copy</span>
           </button>
 
           <button class="q-btn" id="share-btn" aria-label="Share quote" title="Share">
@@ -127,7 +127,7 @@
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
             </svg>
-            Share
+            <span data-i18n="quote_share">Share</span>
           </button>
 
           <button class="q-btn q-auto-btn" id="auto-btn" aria-label="Auto-advance quotes" title="Auto-advance">
@@ -150,9 +150,9 @@
     </div>
   </section>
 
-  <h1 class="section-title">Schedule</h1>
+  <h1 class="section-title" data-i18n="schedule_title">Schedule</h1>
   <div class="toggle-container">
-    <button id="toggle-schedule-btn" type="button">Hide Schedule</button>
+    <button id="toggle-schedule-btn" type="button" data-i18n="schedule_hide">Hide Schedule</button>
   </div>
 
   <section id="upcoming-classes-container" class="features visible">
@@ -161,7 +161,7 @@
     </div>
   </section>
 
-  <h1 class="section-title" id="coding-skills">Special</h1>
+  <h1 class="section-title" data-i18n="special_title">Special</h1>
   <section class="special-group">
     <div class="card glass" id="special-card"  onclick="location.href='/clubs/prodev/Abdumalik/index.html'" style="cursor: pointer;">
       <div class="card-img-container">
@@ -187,70 +187,70 @@
     </div>
   </section>
 
-  <h1 class="section-title" id="coding-skills">Coding Skills</h1>
+  <h1 class="section-title" id="coding-skills" data-i18n="coding_title">Coding Skills</h1>
   <section class="features">
     <div class="card glass" onclick="location.href='/clubs/full-stack/teachers-sec-FS.html'" style="cursor: pointer;">
       <div class="card-img-container">
         <img src="https://ik.imagekit.io/yefypajb8v/Elements/fullstack.png" alt="Full-stack" draggable="false">
       </div>
-      <h3>Full-stack</h3>
-      <p>Transform static designs into interactive digital experiences. Master React, modern CSS, and performance optimization.</p>
-      <a href="/clubs/full-stack/teachers-sec-FS.html">View Club</a>
+      <h3 data-i18n="card_fullstack">Full-stack</h3>
+      <p data-i18n="card_fullstack_desc">Transform static designs into interactive digital experiences. Master React, modern CSS, and performance optimization.</p>
+      <a href="/clubs/full-stack/teachers-sec-FS.html" data-i18n="card_view">View Club</a>
     </div>
     <div class="card glass" onclick="location.href='/clubs/py/teachers-sec-py.html'" style="cursor: pointer;">
       <div class="card-img-container">
         <img src="https://ik.imagekit.io/yefypajb8v/Elements/py.png" alt="Python" draggable="false">
       </div>
-      <h3>Python</h3>
-      <p>Go beyond basic syntax. Learn to architect scalable systems, automate complex workflows, and dive into the foundations of Data Science and AI.</p>
-      <a href="/clubs/py/teachers-sec-py.html">View Club</a>
+      <h3 data-i18n="card_python">Python</h3>
+      <p data-i18n="card_python_desc">Go beyond basic syntax. Learn to architect scalable systems, automate complex workflows, and dive into the foundations of Data Science and AI.</p>
+      <a href="/clubs/py/teachers-sec-py.html" data-i18n="card_view">View Club</a>
     </div>
 
     <div class="card glass" onclick="location.href='/clubs/java/teachers-sec-Json.html'" style="cursor: pointer;">
       <div class="card-img-container">
         <img src="https://ik.imagekit.io/yefypajb8v/Elements/java.png" alt="Java" draggable="false">
       </div>
-      <h3>Java</h3>
-      <p>Build the backbone of enterprise software. Master Object-Oriented Programming (OOP) and robust backend structures used globally.</p>
-      <a href="/clubs/java/teachers-sec-Json.html">View Club</a>
+      <h3 data-i18n="card_java">Java</h3>
+      <p data-i18n="card_java_desc">Build the backbone of enterprise software. Master Object-Oriented Programming (OOP) and robust backend structures used globally.</p>
+      <a href="/clubs/java/teachers-sec-Json.html" data-i18n="card_view">View Club</a>
     </div>
     <div class="card glass" onclick="location.href='/clubs/c++/teachers-sec-c++.html'" style="cursor: pointer;">
       <div class="card-img-container">
         <img src="https://ik.imagekit.io/yefypajb8v/Elements/c++.png" alt="C++" draggable="false">
       </div>
-      <h3>C++</h3>
-      <p>Master C++ for competitive programming and real-world software: algorithms, OOP, STL, and performance-focused coding.</p>
-      <a href="/clubs/c++/teachers-sec-c++.html">View Club</a>
+      <h3 data-i18n="card_cpp">C++</h3>
+      <p data-i18n="card_cpp_desc">Master C++ for competitive programming and real-world software: algorithms, OOP, STL, and performance-focused coding.</p>
+      <a href="/clubs/c++/teachers-sec-c++.html" data-i18n="card_view">View Club</a>
     </div>
   </section>
 
   <section class="principles">
-    <h1 class="section-title">Essential Soft Skills</h1>
+    <h1 class="section-title" data-i18n="soft_title">Essential Soft Skills</h1>
     <div class="principles-grid">
       <div class="principle-card glass" onclick="location.href='/clubs/english/teachers-sec-eng.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
           <img src="https://ik.imagekit.io/yefypajb8v/Elements/eng.webp" alt="English" draggable="false">
         </div>
-        <h3>English</h3>
-        <p>Break the language barrier. Focus on professional communication and technical terminology for global opportunities.</p>
-        <a href="/clubs/english/teachers-sec-eng.html">View Club</a>
+        <h3 data-i18n="card_english">English</h3>
+        <p data-i18n="card_english_desc">Break the language barrier. Focus on professional communication and technical terminology for global opportunities.</p>
+        <a href="/clubs/english/teachers-sec-eng.html" data-i18n="card_view">View Club</a>
       </div>
 
       <div class="principle-card glass" onclick="location.href='/clubs/SI/teachers-sec-SI.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
           <img src="https://ik.imagekit.io/yefypajb8v/Elements/si.webp" alt="Self Improvement" draggable="false">
         </div>
-        <h3>Self Improvement</h3>
-        <p>Upgrade your mental OS. Develop high-performance habits and the psychological resilience needed in tech.</p>
-        <a href="/clubs/SI/teachers-sec-SI.html">View Club</a>
+        <h3 data-i18n="card_si">Self Improvement</h3>
+        <p data-i18n="card_si_desc">Upgrade your mental OS. Develop high-performance habits and the psychological resilience needed in tech.</p>
+        <a href="/clubs/SI/teachers-sec-SI.html" data-i18n="card_view">View Club</a>
       </div>
       <div class="principle-card glass" onclick="location.href='/clubs/mathematics/teachers-sec-mathematic.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
           <img src="https://ik.imagekit.io/yefypajb8v/Elements/math.webp" alt="Mathematics" draggable="false">
         </div>
-        <h3>Mathematics</h3>
-        <p>Level up with functions, limits, derivatives, integrals, and proofs—perfect for olympiad-style thinking and STEM success.</p>
-        <a href="/clubs/mathematics/teachers-sec-mathematic.html">View Club</a>
+        <h3 data-i18n="card_math">Mathematics</h3>
+        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs—perfect for olympiad-style thinking and STEM success.</p>
+        <a href="/clubs/mathematics/teachers-sec-mathematic.html" data-i18n="card_view">View Club</a>
       </div>
     </div>
   </section>
@@ -267,14 +267,14 @@
             </span>
             <div class="edu-footer-title">TENGDOSH<span> USTOZ</span></div>
           </div>
-          <p class="edu-footer-desc">
+          <p class="edu-footer-desc" data-i18n="footer_desc">
             Connecting students with peer teachers across Uzbekistan a community-driven
             platform for shared knowledge, growth, and academic excellence since 2026.
           </p>
         </div>
 
         <div class="edu-footer-col">
-          <h4 class="edu-footer-h">Contact Us</h4>
+          <h4 class="edu-footer-h" data-i18n="footer_contact">Contact Us</h4>
 
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
@@ -283,7 +283,7 @@
               </svg>
             </div>
             <div class="edu-contact-text">
-              <div class="edu-contact-label">STUDENT SUPPORT</div>
+              <div class="edu-contact-label" data-i18n="footer_support_label">STUDENT SUPPORT</div>
               <div class="edu-contact-value">+998 90 855 75 85</div>
             </div>
           </div>
@@ -296,7 +296,7 @@
               </svg>
             </div>
             <div class="edu-contact-text">
-              <div class="edu-contact-label">EMAIL</div>
+              <div class="edu-contact-label" data-i18n="footer_email_label">EMAIL</div>
               <div>
                 <p><a target="_blank" href="mailto:kyuter789@gmail.com" class="edu-contact-value">kyuter789@gmail.com</a></p>
               </div>
@@ -311,18 +311,18 @@
               </svg>
             </div>
             <div class="edu-contact-text">
-              <div class="edu-contact-label">TELEGRAM</div>
+              <div class="edu-contact-label" data-i18n="footer_telegram_label">TELEGRAM</div>
               <p><a href="https://t.me/Hunters1ar" target="_blank" class="edu-contact-value">@Hunters1ar</a></p>
             </div>
           </div>
         </div>
 
         <div class="edu-footer-col">
-          <h4 class="edu-footer-h">Support</h4>
+          <h4 class="edu-footer-h" data-i18n="footer_support">Support</h4>
           <ul class="edu-footer-list">
-            <li><span class="chev"></span> <a href="https://t.me/akhmadjonova_8" target="_blank">Assistant</a></li>
-            <li><span class="chev"></span> <a href="https://t.me/zimiDev" target="_blank">Support Developer 1</a></li>
-            <li><span class="chev"></span> <a href="https://t.me/Reality_ae" target="_blank">Support Developer 2</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/akhmadjonova_8" target="_blank" data-i18n="footer_assistant">Assistant</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/zimiDev" target="_blank" data-i18n="footer_dev1">Support Developer 1</a></li>
+            <li><span class="chev"></span> <a href="https://t.me/Reality_ae" target="_blank" data-i18n="footer_dev2">Support Developer 2</a></li>
           </ul>
         </div>
       </div>
@@ -345,7 +345,7 @@
   <script src="/script.js"></script>
   <script src="/assets.js"></script>
   <script src="/script-internet-checker.js"></script>
-  <script src="/sw.js"></script>
+  <script src="/assets/i18n.js"></script>
   <script type="module">
     import { animations } from "/assets/base64.js"; 
     const img = document.getElementById("anim2");
@@ -411,10 +411,10 @@
       const isHidden = !classesContainer.classList.contains('visible');
       if (isHidden) {
         classesContainer.classList.add('visible');
-        toggleBtn.textContent = 'Hide Schedule';
+        toggleBtn.textContent = window.TU_i18n ? TU_i18n.t('schedule_hide') : 'Hide Schedule';
       } else {
         classesContainer.classList.remove('visible');
-        toggleBtn.textContent = 'Show Upcoming Classes';
+        toggleBtn.textContent = window.TU_i18n ? TU_i18n.t('schedule_show') : 'Show Upcoming Classes';
       }
     });
 
@@ -428,7 +428,8 @@
       const now = new Date();
 
       if (!teachersData) {
-        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1;"><p>No classes scheduled.</p></div>';
+        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
+        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1;"><p>' + _t('schedule_no_classes') + '</p></div>';
         refreshReveal();
         renderLucideIcons();
         return;
@@ -462,29 +463,31 @@
       activeClasses.sort((a, b) => a.timestamp - b.timestamp);
 
       if (activeClasses.length === 0) {
-        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1; text-align: center;"><p>No upcoming sessions at the moment.</p></div>';
+        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
+        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1; text-align: center;"><p>' + _t('schedule_none') + '</p></div>';
       } else {
+        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
         container.innerHTML = activeClasses.map(cls => {
           const path = cls.club || 'SI';
           const displayTime = formatTo12Hour(cls.time);
           const clubNames = { 'py': 'Python', 'java': 'Java', 'full-stack': 'Front-end', 'english': 'English', 'SI': 'Self Improvement','c++':'C++' ,'mathematics':'Mathematics' , 'prodev':'ProDev'};
           const fullClubName = clubNames[path] || 'Educational Club';
           const statusText = cls.isLive
-            ? `<span class="live-pulse"><i data-lucide="radio" class="inline-icon"></i> LIVE NOW</span>`
-            : `Next class: ${cls.date}`;
+            ? `<span class="live-pulse"><i data-lucide="radio" class="inline-icon"></i> ${_t('schedule_live')}</span>`
+            : `${_t('schedule_next')}: ${cls.date}`;
 
           return `
             <div class="card glass" style="text-align: center; padding: 40px 20px;">
               <div style="margin-bottom: 25px;">
                 <div class="pill" style="margin-bottom: 15px;">${fullClubName}</div>
                 <h2 style="font-size: 24px; margin-bottom: 12px;">${statusText}</h2>
-                <h3 style="font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--primary);">Teacher: ${cls.teacher}</h3>
-                <h3 style="font-size: 22px; margin-bottom: 8px;">Time: ${displayTime}</h3>
-                <p style="font-size: 18px; color: var(--text);">Room: ${cls.room || 'TBD'}</p>
+                <h3 style="font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--primary);">${_t('schedule_teacher')}: ${cls.teacher}</h3>
+                <h3 style="font-size: 22px; margin-bottom: 8px;">${_t('schedule_time')}: ${displayTime}</h3>
+                <p style="font-size: 18px; color: var(--text);">${_t('schedule_room')}: ${cls.room || _t('tbd')}</p>
               </div>
               <a href="./clubs/${path}/${cls.teacher}/offline.html"
                  style="${cls.isLive ? 'border: 2px solid #ff4d4d; color: #ff4d4d; background: rgba(255,77,77,0.1);' : ''}">
-                ${cls.isLive ? 'Join Live Session' : 'View Details'}
+                ${cls.isLive ? _t('schedule_join') : _t('schedule_view')}
               </a>
             </div>
           `;
@@ -902,8 +905,9 @@
       document.body.classList.toggle('nav-open', open && isMobile());
     }
 
-    const onScroll = () => nav.classList.toggle('navbar--scrolled', window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const onScroll = () => nav.classList.toggle('navbar--scrolled', (document.getElementById('page-scroll')?.scrollTop || window.scrollY) > 40);
+    const _scrollTarget = document.getElementById('page-scroll') || window;
+    _scrollTarget.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
     ham?.addEventListener('click', (e) => {

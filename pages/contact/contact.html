@@ -12,7 +12,7 @@
 
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/pages/contact/contact.css" />
-  <link rel="ico" href="/icon.png" />
+  <link rel="icon" href="/icon.png" />
 </head>
 
 <body>
@@ -41,7 +41,7 @@
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            Home
+            <span data-i18n="nav_home">Home</span>
           </a>
         </li>
 
@@ -53,7 +53,7 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            Contact us
+            <span data-i18n="nav_contact">Contact us</span>
           </a>
         </li>
 
@@ -63,7 +63,7 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            Account
+            <span data-i18n="nav_account">Account</span>
           </a>
         </li>
       </ul>
@@ -90,46 +90,46 @@
 
     <main>
       <section class="contact-hero">
-        <h1>Contact</h1>
-        <p>Send a message to the team. If you are logged in, your name, surname and group are auto-filled from your account.</p>
+        <h1 data-i18n="contact_title">Contact</h1>
+        <p data-i18n="contact_desc">Send a message to the team. If you are logged in, your name, surname and group are auto-filled from your account.</p>
       </section>
 
       <section class="contact-wrap">
         <div class="glass contact-card">
           <div class="contact-section-title">
             <div class="dot" aria-hidden="true"></div>
-            <h2>Message</h2>
+            <h2 data-i18n="contact_message_title">Message</h2>
           </div>
 
           <form id="contactForm" autocomplete="off">
             <div class="inline-toggle">
               <input type="checkbox" id="anonymousToggle" />
-              <span>Send anonymously</span>
+              <span data-i18n="contact_anon">Send anonymously</span>
             </div>
 
             <div id="personalBlock">
               <div class="form-grid">
                 <div>
-                  <label class="contact-label" for="firstName">Name</label>
-                  <input class="contact-input" id="firstName" name="firstName" placeholder="Your name" />
+                  <label class="contact-label" for="firstName" data-i18n="contact_name">Name</label>
+                  <input class="contact-input" id="firstName" name="firstName" data-i18n-ph="contact_name_ph" placeholder="Your name" />
                 </div>
                 <div>
-                  <label class="contact-label" for="surname">Surname</label>
-                  <input class="contact-input" id="surname" name="surname" placeholder="Your surname" />
+                  <label class="contact-label" for="surname" data-i18n="contact_surname">Surname</label>
+                  <input class="contact-input" id="surname" name="surname" data-i18n-ph="contact_surname_ph" placeholder="Your surname" />
                 </div>
               </div>
 
               <div class="form-row">
-                <label class="contact-label" for="group">Group</label>
-                <input class="contact-input" id="group" name="group" placeholder="e.g. 1-A" />
+                <label class="contact-label" for="group" data-i18n="contact_group">Group</label>
+                <input class="contact-input" id="group" name="group" data-i18n-ph="contact_group_ph" placeholder="e.g. 1-A" />
               </div>
 
               <div class="small-note" id="autofillHint"></div>
             </div>
 
             <div class="form-row">
-              <label class="contact-label" for="message">Message</label>
-              <textarea class="contact-input contact-textarea" id="message" name="message" placeholder="Write your message here..."></textarea>
+              <label class="contact-label" for="message" data-i18n="contact_msg">Message</label>
+              <textarea class="contact-input contact-textarea" id="message" name="message" data-i18n-ph="contact_msg_ph" placeholder="Write your message here..."></textarea>
             </div>
             <div class="contact-actions">
               <button class="contact-btn" id="submitBtn" type="submit">
@@ -137,10 +137,10 @@
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
-                Send message
+                <span data-i18n="contact_send">Send message</span>
               </button>
 
-              <div class="cooldown-pill" id="cooldownPill">Cooldown: ready</div>
+              <div class="cooldown-pill" id="cooldownPill" data-i18n="contact_cooldown">Cooldown: ready</div>
             </div>
 
             <div class="status-line" id="statusLine" aria-live="polite"></div>
@@ -148,15 +148,15 @@
         </div>
 
         <aside class="glass helper-card">
-          <h3>Rules</h3>
-          <p>
+          <h3 data-i18n="contact_rules">Rules</h3>
+          <p data-i18n="contact_rules_desc">
             To reduce spam, you can send a message only once every <strong>6–7 hours</strong>.
             If you are registered, your identity fields are auto-filled.
           </p>
           <ul>
-            <li>Use anonymous mode if needed.</li>
-            <li>Paste links for video / images / documents.</li>
-            <li>Be specific (what happened, where, and when).</li>
+            <li data-i18n="contact_rule1">Use anonymous mode if needed.</li>
+            <li data-i18n="contact_rule2">Paste links for video / images / documents.</li>
+            <li data-i18n="contact_rule3">Be specific (what happened, where, and when).</li>
           </ul>
         </aside>
       </section>
@@ -250,5 +250,7 @@
   <script src="/assets/tu-firebase.js"></script>
 
   <script src="/pages/contact/contact.js"></script>
+  <script src="/assets/i18n.js"></script>
+  <script src="/assets/UI.js"></script>
 </body>
 </html>
