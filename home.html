@@ -70,8 +70,7 @@
     </div>
   </nav>
 
-
-  <div class="copy-toast" id="copy-toast">Copied to clipboard</div>
+  <div class="copy-toast" id="copy-toast" data-i18n="quote_copied">Copied to clipboard</div>
   <div class="top">
     <img src="/logo.png" class="icon-top" id="main-logo" alt="Logo" tabindex="0" draggable="false">
   </div>
@@ -100,7 +99,7 @@
     <div style="display: flex; gap: 24px; align-items: stretch;">
       <div class="quote-card glass" style="flex: 1; min-width: 0;">
         <div class="quote-accent-bar"></div>
-        <p class="quote-text" id="quote-text">Loading inspiration</p>
+        <p class="quote-text" id="quote-text" data-i18n="quote_loading">Loading inspiration</p>
         <p class="quote-author" id="quote-author"></p>
 
         <div class="quote-controls">
@@ -157,7 +156,7 @@
 
   <section id="upcoming-classes-container" class="features visible">
     <div class="card glass" style="grid-column: 1/-1; text-align: center;">
-      <p>Checking for live sessions...</p>
+      <p data-i18n="schedule_checking">Checking for live sessions...</p>
     </div>
   </section>
 
@@ -183,7 +182,7 @@
       Savollar uchun👇: <br>
       
       <a href="https://t.me/abdumalik_prodev" target="_blank" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
-      <a href="/clubs/prodev/Abdumalik/index.html">View Club</a>
+      <a href="/clubs/prodev/Abdumalik/index.html" data-i18n="card_view">View Club</a>
     </div>
   </section>
 
@@ -254,6 +253,7 @@
       </div>
     </div>
   </section>
+
   <footer class="edu-footer" aria-label="Footer">
     <div class="edu-footer-wrap">
       <div class="edu-footer-grid">
@@ -329,12 +329,12 @@
 
       <div class="edu-footer-bottom">
         <div class="edu-footer-rule" aria-hidden="true"></div>
-        <p class="edu-footer-copy">© <span id="footer-year"></span> Tengdosh Ustoz &middot; All rights reserved.</p>
+        <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
       </div>
     </div>
   </footer>
   </div>
-
+  
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -821,7 +821,7 @@
         const { text, author } = parseQuote(raw);
         const full = `"${text}"${author ? "  " + author : ""}`;
         navigator.clipboard.writeText(full)
-          .then(() => showToast('✅ Copied to clipboard'))
+          .then(() => showToast(window.TU_i18n ? "✅ " + window.TU_i18n.t("quote_copied") : "✅ Copied to clipboard"))
           .catch(() => showToast('Could not copy'));
       });
 
@@ -833,7 +833,7 @@
           navigator.share({ title: 'Inspirational Quote', text: full }).catch(() => {});
         } else {
           navigator.clipboard.writeText(full)
-            .then(() => showToast('✅ Copied to clipboard'))
+            .then(() => showToast(window.TU_i18n ? "✅ " + window.TU_i18n.t("quote_copied") : "✅ Copied to clipboard"))
             .catch(() => showToast('Could not copy'));
         }
       });
