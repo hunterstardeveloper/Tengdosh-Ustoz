@@ -86,7 +86,7 @@ body.nav-open { overflow: hidden; }
     }
 
     .edu-footer-wrap {
-      width: min(1350px, 100%);
+      width: min(1250px, 90%);
       margin: 0 auto;
     }
 
