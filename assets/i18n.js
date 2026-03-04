@@ -120,6 +120,7 @@
       opp_tests_desc: "Short and interesting tests to consolidate your knowledge.",
       opp_growth_title: "Growth",
       opp_growth_desc: "Increase your rating and build a foundation for your future career.",
+      nav_mentors:"Mentors",
     },
     uz: {
       nav_home: "Bosh sahifa",
@@ -235,6 +236,7 @@
       opp_tests_desc: "Bilimingizni mustahkamlash uchun qisqa va qiziqarli testlar.",
       opp_growth_title: "O'sish",
       opp_growth_desc: "Reytingingizni oshiring va kelajakdagi karyerangiz uchun poydevor quring.",
+      nav_mentors:"Mentorlar",
     },
     ru: {
       nav_home: "\u0413\u043b\u0430\u0432\u043d\u0430\u044f",
@@ -349,6 +351,7 @@
       opp_tests_title: "Тесты",
       opp_tests_desc: "Короткие и интересные тесты для закрепления ваших знаний.",
       opp_growth_title: "Рост",
+      nav_mentors:"Менторы",
       opp_growth_desc: "Повышайте свой рейтинг и закладывайте фундамент для будущей карьеры.",
     }
   };

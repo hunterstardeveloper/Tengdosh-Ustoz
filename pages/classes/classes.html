@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tengdosh-Ustoz | Barcha Darslar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/icon.png">
+  <link rel="stylesheet" href="/pages/classes/classes.css">
+</head>
+
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <div class="page-scroll" id="page-scroll">
+
+    <nav class="navbar" id="main-navbar">
+      <a href="/home.html" class="navbar-brand">
+        <div class="navbar-brand-logo"><img src="/logo.png" alt="logo"></div>
+        <span class="navbar-wordmark"><span class="w1">Tengdosh</span><span class="w2">Ustoz</span></span>
+      </a>
+      <ul class="navbar-links" id="navbar-links" role="list">
+        <li>
+          <a href="/home.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span data-i18n="nav_home">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/classes/classes.html" class="active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span data-i18n="nav_mentors">Mentors</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/contact/contact.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span data-i18n="nav_contact">Contact us</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/account/account.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span data-i18n="nav_account">Account</span>
+          </a>
+        </li>
+      </ul>
+      <div class="navbar-right">
+        <a href="/pages/account/account.html" class="navbar-avatar" id="navbar-avatar" aria-label="Account">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <button id="theme-toggle" aria-label="Toggle Dark Mode">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navbar-links">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <section class="classes-hero">
+      <span class="pill">
+        <svg style="width:14px;height:14px;margin-right:7px;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Barcha Darslar
+      </span>
+      <h1>O'qituvchilar va<br>Ularning Darslari</h1>
+      <p>Platformadagi barcha ustozlarning yuklangan darslari va dars jadvallari.</p>
+    </section>
+
+    <div class="search-wrap">
+      <div class="search-wrap-inner">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input id="search-input" class="search-input" type="search"
+          placeholder="Ustoz ismi yoki fan bo'yicha qidiring..."
+          aria-label="Search classes" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter by club">
+      <button class="filter-chip active" data-club="all">Hammasi</button>
+      <button class="filter-chip" data-club="full-stack">Full-Stack</button>
+      <button class="filter-chip" data-club="py">Python</button>
+      <button class="filter-chip" data-club="java">Java</button>
+      <button class="filter-chip" data-club="c++">C++</button>
+      <button class="filter-chip" data-club="english">Ingliz tili</button>
+      <button class="filter-chip" data-club="SI">Self Improvement</button>
+      <button class="filter-chip" data-club="mathematics">Matematika</button>
+      <button class="filter-chip" data-club="prodev">ProDev</button>
+    </div>
+
+    <p class="results-count" id="results-count" aria-live="polite"></p>
+
+    <main class="classes-grid" id="classes-grid" aria-label="Classes list">
+      <div class="tc glass tc-skeleton" aria-hidden="true">
+        <div class="tc-header">
+          <div class="skel skel-circle"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div class="skel skel-line" style="width:58%"></div>
+            <div class="skel skel-line" style="width:38%;height:11px"></div>
+          </div>
+        </div>
+        <div class="tc-divider"></div>
+        <div class="skel skel-line" style="width:72%"></div>
+        <div style="display:flex;gap:6px;margin:10px 0">
+          <div class="skel skel-line" style="width:55px;height:21px"></div>
+          <div class="skel skel-line" style="width:48px;height:21px"></div>
+        </div>
+        <div class="skel skel-box"></div>
+        <div class="skel skel-btn"></div>
+      </div>
+      <div class="tc glass tc-skeleton" aria-hidden="true">
+        <div class="tc-header">
+          <div class="skel skel-circle"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div class="skel skel-line" style="width:50%"></div>
+            <div class="skel skel-line" style="width:32%;height:11px"></div>
+          </div>
+        </div>
+        <div class="tc-divider"></div>
+        <div class="skel skel-line" style="width:78%"></div>
+        <div style="display:flex;gap:6px;margin:10px 0">
+          <div class="skel skel-line" style="width:60px;height:21px"></div>
+          <div class="skel skel-line" style="width:65px;height:21px"></div>
+        </div>
+        <div class="skel skel-box"></div>
+        <div class="skel skel-btn"></div>
+      </div>
+      <div class="tc glass tc-skeleton" aria-hidden="true">
+        <div class="tc-header">
+          <div class="skel skel-circle"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div class="skel skel-line" style="width:64%"></div>
+            <div class="skel skel-line" style="width:40%;height:11px"></div>
+          </div>
+        </div>
+        <div class="tc-divider"></div>
+        <div class="skel skel-line" style="width:65%"></div>
+        <div style="display:flex;gap:6px;margin:10px 0">
+          <div class="skel skel-line" style="width:50px;height:21px"></div>
+          <div class="skel skel-line" style="width:72px;height:21px"></div>
+        </div>
+        <div class="skel skel-box"></div>
+        <div class="skel skel-btn"></div>
+      </div>
+      <div class="tc glass tc-skeleton" aria-hidden="true">
+        <div class="tc-header">
+          <div class="skel skel-circle"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div class="skel skel-line" style="width:45%"></div>
+            <div class="skel skel-line" style="width:28%;height:11px"></div>
+          </div>
+        </div>
+        <div class="tc-divider"></div>
+        <div class="skel skel-line" style="width:80%"></div>
+        <div style="display:flex;gap:6px;margin:10px 0">
+          <div class="skel skel-line" style="width:68px;height:21px"></div>
+          <div class="skel skel-line" style="width:55px;height:21px"></div>
+        </div>
+        <div class="skel skel-box"></div>
+        <div class="skel skel-btn"></div>
+      </div>
+    </main>
+
+    <footer class="edu-footer" aria-label="Footer">
+      <div class="edu-footer-wrap">
+        <div class="edu-footer-grid">
+          <div class="edu-footer-brand">
+            <div class="edu-footer-brandline">
+              <span class="edu-footer-cap" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10 12 5 2 10l10 5 10-5Z"/>
+                  <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                </svg>
+              </span>
+              <div class="edu-footer-title">TENGDOSH<span> USTOZ</span></div>
+            </div>
+            <p class="edu-footer-desc" data-i18n="footer_desc">
+              Connecting students with peer teachers across Uzbekistan — a community-driven
+              platform for shared knowledge, growth, and academic excellence since 2026.
+            </p>
+          </div>
+          <div class="edu-footer-col">
+            <h4 class="edu-footer-h" data-i18n="footer_contact">Contact Us</h4>
+            <div class="edu-contact">
+              <div class="edu-contact-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.86.3 1.7.54 2.5a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.58-1.06a2 2 0 0 1 2.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div class="edu-contact-text">
+                <div class="edu-contact-label" data-i18n="footer_support_label">STUDENT SUPPORT</div>
+                <div class="edu-contact-value">+998 90 855 75 85</div>
+              </div>
+            </div>
+            <div class="edu-contact">
+              <div class="edu-contact-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2Z"/>
+                </svg>
+              </div>
+              <div class="edu-contact-text">
+                <div class="edu-contact-label" data-i18n="footer_telegram_label">TELEGRAM</div>
+                <p><a href="https://t.me/Hunters1ar" target="_blank" class="edu-contact-value">@Hunters1ar</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="edu-footer-col">
+            <h4 class="edu-footer-h" data-i18n="footer_support">Support</h4>
+            <ul class="edu-footer-list">
+              <li><span class="chev"></span><a href="https://t.me/akhmadjonova_8" target="_blank" data-i18n="footer_assistant">Assistant</a></li>
+              <li><span class="chev"></span><a href="https://t.me/zimiDev" target="_blank" data-i18n="footer_dev1">Support Developer 1</a></li>
+              <li><span class="chev"></span><a href="https://t.me/Reality_ae" target="_blank" data-i18n="footer_dev2">Support Developer 2</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="edu-footer-bottom">
+          <div class="edu-footer-rule" aria-hidden="true"></div>
+          <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz · All rights reserved.</span></p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="/assets/firebase-config.js"></script>
+  <script src="/assets/tu-firebase.js"></script>
+  <script src="/assets/i18n.js"></script>
+
+  <script>
+  (function () {
+    const nav = document.getElementById('main-navbar');
+    const ham = document.getElementById('navbar-hamburger');
+    const links = document.getElementById('navbar-links');
+    if (!nav || !links) return;
+    const isMobile = () => window.matchMedia('(max-width:700px)').matches;
+    function setOpen(open) {
+      links.classList.toggle('open', open);
+      ham?.classList.toggle('open', open);
+      ham?.setAttribute('aria-expanded', String(open));
+      document.body.classList.toggle('nav-open', open && isMobile());
+    }
+    const scrollEl = document.getElementById('page-scroll') || window;
+    scrollEl.addEventListener('scroll', () =>
+      nav.classList.toggle('navbar--scrolled', (scrollEl.scrollTop || window.scrollY) > 40),
+      { passive: true });
+    ham?.addEventListener('click', e => { e.stopPropagation(); setOpen(!links.classList.contains('open')); });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('click', e => { if (!isMobile() || !links.classList.contains('open') || nav.contains(e.target)) return; setOpen(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+    window.addEventListener('resize', () => { if (!isMobile()) setOpen(false); });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    const btn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-icon');
+    const html = document.documentElement;
+    const moon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    const sun = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') { html.removeAttribute('data-theme'); if (icon) icon.innerHTML = moon; }
+    else { html.setAttribute('data-theme', 'dark'); if (icon) icon.innerHTML = sun; }
+    btn?.addEventListener('click', () => {
+      const dark = html.getAttribute('data-theme') === 'dark';
+      if (dark) { html.removeAttribute('data-theme'); if (icon) icon.innerHTML = moon; localStorage.setItem('theme', 'light'); }
+      else { html.setAttribute('data-theme', 'dark'); if (icon) icon.innerHTML = sun; localStorage.setItem('theme', 'dark'); }
+    });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    const setOut = () => {
+      const el = document.getElementById('navbar-avatar');
+      if (el) el.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+    };
+    const setIn = (u, doc) => {
+      const el = document.getElementById('navbar-avatar');
+      if (!el) return;
+      const url = (doc && (doc.avatarURL || doc.photoURL)) || u.photoURL || '';
+      const name = (u.displayName || doc?.displayName || u.email || '').trim();
+      if (url) {
+        const src = String(url).startsWith('http') ? url : `/${String(url).replace(/^\/+/, '')}`;
+        el.innerHTML = `<img src="${src}" alt="Avatar" referrerpolicy="no-referrer">`;
+      } else el.textContent = (name ? name[0] : '').toUpperCase();
+    };
+    document.addEventListener('tu-auth-changed', async ev => {
+      const u = ev?.detail?.user;
+      if (!u) return setOut();
+      try { const s = await firebase.database().ref(`users/${u.uid}`).once('value'); setIn(u, s.val()); }
+      catch { setIn(u, null); }
+    });
+    setOut();
+  })();
+  </script>
+
+  <script>
+    const _fy = document.getElementById('footer-year');
+    if (_fy) _fy.textContent = new Date().getFullYear();
+  </script>
+
+  <script>
+  'use strict';
+  (function () {
+
+    const CLUB_META = {
+      'full-stack':  { label: 'Full-Stack Dasturlash', tags: ['React', 'Node.js', 'PostgreSQL'], accent: '#6366f1' },
+      'py':          { label: 'Python Dasturlash',     tags: ['Python', 'Django', 'Data'],       accent: '#22c55e' },
+      'java':        { label: 'Java Dasturlash',        tags: ['Java', 'Spring', 'OOP'],          accent: '#f59e0b' },
+      'english':     { label: "Ingliz tili",            tags: ['Grammar', 'Speaking', 'Writing'], accent: '#3b82f6' },
+      'SI':          { label: 'Self Improvement',       tags: ['Mindset', 'Habits', 'Growth'],    accent: '#a855f7' },
+      'c++':         { label: 'C++ Dasturlash',         tags: ['C++', 'STL', 'Algorithms'],       accent: '#06b6d4' },
+      'mathematics': { label: 'Matematika',             tags: ['Algebra', 'Calculus', 'Proofs'],  accent: '#ef4444' },
+      'prodev':      { label: 'ProDev Master Course',   tags: ['Architecture', 'Docker', 'AI'],   accent: '#f97316' },
+    };
+
+    function initials(name) {
+      if (!name) return '?';
+      const clean = name.replace(/-[^-]+$/, '').trim();
+      const parts = clean.split(/[\s-]+/).filter(Boolean);
+      return (parts.length >= 2 ? parts[0][0] + parts[1][0] : clean.slice(0, 2)).toUpperCase();
+    }
+
+function fmt12h(t) {
+      if (!t || !String(t).includes(':')) return t || '';
+      const [h, m] = String(t).split(':').map(Number);
+      return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+    }
+
+    function fmtDate(d) {
+      if (!d) return '';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+        const [y, mo, day] = d.split('-');
+        return `${day}.${mo}.${y}`;
+      }
+      return d;
+    }
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function buildCard(teacherKey, classData, profile, moduleCount) {
+      const club    = classData?.club || '';
+      const meta    = CLUB_META[club] || { label: club || 'Educational Club', tags: [], accent: '#7c8cff' };
+      const isOnline = Boolean(classData?.hasClass);
+      const room    = classData?.room || '';
+      const date    = classData?.date || '';
+      const time    = classData?.time || '';
+      const photoURL = profile?.photoURL || profile?.avatarURL || '';
+
+      const avatarHTML = photoURL
+        ? `<img src="${esc(photoURL)}" alt="${esc(teacherKey)}" loading="lazy"
+               onerror="this.remove(); this.parentElement.textContent='${esc(initials(teacherKey))}';">`
+        : esc(initials(teacherKey));
+
+      const tagsHTML = meta.tags.map(t => `<span class="tc-tag">${esc(t)}</span>`).join('');
+
+      const uploadsHTML = moduleCount > 0
+        ? `<div class="tc-uploads" aria-label="${moduleCount} ta dars yuklangan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span><strong>${moduleCount}</strong> ta dars yuklangan</span>
+          </div>`
+        : `<div class="tc-uploads" style="opacity:.5" aria-label="Hali dars yuklanmagan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>Hali dars yuklanmagan</span>
+          </div>`;
+
+      const hasRoom = room && room !== '?';
+      const hasTime = date && time;
+      let classinfoHTML = '';
+      if (hasRoom || hasTime) {
+        classinfoHTML = `<div class="tc-classinfo">`;
+        if (hasRoom) classinfoHTML += `
+          <div class="tc-classinfo-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Xona: ${esc(room)}
+          </div>`;
+        if (hasTime) classinfoHTML += `
+          <div class="tc-classinfo-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${esc(fmtDate(date))} · ${esc(fmt12h(time))}
+          </div>`;
+        classinfoHTML += `</div>`;
+      }
+
+      const href = `/clubs/${encodeURIComponent(club || 'SI')}/${encodeURIComponent(teacherKey)}/online.html`;
+
+      return `
+        <article class="tc glass"
+          style="--tc-accent:${esc(meta.accent)}"
+          data-club="${esc(club)}"
+          data-teacher="${esc(teacherKey.toLowerCase())}"
+          data-subject="${esc(meta.label.toLowerCase())}"
+          aria-label="${esc(teacherKey)} darslari">
+
+          <div class="tc-header">
+            <div class="tc-avatar" aria-hidden="true">${avatarHTML}</div>
+            <div class="tc-nameblock">
+              <div class="tc-name">${esc(teacherKey)}</div>
+
+            </div>
+            <div class="tc-badge ${isOnline ? 'online' : 'offline'}">
+              <span class="tc-badge-dot" aria-hidden="true"></span>
+              ${isOnline ? 'Onlayn' : 'Oflayn'}
+            </div>
+          </div>
+
+          <div class="tc-divider"></div>
+
+          <div class="tc-subject">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            ${esc(meta.label)}
+          </div>
+
+          <div class="tc-tags">${tagsHTML}</div>
+
+          ${uploadsHTML}
+          ${classinfoHTML}
+
+          <a href="${esc(href)}" class="tc-btn">Batafsil ko'rish</a>
+        </article>`;
+    }
+
+    const grid    = document.getElementById('classes-grid');
+    const countEl = document.getElementById('results-count');
+    const search  = document.getElementById('search-input');
+    const filterBar = document.getElementById('filter-bar');
+
+    let allCards   = [];
+    let activeClub = 'all';
+    let searchQ    = '';
+
+    function applyFilters() {
+      const q = searchQ.toLowerCase().trim();
+      const visible = allCards.filter(c => {
+        const clubOk   = activeClub === 'all' || c.classData?.club === activeClub;
+        const searchOk = !q
+          || c.teacherKey.toLowerCase().includes(q)
+          || (c.classData?.club || '').toLowerCase().includes(q)
+          || ((CLUB_META[c.classData?.club]?.label || '').toLowerCase().includes(q));
+        return clubOk && searchOk;
+      });
+
+      if (visible.length === 0) {
+        grid.innerHTML = `
+          <div class="state-screen" role="status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <h3>Hech narsa topilmadi</h3>
+            <p>Boshqa kalit so'z yoki kategoriyani sinab ko'ring.</p>
+          </div>`;
+        countEl.textContent = '';
+        return;
+      }
+
+      grid.innerHTML = visible.map(c => c.html).join('');
+      countEl.textContent = `${visible.length} ta ustoz`;
+
+      requestAnimationFrame(() => {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add('revealed'), i * 50);
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.07 });
+        grid.querySelectorAll('.tc').forEach(el => io.observe(el));
+      });
+    }
+
+    let _teachers    = null;  
+    let _profileMap  = {};    
+    let _moduleCounts = {};   
+
+    function rebuild() {
+      if (!_teachers) return;
+      allCards = Object.entries(_teachers)
+        .filter(([, v]) => v?.classData)
+        .map(([key, v]) => ({
+          teacherKey: key,
+          classData:  v.classData,
+          html: buildCard(key, v.classData, _profileMap[key] || null, _moduleCounts[key] || 0),
+        }))
+        .sort((a, b) => {
+          const diff = (b.classData?.hasClass ? 1 : 0) - (a.classData?.hasClass ? 1 : 0);
+          if (diff) return diff;
+          const mDiff = (_moduleCounts[b.teacherKey] || 0) - (_moduleCounts[a.teacherKey] || 0);
+          if (mDiff) return mDiff;
+          return a.teacherKey.localeCompare(b.teacherKey);
+        });
+      applyFilters();
+    }
+
+    function parseOnlineSnap(snap) {
+      _moduleCounts = {};
+      const online = snap.val() || {};
+      Object.values(online).forEach(clubNode => {
+        if (!clubNode || typeof clubNode !== 'object') return;
+        Object.entries(clubNode).forEach(([tKey, tNode]) => {
+          const mods = tNode?.modules;
+          if (!mods || typeof mods !== 'object') return;
+          const count = Object.values(mods).filter(Boolean).length;
+          _moduleCounts[tKey] = (_moduleCounts[tKey] || 0) + count;
+        });
+      });
+    }
+
+    function init() {
+      if (typeof TU === 'undefined' || !TU.init) {
+        showFatal('Firebase moduli topilmadi.');
+        return;
+      }
+      TU.init();
+      const db = TU.db;
+      if (!db) { showFatal('Firebase ulanishi muvaffaqiyatsiz.'); return; }
+
+      db.ref('users').once('value')
+        .then(snap => {
+          _profileMap = {};
+          const users = snap.val() || {};
+          Object.values(users).forEach(u => {
+            if (u?.teacherId && u?.role === 'teacher') {
+              _profileMap[u.teacherId] = u;
+            }
+          });
+        })
+        .catch(e => console.warn('[classes] profiles:', e.message));
+
+      db.ref('teachers').on('value', snap => {
+        const data = snap.val();
+        if (!data) {
+          allCards = [];
+          grid.innerHTML = `
+            <div class="state-screen" role="status">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <h3>Hozircha darslar yo'q</h3>
+              <p>Tez orada yangi darslar qo'shiladi.</p>
+            </div>`;
+          countEl.textContent = '';
+          return;
+        }
+        _teachers = data;
+        rebuild();
+      }, err => {
+        console.error('[classes] teachers:', err);
+        grid.innerHTML = `
+          <div class="state-screen" role="alert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <h3>Xatolik yuz berdi</h3>
+            <p>Sahifani qayta yuklang.</p>
+          </div>`;
+      });
+
+      db.ref('online').on('value', snap => {
+        parseOnlineSnap(snap);
+        rebuild();  
+      }, e => console.warn('[classes] online:', e.message));
+    }
+
+    function showFatal(msg) {
+      if (grid) grid.innerHTML = `<div class="state-screen" role="alert"><h3>${esc(msg)}</h3></div>`;
+    }
+
+    filterBar?.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterBar.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeClub = chip.dataset.club;
+        applyFilters();
+      });
+    });
+
+    let searchTimer;
+    search?.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { searchQ = search.value; applyFilters(); }, 250);
+    });
+
+    init();
+  })();
+  </script>
+
+</body>
+</html>
