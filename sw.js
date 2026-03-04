@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v12.1.1";
+const CACHE_VERSION = "tengdosh-v15.1.3"; 
 const CACHE_NAME = `tengdosh-cache-${CACHE_VERSION}`;
 
 const SCOPE = self.registration ? self.registration.scope : (self.location.origin + "/");
@@ -21,8 +21,7 @@ const ASSETS = uniq([
   u("assets/techers-sec.css"),
   u("assets/base64.js"),
   u("assets/techers-sec.js"),
-  u("Elements/icon.png"),
-  u("Elements/icon light.png"),
+  u("icon.png"),
   u("clubs/english/teachers-sec-eng.html"),
   u("clubs/full-stack/teachers-sec-FS.html"),
   u("clubs/java/teachers-sec-Json.html"),
@@ -42,8 +41,23 @@ function isFirebaseApi(url) {
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
+  
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const asset of ASSETS) {
+        try {
+          const request = new Request(asset, { cache: 'reload' }); 
+          const response = await fetch(request);
+          if (response.ok) {
+            await cache.put(request, response);
+          } else {
+            console.warn(`[Service Worker] Skipping missing file: ${asset} (Status: ${response.status})`);
+          }
+        } catch (error) {
+          console.warn(`[Service Worker] Failed to fetch ${asset}:`, error);
+        }
+      }
+    })
   );
 });
 
@@ -69,7 +83,6 @@ self.addEventListener("fetch", (event) => {
 
   if (isFirebaseApi(url)) return;
 
-  // FIXED: Directly forward the request without cloning to prevent timeout drops
   if (url.pathname.endsWith("/ping.txt")) {
     event.respondWith(
       fetch(req).catch(() => new Response("", { status: 503 }))
