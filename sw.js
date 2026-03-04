@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v10.1.1";
+const CACHE_VERSION = "tengdosh-v12.1.1";
 const CACHE_NAME = `tengdosh-cache-${CACHE_VERSION}`;
 
 const SCOPE = self.registration ? self.registration.scope : (self.location.origin + "/");
@@ -34,49 +34,30 @@ function isFirebaseApi(url) {
   const h = url.hostname;
   return (
     h.includes("firebaseio.com") ||
-    h.includes("firebasedatabase.app") ||
-    (h.includes("googleapis.com") &&
-      (url.pathname.includes("identitytoolkit") ||
-        url.pathname.includes("securetoken") ||
-        url.pathname.includes("/firebaseinstallations/")))
+    h.includes("firestore.googleapis.com") ||
+    h.includes("identitytoolkit.googleapis.com") ||
+    h.includes("securetoken.googleapis.com")
   );
 }
 
-async function addAllSafe(cache, urls) {
-  for (const url of urls) {
-    try {
-      const res = await fetch(new Request(url, { cache: "reload" }));
-      if (res && res.ok) await cache.put(url, res.clone());
-    } catch (err) {
-    }
-  }
-}
-
-self.addEventListener("install", (e) => {
-  e.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      await addAllSafe(cache, ASSETS);
-
-      try {
-        const res = await fetch(new Request(OFFLINE_FALLBACK, { cache: "reload" }));
-        if (res && res.ok) await cache.put(OFFLINE_FALLBACK, res.clone());
-      } catch (_) {}
-
-      self.skipWaiting();
-    })()
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
 });
 
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    (async () => {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map((n) => (n !== CACHE_NAME ? caches.delete(n) : undefined))
-      );
-      await self.clients.claim();
-    })()
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    self.clients.claim().then(() =>
+      caches.keys().then((keys) =>
+        Promise.all(
+          keys.map((key) => {
+            if (key !== CACHE_NAME) return caches.delete(key);
+          })
+        )
+      )
+    )
   );
 });
 
@@ -84,22 +65,14 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
 
-  let url;
-  try {
-    url = new URL(req.url);
-  } catch (e) {
-    
-    
-    event.respondWith(fetch(req));
-    return;
-  }
+  const url = new URL(req.url);
 
   if (isFirebaseApi(url)) return;
 
+  // FIXED: Directly forward the request without cloning to prevent timeout drops
   if (url.pathname.endsWith("/ping.txt")) {
     event.respondWith(
-      fetch(new Request(req, { cache: "no-store" }))
-        .catch(() => new Response("", { status: 503 }))
+      fetch(req).catch(() => new Response("", { status: 503 }))
     );
     return;
   }
@@ -120,8 +93,7 @@ self.addEventListener("fetch", (event) => {
         if (networkRes && networkRes.status === 200) {
           const copy = networkRes.clone();
           event.waitUntil(
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {}
-            )
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {})
           );
         }
         return networkRes;
@@ -141,12 +113,4 @@ self.addEventListener("fetch", (event) => {
         });
       })
   );
-});
-
-self.addEventListener("message", (event) => {
-  const data = event.data;
-  if (!data) return;
-  if (data.action === "skipWaiting" || data.type === "SKIP_WAITING" || data === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
 });

@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reset Password • Tengdosh Ustoz</title>
+  <title>Reset Password â€¢ Tengdosh Ustoz</title>
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -152,7 +152,7 @@
       <button id="btn">Send reset email</button>
 
       <div class="row">
-        <a href="/auth/login.html">← Back to sign in</a>
+        <a href="/auth/login.html">â† Back to sign in</a>
       </div>
 
     </div>
@@ -198,7 +198,7 @@
         if (!email) throw new Error('Enter your email');
         if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error('Enter a valid email');
         await TU.auth.sendPasswordResetEmail(email);
-        setMsg('Reset email sent — check your inbox (and spam).', true);
+        setMsg('Reset email sent â€” check your inbox (and spam).', true);
       } catch (e) {
         setMsg(e?.message || 'Failed to send reset email', false);
       } finally {
@@ -213,5 +213,9 @@
   </script>
 
   <script src="/assets/UI.js"></script>
+	<script src="/sw.js"></script>
+	<script src="/script-internet-checker.js"></script>
 </body>
 </html>
+
+

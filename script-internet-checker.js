@@ -2,7 +2,7 @@
   "use strict";
 
   const PING_URL = "/ping.txt";
-  const PING_TIMEOUT_MS = 3000;
+  const PING_TIMEOUT_MS = 5000;
   const CHECK_INTERVAL_MS = 5000;
 
       const animations = [
@@ -236,11 +236,19 @@ body.eduventure-offline-lock {
 
         clearTimeout(timeoutId);
 
-        if (res && res.status === 503) setOffline(true);
-        else setOffline(false);
+        if (res && res.ok) {
+          const text = await res.text();
+          if (text.trim() === "ok") {
+            setOffline(false);
+          } else {
+            setOffline(true);
+          }
+        } else {
+          setOffline(true);
+        }
       } catch (_) {
         clearTimeout(timeoutId);
-        setOffline(true);
+        setOffline(true); 
       }
     } finally {
       __checkInFlight = false;

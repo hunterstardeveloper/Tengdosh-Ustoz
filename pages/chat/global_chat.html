@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -89,7 +89,7 @@
           </div>
           <div class="chat-status">
             <span class="status-dot" id="statusDot"></span>
-            <span id="statusText" data-i18n="chat_connecting">Connecting…</span>
+            <span id="statusText" data-i18n="chat_connecting">Connectingâ€¦</span>
             <span class="user-badge" id="userBadge"></span>
           </div>
         </div>
@@ -98,7 +98,7 @@
           <div class="empty-state" id="emptyState">
             <div class="loading-spinner"></div>
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <p data-i18n="chat_empty">Connecting to the global community…</p>
+            <p data-i18n="chat_empty">Connecting to the global communityâ€¦</p>
           </div>
         </div>
 
@@ -118,7 +118,7 @@
                 class="chat-input"
                 id="chatInput"
                 data-i18n-ph="chat_placeholder"
-                placeholder="Write a message…"
+                placeholder="Write a messageâ€¦"
                 maxlength="500"
                 rows="1"
               ></textarea>
@@ -155,5 +155,6 @@
   <script src="/assets/i18n.js"></script> 
   <script src="/pages/chat/global-chat.js"></script>
 
+	<script src="/sw.js"></script>
 </body>
 </html>
