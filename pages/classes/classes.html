@@ -9,7 +9,234 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" href="/icon.png">
-  <link rel="stylesheet" href="/pages/classes/classes.css">
+
+  <style>
+    .classes-hero {
+      padding: 52px 20px 28px;
+      text-align: center;
+    }
+    .classes-hero h1 {
+      font-size: clamp(28px, 6vw, 52px);
+      line-height: 1.15;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .classes-hero p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto 28px;
+    }
+
+    .search-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 24px;
+    }
+    .search-wrap-inner {
+      position: relative;
+      width: min(460px, 100%);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 11px 20px 11px 42px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--btn-bg);
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 0 20px 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .filter-chip {
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--btn-bg);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px var(--glow);
+    }
+
+    .results-count {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 18px;
+      min-height: 20px;
+    }
+
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(274px, 1fr));
+      gap: 20px;
+      max-width: 1180px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+
+    .tc {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--card-bg), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: transform 0.26s, box-shadow 0.26s, opacity 0.3s;
+    }
+    .tc.revealed { opacity: 1; transform: translateY(0); }
+    .tc:hover { transform: translateY(-7px); box-shadow: 0 14px 36px var(--glow); }
+
+    .tc::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--tc-accent, var(--primary));
+      border-radius: 18px 18px 0 0;
+    }
+
+    .tc-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .tc-avatar {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--pill-bg);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: var(--primary);
+      flex-shrink: 0; overflow: hidden;
+    }
+    .tc-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .tc-nameblock { flex: 1; min-width: 0; }
+    .tc-name {
+      font-weight: 700; font-size: 15px; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .tc-badge {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 999px;
+      display: flex; align-items: center; gap: 5px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .tc-badge.active   { background: rgba(34,197,94,.13); color: #22c55e; border: 1px solid rgba(34,197,94,.25); }
+    .tc-badge.inactive { background: rgba(156,163,175,.1); color: var(--muted); border: 1px solid var(--border); }
+    .tc-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    .tc-divider { height: 1px; background: var(--border); margin-bottom: 14px; }
+
+    .tc-subject {
+      display: flex; align-items: center; gap: 7px;
+      font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 12px;
+    }
+    .tc-subject svg { width: 15px; height: 15px; color: var(--primary); flex-shrink: 0; }
+
+    .tc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tc-tag {
+      font-size: 11.5px; font-weight: 600; padding: 3px 9px;
+      border-radius: 6px; background: var(--pill-bg);
+      color: var(--primary); border: 1px solid var(--border);
+    }
+
+    .tc-uploads {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12.5px; color: var(--muted);
+      margin-bottom: 12px; padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--btn-bg); border: 1px solid var(--border);
+    }
+    .tc-uploads svg { width: 13px; height: 13px; color: var(--primary); flex-shrink: 0; }
+    .tc-uploads strong { color: var(--text); }
+
+    .tc-classinfo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+    .tc-classinfo-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .tc-classinfo-row svg { width: 12px; height: 12px; color: var(--primary); flex-shrink: 0; }
+
+    .tc-btn {
+      margin-top: auto; padding: 11px 16px;
+      border-radius: 10px; background: var(--btn-bg);
+      border: 1px solid var(--border); color: var(--text);
+      font-size: 13.5px; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer; text-align: center; text-decoration: none;
+      display: block;
+      transition: background .2s, box-shadow .2s, border-color .2s, color .2s;
+    }
+    .tc-btn:hover {
+      background: var(--primary); color: #fff;
+      border-color: var(--primary); box-shadow: 0 8px 20px var(--glow);
+    }
+
+    .state-screen {
+      grid-column: 1/-1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 64px 20px; text-align: center; gap: 12px; color: var(--muted);
+    }
+    .state-screen svg { width: 44px; height: 44px; opacity: .45; }
+    .state-screen h3 { font-size: 17px; color: var(--text); font-weight: 700; }
+    .state-screen p  { font-size: 13.5px; max-width: 320px; }
+
+    .tc-skeleton { opacity: 1 !important; transform: none !important; pointer-events: none; }
+    .skel {
+      background: linear-gradient(90deg, var(--border) 25%, rgba(255,255,255,.07) 50%, var(--border) 75%);
+      background-size: 400% 100%; animation: shimmer 1.5s infinite; border-radius: 8px;
+    }
+    @keyframes shimmer { 0%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .skel-circle { width: 50px; height: 50px; border-radius: 50%; }
+    .skel-line   { height: 13px; margin-bottom: 8px; }
+    .skel-box    { height: 36px; border-radius: 8px; margin-bottom: 12px; }
+    .skel-btn    { height: 42px; border-radius: 10px; }
+
+    @media (max-width: 600px) { .classes-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 
 <body>
@@ -37,7 +264,7 @@
         <li>
           <a href="/pages/classes/classes.html" class="active" aria-current="page">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            <span data-i18n="nav_mentors">Mentors</span>
+            <span data-i18n="nav_classes">Darslar</span>
           </a>
         </li>
         <li>
@@ -71,10 +298,10 @@
     <section class="classes-hero">
       <span class="pill">
         <svg style="width:14px;height:14px;margin-right:7px;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Barcha Darslar
+        <span data-i18n="classes_pill">Barcha Darslar</span>
       </span>
-      <h1>O'qituvchilar va<br>Ularning Darslari</h1>
-      <p>Platformadagi barcha ustozlarning yuklangan darslari va dars jadvallari.</p>
+      <h1 data-i18n="classes_title">O'qituvchilar va<br>Ularning Darslari</h1>
+      <p data-i18n="classes_desc">Platformadagi barcha ustozlarning yuklangan darslari va dars jadvallari.</p>
     </section>
 
     <div class="search-wrap">
@@ -84,12 +311,13 @@
         </svg>
         <input id="search-input" class="search-input" type="search"
           placeholder="Ustoz ismi yoki fan bo'yicha qidiring..."
+          data-i18n-ph="classes_search_ph"
           aria-label="Search classes" autocomplete="off">
       </div>
     </div>
 
     <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter by club">
-      <button class="filter-chip active" data-club="all">Hammasi</button>
+      <button class="filter-chip active" data-club="all" data-i18n="classes_filter_all">Hammasi</button>
       <button class="filter-chip" data-club="full-stack">Full-Stack</button>
       <button class="filter-chip" data-club="py">Python</button>
       <button class="filter-chip" data-club="java">Java</button>
@@ -321,8 +549,8 @@
 
     const CLUB_META = {
       'full-stack':  { label: 'Full-Stack Dasturlash', tags: ['React', 'Node.js', 'PostgreSQL'], accent: '#6366f1' },
-      'py':          { label: 'Python Dasturlash',     tags: ['Python', 'Django', 'Data'],       accent: '#22c55e' },
-      'java':        { label: 'Java Dasturlash',        tags: ['Java', 'Spring', 'OOP'],          accent: '#f59e0b' },
+      'py':          { label: 'Python Dasturlash',    tags: ['Python', 'Django', 'Data'],      accent: '#22c55e' },
+      'java':        { label: 'Java Dasturlash',      tags: ['Java', 'Spring', 'OOP'],          accent: '#f59e0b' },
       'english':     { label: "Ingliz tili",            tags: ['Grammar', 'Speaking', 'Writing'], accent: '#3b82f6' },
       'SI':          { label: 'Self Improvement',       tags: ['Mindset', 'Habits', 'Growth'],    accent: '#a855f7' },
       'c++':         { label: 'C++ Dasturlash',         tags: ['C++', 'STL', 'Algorithms'],       accent: '#06b6d4' },
@@ -337,7 +565,7 @@
       return (parts.length >= 2 ? parts[0][0] + parts[1][0] : clean.slice(0, 2)).toUpperCase();
     }
 
-function fmt12h(t) {
+    function fmt12h(t) {
       if (!t || !String(t).includes(':')) return t || '';
       const [h, m] = String(t).split(':').map(Number);
       return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
@@ -358,10 +586,14 @@ function fmt12h(t) {
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    function i(key) {
+      return (window.TU_i18n && window.TU_i18n.t(key)) || key;
+    }
+
     function buildCard(teacherKey, classData, profile, moduleCount) {
       const club    = classData?.club || '';
       const meta    = CLUB_META[club] || { label: club || 'Educational Club', tags: [], accent: '#7c8cff' };
-      const isOnline = Boolean(classData?.hasClass);
+      const isActive = moduleCount > 0;
       const room    = classData?.room || '';
       const date    = classData?.date || '';
       const time    = classData?.time || '';
@@ -375,20 +607,20 @@ function fmt12h(t) {
       const tagsHTML = meta.tags.map(t => `<span class="tc-tag">${esc(t)}</span>`).join('');
 
       const uploadsHTML = moduleCount > 0
-        ? `<div class="tc-uploads" aria-label="${moduleCount} ta dars yuklangan">
+        ? `<div class="tc-uploads" aria-label="${moduleCount} ${i('classes_uploads')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
               <polyline points="14 2 14 8 20 8"/>
               <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
-            <span><strong>${moduleCount}</strong> ta dars yuklangan</span>
+            <span><strong>${moduleCount}</strong> ${i('classes_uploads')}</span>
           </div>`
-        : `<div class="tc-uploads" style="opacity:.5" aria-label="Hali dars yuklanmagan">
+        : `<div class="tc-uploads" style="opacity:.5" aria-label="${i('classes_no_uploads')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            <span>Hali dars yuklanmagan</span>
+            <span>${i('classes_no_uploads')}</span>
           </div>`;
 
       const hasRoom = room && room !== '?';
@@ -399,7 +631,7 @@ function fmt12h(t) {
         if (hasRoom) classinfoHTML += `
           <div class="tc-classinfo-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Xona: ${esc(room)}
+            ${i('classes_room')} ${esc(room)}
           </div>`;
         if (hasTime) classinfoHTML += `
           <div class="tc-classinfo-row">
@@ -423,11 +655,10 @@ function fmt12h(t) {
             <div class="tc-avatar" aria-hidden="true">${avatarHTML}</div>
             <div class="tc-nameblock">
               <div class="tc-name">${esc(teacherKey)}</div>
-
             </div>
-            <div class="tc-badge ${isOnline ? 'online' : 'offline'}">
+            <div class="tc-badge ${isActive ? 'active' : 'inactive'}">
               <span class="tc-badge-dot" aria-hidden="true"></span>
-              ${isOnline ? 'Onlayn' : 'Oflayn'}
+              ${isActive ? i('classes_active') : i('classes_inactive')}
             </div>
           </div>
 
@@ -443,7 +674,7 @@ function fmt12h(t) {
           ${uploadsHTML}
           ${classinfoHTML}
 
-          <a href="${esc(href)}" class="tc-btn">Batafsil ko'rish</a>
+          <a href="${esc(href)}" class="tc-btn">${i('classes_view_btn')}</a>
         </article>`;
     }
 
@@ -471,15 +702,15 @@ function fmt12h(t) {
         grid.innerHTML = `
           <div class="state-screen" role="status">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <h3>Hech narsa topilmadi</h3>
-            <p>Boshqa kalit so'z yoki kategoriyani sinab ko'ring.</p>
+            <h3>${i('classes_not_found')}</h3>
+            <p>${i('classes_not_found_sub')}</p>
           </div>`;
         countEl.textContent = '';
         return;
       }
 
       grid.innerHTML = visible.map(c => c.html).join('');
-      countEl.textContent = `${visible.length} ta ustoz`;
+      countEl.textContent = `${visible.length} ${i('classes_results')}`;
 
       requestAnimationFrame(() => {
         const io = new IntersectionObserver((entries) => {
@@ -494,9 +725,9 @@ function fmt12h(t) {
       });
     }
 
-    let _teachers    = null;  
-    let _profileMap  = {};    
-    let _moduleCounts = {};   
+    let _teachers    = null;
+    let _profileMap  = {};
+    let _moduleCounts = {};
 
     function rebuild() {
       if (!_teachers) return;
@@ -508,7 +739,7 @@ function fmt12h(t) {
           html: buildCard(key, v.classData, _profileMap[key] || null, _moduleCounts[key] || 0),
         }))
         .sort((a, b) => {
-          const diff = (b.classData?.hasClass ? 1 : 0) - (a.classData?.hasClass ? 1 : 0);
+          const diff = (_moduleCounts[b.teacherKey] > 0 ? 1 : 0) - (_moduleCounts[a.teacherKey] > 0 ? 1 : 0);
           if (diff) return diff;
           const mDiff = (_moduleCounts[b.teacherKey] || 0) - (_moduleCounts[a.teacherKey] || 0);
           if (mDiff) return mDiff;
@@ -517,10 +748,12 @@ function fmt12h(t) {
       applyFilters();
     }
 
-    function parseOnlineSnap(snap) {
-      _moduleCounts = {};
-      const online = snap.val() || {};
-      Object.values(online).forEach(clubNode => {
+    let _onlineSnap  = null;
+    let _offlineSnap = null;
+
+    function parseModuleNode(nodeVal) {
+      const root = nodeVal || {};
+      Object.values(root).forEach(clubNode => {
         if (!clubNode || typeof clubNode !== 'object') return;
         Object.entries(clubNode).forEach(([tKey, tNode]) => {
           const mods = tNode?.modules;
@@ -529,6 +762,13 @@ function fmt12h(t) {
           _moduleCounts[tKey] = (_moduleCounts[tKey] || 0) + count;
         });
       });
+    }
+
+    function recomputeAndRebuild() {
+      _moduleCounts = {};
+      parseModuleNode(_onlineSnap);
+      parseModuleNode(_offlineSnap);
+      rebuild();
     }
 
     function init() {
@@ -559,8 +799,8 @@ function fmt12h(t) {
           grid.innerHTML = `
             <div class="state-screen" role="status">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              <h3>Hozircha darslar yo'q</h3>
-              <p>Tez orada yangi darslar qo'shiladi.</p>
+              <h3>${i('classes_empty')}</h3>
+              <p>${i('classes_empty_sub')}</p>
             </div>`;
           countEl.textContent = '';
           return;
@@ -572,15 +812,20 @@ function fmt12h(t) {
         grid.innerHTML = `
           <div class="state-screen" role="alert">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <h3>Xatolik yuz berdi</h3>
-            <p>Sahifani qayta yuklang.</p>
+            <h3>${i('classes_error')}</h3>
+            <p>${i('classes_error_sub')}</p>
           </div>`;
       });
 
       db.ref('online').on('value', snap => {
-        parseOnlineSnap(snap);
-        rebuild();  
+        _onlineSnap = snap.val();
+        recomputeAndRebuild();
       }, e => console.warn('[classes] online:', e.message));
+
+      db.ref('offline').on('value', snap => {
+        _offlineSnap = snap.val();
+        recomputeAndRebuild();
+      }, e => console.warn('[classes] offline:', e.message));
     }
 
     function showFatal(msg) {
@@ -603,6 +848,8 @@ function fmt12h(t) {
     });
 
     init();
+
+    document.addEventListener('tu-lang-changed', () => rebuild());
   })();
   </script>
 
