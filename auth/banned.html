@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Banned â€¢ Tengdosh Ustoz</title>
+  <title>Banned • Tengdosh Ustoz</title>
 
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -307,7 +307,7 @@ a:hover{text-decoration:underline}
           <div class="metaRow">
             <div class="label">Status</div>
             <div class="value">
-              <span class="pill"><span class="dot"></span><span id="banStatus">Checkingâ€¦</span></span>
+              <span class="pill"><span class="dot"></span><span id="banStatus">Checking...</span></span>
             </div>
           </div>
 
@@ -498,7 +498,7 @@ a:hover{text-decoration:underline}
     }
 
     (async function initBanDetails() {
-      setText("banStatus", "Checkingâ€¦");
+      setText("banStatus", "Checking...");
 
       const cached = readCachedBan();
       if (cached) {
@@ -652,4 +652,3 @@ a:hover{text-decoration:underline}
 	<script src="/script-internet-checker.js"></script>
 </body>
 </html>
-
