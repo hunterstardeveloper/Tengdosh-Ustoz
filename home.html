@@ -91,7 +91,40 @@
       <div class="stat-value" id="teachers-count">0</div>
     </div>
   </section>
+  <h1 class="section-title" data-i18n="opp_title">Tengdosh-Ustoz Opportunities</h1>
+    <section class="features opportunities-grid">
+      <div class="card glass opp-card">
+        <div class="opp-icon">
+          <i data-lucide="users"></i>
+        </div>
+        <h3 data-i18n="opp_mentor_title">Mentors</h3>
+        <p data-i18n="opp_mentor_desc">Work directly with active students who are masters of their craft.</p>
+      </div>
 
+      <div class="card glass opp-card">
+        <div class="opp-icon">
+          <i data-lucide="file-code-2"></i>
+        </div>
+        <h3 data-i18n="opp_tasks_title">Problems</h3>
+        <p data-i18n="opp_tasks_desc">Logic and programming problems specially created for practice.</p>
+      </div>
+
+      <div class="card glass opp-card">
+        <div class="opp-icon">
+          <i data-lucide="book-check"></i>
+        </div>
+        <h3 data-i18n="opp_tests_title">Tests</h3>
+        <p data-i18n="opp_tests_desc">Short and interesting tests to consolidate your knowledge.</p>
+      </div>
+
+      <div class="card glass opp-card">
+        <div class="opp-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <h3 data-i18n="opp_growth_title">Growth</h3>
+        <p data-i18n="opp_growth_desc">Increase your rating and build a foundation for your future career.</p>
+      </div>
+    </section>
   <section class="quote-section" aria-label="Daily Inspiration">
     <div class="quote-section-label">
       <span class="pill"><i data-lucide="quote" class="pill-icon"></i> <span data-i18n="quote_pill">Daily Inspiration</span></span>
@@ -160,32 +193,6 @@
     </div>
   </section>
 
-  <h1 class="section-title" data-i18n="special_title">Special</h1>
-  <section class="special-group">
-    <div class="card glass" id="special-card"  onclick="location.href='/clubs/prodev/Abdumalik/index.html'" style="cursor: pointer;">
-      <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/prodev?updatedAt=1771909961755" alt="Full-stack" draggable="false">
-      </div>
-      <h3>ProDev’s Master Course</h3>
-      <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.
-
-      Kurs davomida siz quyidagilarni o‘rganashingiz mumkin: <br>
-
-      • Architecture: Monolith, Modular Monolith, Microservices <br>
-      • System Design va production-level engineering thinking  <br>
-      • Design Patterns, scalability, real backend architecture  <br>
-      • Docker, Kubernetes va infrastructure fundamentals  <br>
-      • AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br>
-
-      Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o’rganamiz.</p>
-
-      Savollar uchun👇: <br>
-      
-      <a href="https://t.me/abdumalik_prodev" target="_blank" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
-      <a href="/clubs/prodev/Abdumalik/index.html" data-i18n="card_view">View Club</a>
-    </div>
-  </section>
-
   <h1 class="section-title" id="coding-skills" data-i18n="coding_title">Coding Skills</h1>
   <section class="features">
     <div class="card glass" onclick="location.href='/clubs/full-stack/teachers-sec-FS.html'" style="cursor: pointer;">
@@ -220,6 +227,39 @@
       <h3 data-i18n="card_cpp">C++</h3>
       <p data-i18n="card_cpp_desc">Master C++ for competitive programming and real-world software: algorithms, OOP, STL, and performance-focused coding.</p>
       <a href="/clubs/c++/teachers-sec-c++.html" data-i18n="card_view">View Club</a>
+    </div>
+  </section>
+
+  <h1 class="section-title" data-i18n="special_title">Special</h1>
+  <section class="special-group">
+    <div class="card glass" id="special-card" onclick="location.href='/clubs/prodev/Abdumalik/index.html'" style="cursor: pointer;">
+      <div class="card-img-container">
+        <img src="https://ik.imagekit.io/yefypajb8v/Elements/prodev?updatedAt=1771909961755" alt="Full-stack" draggable="false">
+      </div>
+      <h3>ProDev’s Master Course</h3>
+      
+      <div class="card-content">
+        <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.</p>
+        
+        <div id="more-text" style="display: none;">
+          <p>
+            Kurs davomida siz quyidagilarni o‘rganashingiz mumkin: <br>
+            • Architecture: Monolith, Modular Monolith, Microservices <br>
+            • System Design va production-level engineering thinking <br>
+            • Design Patterns, scalability, real backend architecture <br>
+            • Docker, Kubernetes va infrastructure fundamentals <br>
+            • AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
+            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o’rganamiz.
+          </p>
+        </div>
+        
+        <button onclick="toggleReadMore(event)" id="read-more-btn" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 0; font-weight: bold;">Read More...</button>
+      </div>
+
+      <br>
+      Savollar uchun👇: <br>
+      <a href="https://t.me/abdumalik_prodev" target="_blank" onclick="event.stopPropagation();" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
+      <a href="/clubs/prodev/Abdumalik/index.html" data-i18n="card_view" onclick="event.stopPropagation();">View Club</a>
     </div>
   </section>
 
@@ -352,6 +392,20 @@
     img.src = animations["2 animation"]; 
   </script>
   <script>
+    function toggleReadMore(event) {
+      event.stopPropagation();
+
+      const moreText = document.getElementById("more-text");
+      const btnText = document.getElementById("read-more-btn");
+
+      if (moreText.style.display === "none") {
+        moreText.style.display = "inline";
+        btnText.innerHTML = "Read Less";
+      } else {
+        moreText.style.display = "none";
+        btnText.innerHTML = "Read More...";
+      }
+    }
     function renderLucideIcons() {
       if (window.lucide && typeof lucide.createIcons === "function") {
         lucide.createIcons();

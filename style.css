@@ -84,7 +84,42 @@ body.nav-open { overflow: hidden; }
       color: rgba(255,255,255,0.78);
       border-top: 1px solid rgba(255,255,255,0.08);
     }
+    .opportunities-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+    }
 
+    .opp-card {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .opp-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--text);
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .opp-card:hover .opp-icon {
+      background: var(--pill-bg);
+      border-color: rgba(124, 140, 255, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px var(--glow);
+      color: var(--primary);
+    }
+
+    .opp-icon .lucide {
+      width: 22px;
+      height: 22px;
+      margin: 0; 
+    }
     .edu-footer-wrap {
       width: min(1250px, 90%);
       margin: 0 auto;

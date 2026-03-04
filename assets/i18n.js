@@ -110,7 +110,16 @@
       acc_liked_title: "Liked Quotes",
       acc_liked_sub: "Quotes you liked on the Home page. Visible only to you.",
       acc_your_likes: "Your likes",
-      tbd: "TBD"
+      tbd: "TBD",
+      opp_title: "Tengdosh-Ustoz Opportunities",
+      opp_mentor_title: "Mentors",
+      opp_mentor_desc: "Work directly with active students who are masters of their craft.",
+      opp_tasks_title: "Problems",
+      opp_tasks_desc: "Logic and programming problems specially created for practice.",
+      opp_tests_title: "Tests",
+      opp_tests_desc: "Short and interesting tests to consolidate your knowledge.",
+      opp_growth_title: "Growth",
+      opp_growth_desc: "Increase your rating and build a foundation for your future career.",
     },
     uz: {
       nav_home: "Bosh sahifa",
@@ -216,7 +225,16 @@
       acc_liked_title: "Yoqtirilgan iqtiboslar",
       acc_liked_sub: "Bosh sahifada yoqtirgan iqtiboslaringiz. Faqat sizga ko\u2018rinadi.",
       acc_your_likes: "Yoqtirilganlaringiz",
-      tbd: "Aniqlanmagan"
+      tbd: "Aniqlanmagan",
+      opp_title: "Tengdosh-Ustoz imkoniyatlari",
+      opp_mentor_title: "Mentorlar",
+      opp_mentor_desc: "O'z ishining ustasi bo'lgan faol talabalar bilan bevosita ishlash.",
+      opp_tasks_title: "Masalalar",
+      opp_tasks_desc: "Amaliyot uchun maxsus tuzilgan mantiqiy va dasturlash masalalari.",
+      opp_tests_title: "Testlar",
+      opp_tests_desc: "Bilimingizni mustahkamlash uchun qisqa va qiziqarli testlar.",
+      opp_growth_title: "O'sish",
+      opp_growth_desc: "Reytingingizni oshiring va kelajakdagi karyerangiz uchun poydevor quring.",
     },
     ru: {
       nav_home: "\u0413\u043b\u0430\u0432\u043d\u0430\u044f",
@@ -322,7 +340,16 @@
       acc_liked_title: "\u041f\u043e\u043d\u0440\u0430\u0432\u0438\u0432\u0448\u0438\u0435\u0441\u044f \u0446\u0438\u0442\u0430\u0442\u044b",
       acc_liked_sub: "\u0426\u0438\u0442\u0430\u0442\u044b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0432\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u043b\u0438 \u043d\u0430 \u0413\u043b\u0430\u0432\u043d\u043e\u0439. \u0412\u0438\u0434\u043d\u044b \u0442\u043e\u043b\u044c\u043a\u043e \u0432\u0430\u043c.",
       acc_your_likes: "\u0412\u0430\u0448\u0438 \u043e\u0442\u043c\u0435\u0442\u043a\u0438",
-      tbd: "\u041d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u043e"
+      tbd: "\u041d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u043e",
+      opp_title: "Возможности Tengdosh-Ustoz",
+      opp_mentor_title: "Наставники",
+      opp_mentor_desc: "Прямая работа с активными студентами, которые являются мастерами своего дела.",
+      opp_tasks_title: "Задачи",
+      opp_tasks_desc: "Логические задачи и задачи по программированию, специально созданные для практики.",
+      opp_tests_title: "Тесты",
+      opp_tests_desc: "Короткие и интересные тесты для закрепления ваших знаний.",
+      opp_growth_title: "Рост",
+      opp_growth_desc: "Повышайте свой рейтинг и закладывайте фундамент для будущей карьеры.",
     }
   };
 
