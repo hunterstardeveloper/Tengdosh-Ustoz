@@ -223,3 +223,4 @@
     .skel-btn    { height: 42px; border-radius: 10px; }
 
     @media (max-width: 600px) { .classes-grid { grid-template-columns: 1fr; } }
+    
