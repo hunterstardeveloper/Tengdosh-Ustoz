@@ -97,7 +97,7 @@
     }
 
     .auth-card {
-      width: 420px;
+      width: min(420px, calc(100vw - 32px));
       background: linear-gradient(135deg, rgba(31,41,55,0.82), rgba(17,24,39,0.72));
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
@@ -869,10 +869,43 @@
        RESPONSIVE
     ───────────────────────────────────────────────── */
     @media (max-width: 700px) {
-      #sidebar { width: 100vw; position: absolute; z-index: 10; left: 0; }
+      /* Sidebar takes full width and overlays the chat panel */
+      #sidebar {
+        width: 100vw;
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        top: 0;
+        height: 100vh;
+      }
       #sidebar.hidden-mobile { display: none; }
+
+      /* Chat panel always full width on mobile */
       #chat-panel { width: 100vw; }
+
+      /* Show the in-chat back-to-list button on mobile */
+      .chat-back { display: inline-flex; }
+
+      /* Reduce message area padding */
+      #messages-wrap { padding: 16px 14px; }
+      #typing-indicator { padding: 0 14px 10px; }
+
+      /* Reduce input area padding */
+      #input-area { padding: 10px 12px; }
+
+      /* Compact message bubbles */
+      .msg-bubble-col { max-width: 82%; }
+
+      /* Shrink filter tabs to 2 columns */
       .filter-tabs { grid-template-columns: repeat(2, 1fr); }
+
+      /* Auth card padding */
+      .auth-card { padding: 32px 24px; }
+    }
+
+    /* Hide the chat-back arrow on desktop (it's for mobile only) */
+    @media (min-width: 701px) {
+      .chat-back { display: none; }
     }
   </style>
 </head>
@@ -1303,8 +1336,27 @@
 
   const backHomeBtn = document.getElementById('back-home');
   if (backHomeBtn) backHomeBtn.addEventListener('click', goBackOrHome);
+
+  function isMobileView() { return window.innerWidth <= 700; }
+
+  function showSidebarMobile() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) sidebar.classList.remove('hidden-mobile');
+  }
+
+  function hideSidebarMobile() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && isMobileView()) sidebar.classList.add('hidden-mobile');
+  }
+
   const chatBackBtn = document.getElementById('chat-back');
-  if (chatBackBtn) chatBackBtn.addEventListener('click', goBackOrHome);
+  if (chatBackBtn) chatBackBtn.addEventListener('click', () => {
+    if (isMobileView()) {
+      showSidebarMobile();
+    } else {
+      goBackOrHome();
+    }
+  });
 
   async function doSignOut() {
     if (!currentUser) return;
@@ -1525,6 +1577,9 @@
     document.getElementById('chat-empty').style.display    = 'none';
     document.getElementById('messages-wrap').classList.add('visible');
     document.getElementById('input-area').classList.add('visible');
+
+    // On mobile: hide the sidebar so the chat panel is visible
+    hideSidebarMobile();
 
     // Clear messages
     const wrap = document.getElementById('messages-wrap');
@@ -1813,17 +1868,9 @@
       document.getElementById('messages-wrap').classList.remove('visible');
       document.getElementById('input-area').classList.remove('visible');
       document.getElementById('chat-empty').style.display = 'flex';
+      showSidebarMobile();
     }
   });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
