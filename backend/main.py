@@ -1,10 +1,10 @@
-import os
+﻿import os
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Report → Telegram")
+app = FastAPI(title="Report -> Telegram")
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,21 +34,21 @@ def send_report(r: Report):
         raise HTTPException(status_code=500, detail="Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in environment.")
 
     lines = [
-        "📩 New Transmission",
-        f"🕒 {r.timestamp or ''}",
-        f"👤 Anonymous: {'Yes' if r.isAnonymous else 'No'}",
+        "New Transmission",
+        f"Time: {r.timestamp or ''}",
+        f"Anonymous: {'Yes' if r.isAnonymous else 'No'}",
         ""
     ]
 
     if not r.isAnonymous:
         lines += [
-            f"🧑 First name: {r.firstName or '-'}",
-            f"🧾 Surname: {r.surname or '-'}",
-            f"👥 Group: {r.group or '-'}",
+            f"First name: {r.firstName or '-'}",
+            f"Surname: {r.surname or '-'}",
+            f"Group: {r.group or '-'}",
             ""
         ]
 
-    lines += ["✉️ Message:", r.message]
+    lines += ["Message:", r.message]
     text = "\n".join(lines)
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"

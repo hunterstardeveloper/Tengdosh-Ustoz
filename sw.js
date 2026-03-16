@@ -1,6 +1,7 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v15.1.3"; 
-const CACHE_NAME = `tengdosh-cache-${CACHE_VERSION}`;
+const CACHE_VERSION = "tengdosh-v17.0.0";
+const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
+const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
 const SCOPE = self.registration ? self.registration.scope : (self.location.origin + "/");
 const u = (path) => new URL(path, SCOPE).toString();
@@ -8,33 +9,24 @@ const uniq = (arr) => Array.from(new Set(arr));
 
 const OFFLINE_FALLBACK = u("index.html");
 
+const STATIC_EXT = /\.(?:js|css|mjs|png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|otf)$/i;
+
 const ASSETS = uniq([
   u(""),
   u("index.html"),
-  u("pages/chat/global_chat.html"),
   u("pages/classes/classes.html"),
   u("pages/contact/contact.html"),
   u("pages/account/account.html"),
-  u("auth/banned.html"),
-  u("auth/register.html"),
-  u("auth/reset.html"),
-  u("auth/login.html"),
   u("style.css"),
   u("script.js"),
-  u("assets.js"),
   u("script-internet-checker.js"),
   u("favicon.ico"),
   u("ping.txt"),
-  u("assets/techers-sec.css"),
-  u("assets/base64.js"),
-  u("assets/techers-sec.js"),
   u("icon.png"),
-  u("clubs/english/teachers-sec-eng.html"),
-  u("clubs/full-stack/teachers-sec-FS.html"),
-  u("clubs/java/teachers-sec-Json.html"),
-  u("clubs/py/teachers-sec-py.html"),
-  u("clubs/SI/teachers-sec-SI.html"),
 ]);
+
+const MAX_RUNTIME_ENTRIES = 60;
+const MAX_RUNTIME_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 function isFirebaseApi(url) {
   const h = url.hostname;
@@ -50,13 +42,14 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
   
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    caches.open(PRECACHE).then(async (cache) => {
       for (const asset of ASSETS) {
         try {
           const request = new Request(asset, { cache: 'reload' }); 
           const response = await fetch(request);
           if (response.ok) {
-            await cache.put(request, response);
+            await cache.put(request, response.clone());
+            cache.put(asset + ".meta", new Response(String(Date.now()))).catch(() => {});
           } else {
             console.warn(`[Service Worker] Skipping missing file: ${asset} (Status: ${response.status})`);
           }
@@ -70,17 +63,110 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    self.clients.claim().then(() =>
-      caches.keys().then((keys) =>
-        Promise.all(
-          keys.map((key) => {
-            if (key !== CACHE_NAME) return caches.delete(key);
-          })
-        )
-      )
-    )
+    self.clients.claim().then(() => cleanupCaches())
   );
 });
+
+self.addEventListener("message", (event) => {
+  const data = event && event.data;
+  if (data && data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+function isHtmlRequest(req) {
+  if (req.mode === "navigate") return true;
+  const accept = req.headers.get("accept") || "";
+  return accept.includes("text/html");
+}
+
+async function cacheFirst(req) {
+  const cached = await caches.match(req);
+  if (cached) return cached;
+  const res = await fetch(req);
+  if (res && res.status === 200) {
+    const copy = res.clone();
+    caches.open(RUNTIME).then((cache) => cache.put(req, copy)).catch(() => {});
+    cleanupCaches().catch(() => {});
+  }
+  return res;
+}
+
+async function networkFirst(req) {
+  try {
+    const res = await fetch(req);
+    if (res && res.status === 200) {
+      const copy = res.clone();
+      caches.open(RUNTIME).then((cache) => cache.put(req, copy)).catch(() => {});
+      cleanupCaches().catch(() => {});
+    }
+    return res;
+  } catch (_) {
+    const cached = await caches.match(req);
+    if (cached) return cached;
+    const fallback = await caches.match(OFFLINE_FALLBACK);
+    if (fallback) return fallback;
+    return new Response("Offline", {
+      status: 503,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+}
+
+async function staleWhileRevalidate(req) {
+  const cached = await caches.match(req);
+  const fetchPromise = fetch(req)
+    .then((res) => {
+      if (res && res.status === 200) {
+        const copy = res.clone();
+        caches.open(RUNTIME).then((cache) => cache.put(req, copy)).catch(() => {});
+        cleanupCaches().catch(() => {});
+      }
+      return res;
+    })
+    .catch(() => null);
+  return cached || (await fetchPromise) || new Response("Offline", { status: 503 });
+}
+
+async function cleanupCaches() {
+  try {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.map((key) => {
+        if (key !== PRECACHE && key !== RUNTIME) return caches.delete(key);
+      })
+    );
+  } catch (_) {}
+
+  try {
+    const cache = await caches.open(RUNTIME);
+    const requests = await cache.keys();
+    if (requests.length <= MAX_RUNTIME_ENTRIES) return;
+
+    const metas = [];
+    for (const req of requests) {
+      if (req.url.endsWith(".meta")) continue;
+      const meta = await cache.match(req.url + ".meta");
+      const ts = meta ? Number(await meta.text()) : 0;
+      metas.push({ req, ts });
+    }
+
+    metas.sort((a, b) => a.ts - b.ts);
+    const now = Date.now();
+    const tooOld = metas.filter((m) => m.ts && now - m.ts > MAX_RUNTIME_AGE_MS);
+    const overflow = metas.slice(0, Math.max(0, metas.length - MAX_RUNTIME_ENTRIES));
+
+    const toDelete = new Set();
+    for (const m of tooOld.concat(overflow)) {
+      toDelete.add(m.req.url);
+      toDelete.add(m.req.url + ".meta");
+    }
+
+    await Promise.all(
+      Array.from(toDelete).map((url) => cache.delete(url))
+    );
+  } catch (_) {}
+}
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
@@ -107,30 +193,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  event.respondWith(
-    fetch(req)
-      .then((networkRes) => {
-        if (networkRes && networkRes.status === 200) {
-          const copy = networkRes.clone();
-          event.waitUntil(
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {})
-          );
-        }
-        return networkRes;
-      })
-      .catch(async () => {
-        const cached = await caches.match(req);
-        if (cached) return cached;
+  const pathname = url.pathname || "";
+  const isStatic = STATIC_EXT.test(pathname);
+  const isHtml = isHtmlRequest(req);
 
-        if (req.mode === "navigate") {
-          const fallback = await caches.match(OFFLINE_FALLBACK);
-          if (fallback) return fallback;
-        }
+  if (isStatic) {
+    event.respondWith(cacheFirst(req));
+    return;
+  }
 
-        return new Response("Offline", {
-          status: 503,
-          headers: { "Content-Type": "text/plain; charset=utf-8" },
-        });
-      })
-  );
+  if (isHtml) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(req));
 });

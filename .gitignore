@@ -1,4 +1,24 @@
-*.json
-*.env
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Hosting
+.vercel/
+
+# Env files (keep secrets out of git)
+.env*
+!.env.example
+
+# Misc
+.DS_Store
 *.bak
-*.md
