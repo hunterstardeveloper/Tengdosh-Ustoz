@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v21.0.0";
+const CACHE_VERSION = "tengdosh-v21.0.1";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 

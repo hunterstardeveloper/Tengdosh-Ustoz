@@ -582,7 +582,15 @@
     try {
       const parts = (window.location.pathname || "").split("/").filter(Boolean);
       const i = parts.indexOf("clubs");
-      if (i >= 0 && parts.length >= i + 3) return decodeURIComponent(parts[i + 2] || "");
+      if (i >= 0 && parts.length >= i + 3) {
+        const candidate = decodeURIComponent(parts[i + 2] || "").trim();
+        if (!candidate) return "";
+        const lower = candidate.toLowerCase();
+        // Ignore list pages like teachers-sec-*.html
+        if (lower.includes(".html")) return "";
+        if (lower.startsWith("teachers-sec")) return "";
+        return candidate;
+      }
     } catch (e) {}
     return "";
   }
@@ -723,6 +731,23 @@
     btn.id = "tu-mentor-chat-btn";
     btn.className = "tu-mentor-chat-btn";
     btn.href = href;
+    // If a floating theme toggle exists, offset the CTA so they don't overlap.
+    const themeToggle = document.getElementById("theme-toggle");
+    if (themeToggle) {
+      try {
+        const cs = window.getComputedStyle(themeToggle);
+        const bottom = parseFloat(cs.bottom || "0");
+        const height = parseFloat(cs.height || themeToggle.offsetHeight || "0");
+        if (!Number.isNaN(bottom) && !Number.isNaN(height)) {
+          const offset = Math.max(24, bottom + height + 12);
+          btn.style.bottom = `${offset}px`;
+        } else {
+          btn.style.bottom = "90px";
+        }
+      } catch (e) {
+        btn.style.bottom = "90px";
+      }
+    }
     btn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
