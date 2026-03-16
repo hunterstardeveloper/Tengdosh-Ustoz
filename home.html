@@ -222,14 +222,6 @@
       <p data-i18n="card_java_desc">Build the backbone of enterprise software. Master Object-Oriented Programming (OOP) and robust backend structures used globally.</p>
       <a href="/clubs/java/teachers-sec-Json.html" data-i18n="card_view">View Club</a>
     </div>
-    <div class="card glass" onclick="location.href='/clubs/c++/teachers-sec-c++.html'" style="cursor: pointer;">
-      <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/c++.png" alt="C++" draggable="false">
-      </div>
-      <h3 data-i18n="card_cpp">C++</h3>
-      <p data-i18n="card_cpp_desc">Master C++ for competitive programming and real-world software: algorithms, OOP, STL, and performance-focused coding.</p>
-      <a href="/clubs/c++/teachers-sec-c++.html" data-i18n="card_view">View Club</a>
-    </div>
   </section>
 
   <h1 class="section-title" data-i18n="special_title">Special</h1>
@@ -526,7 +518,7 @@
         container.innerHTML = activeClasses.map(cls => {
           const path = cls.club || 'SI';
           const displayTime = formatTo12Hour(cls.time);
-          const clubNames = { 'py': 'Python', 'java': 'Java', 'full-stack': 'Front-end', 'english': 'English', 'SI': 'Self Improvement','c++':'C++' ,'mathematics':'Mathematics' , 'prodev':'ProDev'};
+          const clubNames = { 'py': 'Python', 'java': 'Java', 'full-stack': 'Front-end', 'english': 'English', 'SI': 'Self Improvement','mathematics':'Mathematics' , 'prodev':'ProDev'};
           const fullClubName = clubNames[path] || 'Educational Club';
           const statusText = cls.isLive
             ? `<span class="live-pulse"><i data-lucide="radio" class="inline-icon"></i> ${_t('schedule_live')}</span>`
