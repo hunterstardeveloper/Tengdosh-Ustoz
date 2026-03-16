@@ -275,18 +275,22 @@
     const ham = document.getElementById('navbar-hamburger');
     const links = document.getElementById('navbar-links');
     if (!nav || !links) return;
-    const isMobile = () => window.matchMedia('(max-width:700px)').matches;
+    const isMobile = () => window.matchMedia('(max-width:1000px)').matches;
     function setOpen(open) {
       links.classList.toggle('open', open);
-      ham?.classList.toggle('open', open);
-      ham?.setAttribute('aria-expanded', String(open));
+      if (ham) {
+        ham.classList.toggle('open', open);
+        ham.setAttribute('aria-expanded', String(open));
+      }
       document.body.classList.toggle('nav-open', open && isMobile());
     }
     const scrollEl = document.getElementById('page-scroll') || window;
     scrollEl.addEventListener('scroll', () =>
       nav.classList.toggle('navbar--scrolled', (scrollEl.scrollTop || window.scrollY) > 40),
       { passive: true });
-    ham?.addEventListener('click', e => { e.stopPropagation(); setOpen(!links.classList.contains('open')); });
+    if (ham) {
+      ham.addEventListener('click', e => { e.stopPropagation(); setOpen(!links.classList.contains('open')); });
+    }
     links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
     document.addEventListener('click', e => { if (!isMobile() || !links.classList.contains('open') || nav.contains(e.target)) return; setOpen(false); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
@@ -658,4 +662,3 @@
 	<script src="/assets/UI.js"></script>
 </body>
 </html>
-

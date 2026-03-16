@@ -238,6 +238,58 @@
   </footer>
   </div>
   
+  <script>
+    (function () {
+      const nav = document.getElementById('main-navbar');
+      const ham = document.getElementById('navbar-hamburger');
+      const links = document.getElementById('navbar-links');
+      if (!nav || !links) return;
+
+      const isMobile = () => window.matchMedia('(max-width: 1000px)').matches;
+
+      function setOpen(open) {
+        links.classList.toggle('open', open);
+        if (ham) {
+          ham.classList.toggle('open', open);
+          ham.setAttribute('aria-expanded', String(open));
+        }
+        document.body.classList.toggle('nav-open', open && isMobile());
+      }
+
+      const scrollEl = document.getElementById('page-scroll');
+      const onScroll = () => {
+        const top = scrollEl ? scrollEl.scrollTop : window.scrollY;
+        nav.classList.toggle('navbar--scrolled', top > 40);
+      };
+      const scrollTarget = scrollEl || window;
+      scrollTarget.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if (ham) {
+        ham.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setOpen(!links.classList.contains('open'));
+        });
+      }
+
+      links.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+
+      document.addEventListener('click', (e) => {
+        if (!isMobile()) return;
+        if (!links.classList.contains('open')) return;
+        if (nav.contains(e.target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      });
+
+      window.addEventListener('resize', () => {
+        if (!isMobile()) setOpen(false);
+      });
+    })();
+  </script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>

@@ -736,6 +736,136 @@
     document.body.appendChild(btn);
   }
 
+  // -----------------------------
+  // CHAT NOTIFICATION BADGE (bell)
+  function findChatBellAnchors() {
+    try {
+      return document.querySelectorAll('a.navbar-icon[href*="/pages/private chat/private_chat.html"]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function ensureChatBellBadges() {
+    const anchors = findChatBellAnchors();
+    const badges = [];
+    if (!anchors || !anchors.length) return badges;
+    anchors.forEach((a) => {
+      let badge = a.querySelector(".nav-badge");
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "nav-badge hidden";
+        badge.setAttribute("aria-hidden", "true");
+        a.appendChild(badge);
+      }
+      badges.push(badge);
+    });
+    return badges;
+  }
+
+  function updateChatBellBadges(count) {
+    const badges = ensureChatBellBadges();
+    if (!badges.length) return;
+    const show = Number(count) > 0;
+    const text = count > 99 ? "99+" : String(count || "");
+    badges.forEach((badge) => {
+      if (show) {
+        badge.textContent = text;
+        badge.classList.remove("hidden");
+      } else {
+        badge.textContent = "";
+        badge.classList.add("hidden");
+      }
+    });
+  }
+
+  function isChatForUser(chatId, uid) {
+    if (!chatId || !uid) return false;
+    const parts = String(chatId).split("_");
+    if (parts.length !== 2) return false;
+    return parts[0] === uid || parts[1] === uid;
+  }
+
+  function watchUnreadMessages(db, uid, onUpdate) {
+    if (!db || !uid) return () => {};
+    const chatsRef = db.ref("chats");
+    const chatListeners = {};
+    const chatCounts = {};
+
+    function updateTotal() {
+      let total = 0;
+      Object.keys(chatCounts).forEach((k) => {
+        total += chatCounts[k] || 0;
+      });
+      onUpdate(total);
+    }
+
+    function attachChat(chatId) {
+      const q = db.ref(`chats/${chatId}/messages`).orderByChild("read").equalTo(false);
+      const cb = q.on("value", (snap) => {
+        let count = 0;
+        snap.forEach((child) => {
+          const v = child.val() || {};
+          if (v.senderId && v.senderId !== uid) count += 1;
+        });
+        chatCounts[chatId] = count;
+        updateTotal();
+      });
+      chatListeners[chatId] = { ref: q, cb: cb };
+    }
+
+    function detachChat(chatId) {
+      const h = chatListeners[chatId];
+      if (!h) return;
+      h.ref.off("value", h.cb);
+      delete chatListeners[chatId];
+      delete chatCounts[chatId];
+    }
+
+    function handleChats(snap) {
+      const active = {};
+      snap.forEach((child) => {
+        const chatId = child.key;
+        if (!isChatForUser(chatId, uid)) return;
+        active[chatId] = true;
+        if (!chatListeners[chatId]) attachChat(chatId);
+      });
+      Object.keys(chatListeners).forEach((id) => {
+        if (!active[id]) detachChat(id);
+      });
+      updateTotal();
+    }
+
+    chatsRef.on("value", handleChats);
+
+    return function stop() {
+      chatsRef.off("value", handleChats);
+      Object.keys(chatListeners).forEach((id) => detachChat(id));
+      onUpdate(0);
+    };
+  }
+
+  function setupChatBellUnread(db, auth) {
+    const anchors = findChatBellAnchors();
+    if (!anchors || !anchors.length) return;
+    let stop = null;
+
+    function refresh() {
+      if (stop) {
+        stop();
+        stop = null;
+      }
+      if (!auth.currentUser) {
+        updateChatBellBadges(0);
+        return;
+      }
+      stop = watchUnreadMessages(db, auth.currentUser.uid, updateChatBellBadges);
+    }
+
+    document.addEventListener("tu-auth-changed", refresh);
+    setTimeout(refresh, 600);
+  }
+
 window.TU = {
     init: function () {
       const { auth, db, stub } = initFirebaseOnce();
@@ -750,6 +880,9 @@ window.TU = {
       // Auto-inject admin panel button on pages that have an admin overlay
       try { setupAdminFab(db, auth); } catch (e) {}
       try { setupMentorChatCta(); } catch (e) {}
+      if (!stub) {
+        try { setupChatBellUnread(db, auth); } catch (e) {}
+      }
 
       let banUnsub = null;
 

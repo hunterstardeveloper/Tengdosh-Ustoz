@@ -386,9 +386,12 @@
 
     /* Search */
     .search-wrap {
-      padding: 14px 16px;
+      padding: 14px 16px 12px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .search-input-wrap {
       position: relative;
@@ -411,6 +414,34 @@
     }
     .search-input:focus { border-color: var(--gold); }
     .search-input::placeholder { color: var(--text-muted); }
+
+    .filter-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .filter-btn {
+      padding: 6px 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .filter-btn:hover {
+      color: var(--text-secondary);
+      background: var(--bg-active);
+      border-color: rgba(124,140,255,0.4);
+    }
+    .filter-btn.active {
+      color: var(--gold);
+      background: var(--gold-dim);
+      border-color: rgba(124,140,255,0.5);
+    }
 
     /* Section label */
     .section-label {
@@ -841,6 +872,7 @@
       #sidebar { width: 100vw; position: absolute; z-index: 10; left: 0; }
       #sidebar.hidden-mobile { display: none; }
       #chat-panel { width: 100vw; }
+      .filter-tabs { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -899,13 +931,19 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
         </svg>
-        <input class="search-input" type="text" id="search-input" placeholder="Search mentors…" oninput="filterUsers(this.value)" />
+        <input class="search-input" type="text" id="search-input" placeholder="Search users…" oninput="filterUsers(this.value)" />
+      </div>
+      <div class="filter-tabs" id="role-filters" role="group" aria-label="Filter users">
+        <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter-btn" type="button" data-filter="mentors" aria-pressed="false">Mentors</button>
+        <button class="filter-btn" type="button" data-filter="students" aria-pressed="false">Students</button>
+        <button class="filter-btn" type="button" data-filter="admins" aria-pressed="false">Admin</button>
       </div>
     </div>
 
-    <div class="section-label">Mentors</div>
+    <div class="section-label" id="users-section-label">Users</div>
     <div id="users-list">
-      <div class="users-empty">Loading mentors…</div>
+      <div class="users-empty">Loading users…</div>
     </div>
   </aside>
 
@@ -919,8 +957,8 @@
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
       </div>
-      <h3>Select a mentor</h3>
-      <p>Click on a mentor to start a private chat</p>
+      <h3>Select a user</h3>
+      <p>Click on a user to start a private chat</p>
     </div>
 
     <!-- Chat header -->
@@ -1000,6 +1038,7 @@
   let typingTimeout    = null;   // debounce timer
   let unsubUsers       = null;   // Firebase users listener
   let autoOpenedMentor = false;
+  let currentFilter    = 'all';
   const mentorParam = (() => {
     try {
       const v = new URLSearchParams(window.location.search || "").get('mentor');
@@ -1047,6 +1086,7 @@
       u.surename,
       u.surname,
       u.email,
+      u.gmail,
       u.phone,
       u['phone number'],
     ].filter(Boolean);
@@ -1078,15 +1118,71 @@
     const match = Object.values(allUsers).find(u => matchesMentorParam(u, key));
     if (match) {
       autoOpenedMentor = true;
+      if (currentFilter !== 'all') setRoleFilter('all');
       openChat(match.uid);
     }
   }
 
-  function isMentor(u) {
-    const role = String(u?.role || '').toLowerCase();
-    if (role === 'mentor' || role === 'teacher' || role === 'admin') return true;
+  function getUserRoleBucket(u) {
+    const role = String(u?.role || '').toLowerCase().trim();
+    if (role === 'admin') return 'admin';
+    if (role === 'mentor' || role === 'teacher') return 'mentor';
+    if (role === 'student' || role === 'user') return 'student';
     const tid = (u?.teacherId || u?.teacherIdonline || u?.[' teacherIdonline'] || '').toString().trim();
-    return !!tid;
+    if (tid) return 'mentor';
+    return 'student';
+  }
+
+  function isMentor(u) {
+    return getUserRoleBucket(u) === 'mentor';
+  }
+
+  function matchesRoleFilter(u, filter) {
+    if (!filter || filter === 'all') return true;
+    const bucket = getUserRoleBucket(u);
+    if (filter === 'mentors') return bucket === 'mentor';
+    if (filter === 'students') return bucket === 'student';
+    if (filter === 'admins') return bucket === 'admin';
+    return true;
+  }
+
+  function getFilterLabel(filter) {
+    if (filter === 'mentors') return 'Mentors';
+    if (filter === 'students') return 'Students';
+    if (filter === 'admins') return 'Admins';
+    return 'Users';
+  }
+
+  function updateSectionLabel() {
+    const label = document.getElementById('users-section-label');
+    if (label) label.textContent = getFilterLabel(currentFilter);
+  }
+
+  function updateFilterUI() {
+    const wrap = document.getElementById('role-filters');
+    if (!wrap) return;
+    wrap.querySelectorAll('.filter-btn').forEach(btn => {
+      const active = btn.dataset.filter === currentFilter;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    updateSectionLabel();
+  }
+
+  function setRoleFilter(filter) {
+    currentFilter = filter || 'all';
+    updateFilterUI();
+    const q = (document.getElementById('search-input') || {}).value || '';
+    renderUsersList(allUsers, q);
+  }
+
+  function setupRoleFilters() {
+    const wrap = document.getElementById('role-filters');
+    if (!wrap) return;
+    wrap.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => setRoleFilter(btn.dataset.filter));
+    });
+    updateFilterUI();
   }
 
   function getUserAvatar(u) {
@@ -1262,7 +1358,6 @@
         u.uid = u.uid || child.key;
         if (!u.uid) return;
         if (u.uid === currentUser.uid) return;
-        if (!isMentor(u)) return;
         allUsers[u.uid] = u;
       });
       renderUsersList(allUsers);
@@ -1273,12 +1368,14 @@
     const container = document.getElementById('users-list');
     const q = (filter || '').toLowerCase();
     const filtered = Object.values(users).filter(u => {
+      if (!matchesRoleFilter(u, currentFilter)) return false;
       if (!q) return true;
       return getUserSearchText(u).includes(q);
     });
 
     if (!filtered.length) {
-      container.innerHTML = `<div class="users-empty">No mentors found</div>`;
+      const label = getFilterLabel(currentFilter).toLowerCase();
+      container.innerHTML = `<div class="users-empty">No ${label} found</div>`;
       return;
     }
 
@@ -1647,6 +1744,8 @@
       .replace(/'/g, '&#039;')
       .replace(/\n/g, '<br>');
   }
+
+  setupRoleFilters();
 
   /* ─────────────────────────────────────────
      AUTH STATE OBSERVER  ← main entry point

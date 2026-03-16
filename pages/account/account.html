@@ -297,12 +297,14 @@
     const links = document.getElementById('navbar-links');
     if (!nav || !links) return;
 
-    const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+    const isMobile = () => window.matchMedia('(max-width: 1000px)').matches;
 
     function setOpen(open) {
       links.classList.toggle('open', open);
-      ham?.classList.toggle('open', open);
-      ham?.setAttribute('aria-expanded', String(open));
+      if (ham) {
+        ham.classList.toggle('open', open);
+        ham.setAttribute('aria-expanded', String(open));
+      }
       document.body.classList.toggle('nav-open', open && isMobile());
     }
 
@@ -315,10 +317,12 @@
     scrollTarget.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    ham?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setOpen(!links.classList.contains('open'));
-    });
+    if (ham) {
+      ham.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(!links.classList.contains('open'));
+      });
+    }
 
     links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
 
@@ -941,4 +945,3 @@
 	<script src="/assets/UI.js"></script>
 </body>
 </html>
-
