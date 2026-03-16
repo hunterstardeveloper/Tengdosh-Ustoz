@@ -11,7 +11,7 @@ const securityHeaders = [
       "font-src 'self' data: https://fonts.gstatic.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://unpkg.com; " +
-      "connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://repo3-17oc.onrender.com; " +
+      "connect-src 'self' https://*.firebaseio.com https://*.firebasedatabase.app https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.telegram.org; " +
       "worker-src 'self' blob:; " +
       "upgrade-insecure-requests",
   },

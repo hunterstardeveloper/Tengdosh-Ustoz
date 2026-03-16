@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v17.0.0";
+const CACHE_VERSION = "tengdosh-v18.0.0";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
@@ -194,6 +194,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   const pathname = url.pathname || "";
+  if (pathname === "/pages/contact/contact.js") {
+    event.respondWith(networkFirst(req));
+    return;
+  }
   const isStatic = STATIC_EXT.test(pathname);
   const isHtml = isHtmlRequest(req);
 

@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/pages/contact/contact.css" />
+  <link rel="stylesheet" href="/pages/contact/contact.css?v=2" />
   <link rel="icon" href="/icon.png" />
 </head>
 
@@ -112,6 +112,15 @@
             <div class="form-row">
               <label class="contact-label" for="message" data-i18n="contact_msg">Message</label>
               <textarea class="contact-input contact-textarea" id="message" name="message" data-i18n-ph="contact_msg_ph" placeholder="Write your message here..."></textarea>
+            </div>
+            <div class="form-row">
+              <label class="contact-label">Attachments (optional)</label>
+              <input id="fileInput" type="file" multiple />
+              <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Upload files">
+                <div class="dz-title">Drop files here or click to choose</div>
+                <div class="dz-sub">Image, video, or document.</div>
+              </div>
+              <div class="file-preview" id="filePreview"></div>
             </div>
             <div class="contact-actions">
               <button class="contact-btn" id="submitBtn" type="submit">
@@ -229,11 +238,10 @@
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
 
-  <script src="/pages/contact/contact.js"></script>
+  <script src="/pages/contact/contact.js?v=24"></script>
   <script src="/assets/i18n.js"></script>
   <script src="/assets/UI.js"></script>
 	<script src="/sw.js"></script>
 	<script src="/script-internet-checker.js"></script>
 </body>
 </html>
-
