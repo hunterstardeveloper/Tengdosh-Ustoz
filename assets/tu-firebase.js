@@ -676,6 +676,66 @@
     setTimeout(() => refresh(), 700);
   }
 
+  // -----------------------------
+  // MENTOR CHAT CTA (visible on mentor pages)
+  function setupMentorChatCta() {
+    const p = window.location.pathname || "";
+    if (p.includes("/private chat/")) return;
+
+    const teacherId = (window.TEACHER_ID || window.teacherId || getPageTeacherIdFromPath() || "").toString().trim();
+    if (!teacherId) return;
+
+    if (document.getElementById("tu-mentor-chat-btn")) return;
+
+    if (!document.getElementById("tu-mentor-chat-style")) {
+      const style = document.createElement("style");
+      style.id = "tu-mentor-chat-style";
+      style.textContent = `
+        .tu-mentor-chat-btn{
+          position:fixed;
+          right:20px;
+          bottom:24px;
+          z-index:9999;
+          padding:12px 16px;
+          border-radius:999px;
+          border:1px solid rgba(124,140,255,0.35);
+          background: rgba(124,140,255,0.92);
+          color:#fff;
+          font-weight:700;
+          font-size:13px;
+          text-decoration:none;
+          box-shadow:0 12px 30px rgba(0,0,0,0.35);
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+        }
+        .tu-mentor-chat-btn:hover{
+          transform: translateY(-1px);
+          box-shadow:0 14px 34px rgba(0,0,0,0.4);
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const root = getRootPath();
+    const href = `${root}/pages/private chat/private_chat.html?mentor=${encodeURIComponent(teacherId)}`;
+    const btn = document.createElement("a");
+    btn.id = "tu-mentor-chat-btn";
+    btn.className = "tu-mentor-chat-btn";
+    btn.href = href;
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      Message Mentor
+    `;
+    btn.addEventListener("click", () => {
+      try { sessionStorage.setItem("tu_return_url", href); } catch (e) {}
+    });
+
+    document.body.appendChild(btn);
+  }
+
 window.TU = {
     init: function () {
       const { auth, db, stub } = initFirebaseOnce();
@@ -689,6 +749,7 @@ window.TU = {
 
       // Auto-inject admin panel button on pages that have an admin overlay
       try { setupAdminFab(db, auth); } catch (e) {}
+      try { setupMentorChatCta(); } catch (e) {}
 
       let banUnsub = null;
 

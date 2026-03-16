@@ -1173,6 +1173,31 @@ body { padding-top: 0; }
   flex-shrink: 0;
 }
 
+.navbar-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(124, 140, 255, 0.10);
+  border: 1.5px solid rgba(124, 140, 255, 0.32);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  display: grid;
+  place-items: center;
+  color: var(--primary, #a5b4fc);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.2,0.8,0.2,1);
+}
+.navbar-icon:hover {
+  box-shadow: 0 0 0 3px rgba(124, 140, 255, 0.22), 0 0 20px rgba(124, 140, 255, 0.20);
+  border-color: rgba(124, 140, 255, 0.55);
+  transform: scale(1.10);
+}
+.navbar-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+  opacity: 0.95;
+}
+
 .navbar-avatar {
   width: 42px;
   height: 42px;
