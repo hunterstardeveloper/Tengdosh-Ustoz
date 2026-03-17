@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  // =========================
-  //  BRAND SETTINGS
-  // =========================
+  
+  
+  
   const BRAND = "TENGDOSH-USTOZ";
   const BRAND_SHORT = "TU";
   const CONSOLE_TAG = "[TENGDOSH-USTOZ UI]";
@@ -95,7 +95,7 @@
 
     if (pathname === "/" || pathname.endsWith("/index.html")) return "";
 
-    // Keep your custom routes (edit these if your site paths differ)
+    
     if (pathname.endsWith("/pages/study_materials/study_materials.html")) return "Study Materials";
     if (pathname.endsWith("/pages/chat/global.chat.html")) return "Global Chat";
 

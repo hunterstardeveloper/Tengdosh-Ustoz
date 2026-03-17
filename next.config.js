@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy",

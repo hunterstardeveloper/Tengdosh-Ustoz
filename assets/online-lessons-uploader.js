@@ -1,18 +1,18 @@
-// assets/online-lessons-uploader.js
-// Global logic: load lessons from Firebase RTDB and allow ONLY admin or the page's teacher to add lessons.
-// Works with the existing per-teacher online.html pages (compat Firebase via TU.*).
-//
-// Data source:
-//   online/{clubId}/{teacherId}/modules/{moduleId}
-//
-// It populates window.courseData in the legacy format used by existing pages:
-//   { qa, video:[], tasks:[], docs:[{title,link}], downloads:[{title,link}] }
-// and calls window.renderCourses() if it exists.
+
+
+
+
+
+
+
+
+
+
 
 (function () {
   'use strict';
 
-  // ---------- small helpers ----------
+  
   const $ = (sel) => document.querySelector(sel);
   const safeText = (v) => (v == null ? '' : String(v));
   const trimLines = (txt) => safeText(txt).split('\n').map(s => s.trim()).filter(Boolean);
@@ -53,13 +53,13 @@
   }
 
   function inferClubTeacherFromPath() {
-    // Expected: /clubs/{club}/{teacher}/online.html
+    
     const parts = (location.pathname || '').split('/').filter(Boolean);
     const i = parts.indexOf('clubs');
     if (i >= 0 && parts[i + 1] && parts[i + 2]) {
       return { clubId: parts[i + 1], teacherId: parts[i + 2] };
     }
-    // Fallback: keep legacy globals if present
+    
     const clubId = (window.CLUB_ID || '').trim();
     const teacherId = (window.TEACHER_ID || '').trim();
     return { clubId: clubId || 'unknown', teacherId: teacherId || 'unknown' };
@@ -73,9 +73,9 @@
     return true;
   }
 
-  // ---------- permissions ----------
+  
   async function getUserRole(uid) {
-    // Prefer TU.getRole if available; else read users/{uid}/role
+    
     try {
       if (window.TU && typeof TU.getRole === 'function') {
         const r = await TU.getRole(TU.db, uid);
@@ -92,9 +92,9 @@
   }
 
   async function getUserTeacherId(uid) {
-    // Back-compat: different keys exist across your DB history.
-    // Prefer canonical teacherId (matches folder name), also support teacherIdonline (security ID).
-    // Some exports even contain a typo key: " teacherIdonline" (leading space).
+    
+    
+    
     try {
       const snap = await TU.db.ref(`users/${uid}`).once('value');
       const v = snap.val() || {};
@@ -114,10 +114,10 @@
     const packed = await getUserTeacherId(uid);
     const [userTeacherId, userTeacherIdOnline] = String(packed || '').split('|||');
 
-    // teacher editing their own page by canonical teacherId
+    
     if ((userTeacherId || '').trim() === pageTeacherId) return true;
 
-    // legacy: teacherIdonline might directly equal folder teacherId
+    
     if ((userTeacherIdOnline || '').trim() === pageTeacherId) return true;
 
     try {
@@ -160,12 +160,12 @@
     };
   }
 
-  // ---------- UI (minimal, logic-focused) ----------
+  
   function ensureAddCard(canUpload) {
     const container = $('#courses');
     if (!container) return;
 
-    // Remove existing injected card if any
+    
     const prev = container.querySelector('[data-tu-add-lesson="1"]');
     if (prev) prev.remove();
 
@@ -266,7 +266,7 @@
 
       const parseTitleUrlLines = (txt) => {
         return trimLines(txt).map(line => {
-          // accept "title | url" or plain url
+          
           const parts = line.split('|').map(s => s.trim()).filter(Boolean);
           if (parts.length === 1) {
             const url = parts[0];
@@ -300,7 +300,7 @@
     overlay.style.display = 'flex';
   }
 
-  // ---------- realtime loader ----------
+  
   let CLUB_ID = 'unknown';
   let TEACHER_ID = 'unknown';
   let MODULES_PATH = '';
@@ -314,13 +314,13 @@
     TU.db.ref(MODULES_PATH).on('value', (snap) => {
       const v = snap.val() || {};
       const arr = Object.keys(v).map((id) => ({ _id: id, ...v[id] }));
-      // oldest -> newest
+      
       arr.sort((a, b) => (a.createdAtMs || 0) - (b.createdAtMs || 0));
 
-      // IMPORTANT: many pages define `const courseData = window.courseData = []`.
-      // If we reassign `window.courseData = [...]`, the local `courseData` const
-      // keeps pointing to the old empty array and UI never updates.
-      // So we MUTATE the existing array in place when possible.
+      
+      
+      
+      
       const nextCourses = arr.map(moduleToLegacyCourse);
       if (Array.isArray(window.courseData)) {
         window.courseData.length = 0;
@@ -333,10 +333,10 @@
         try { window.renderCourses(); } catch (e) { console.warn(e); }
       }
 
-      // Mark courses ready (first data snapshot received)
+      
       window.__TU_COURSES_READY = true;
 
-      // Add "Add lesson" card after render
+      
       ensureAddCard(canUpload);
     });
   }
@@ -348,8 +348,8 @@
     CLUB_ID = inf.clubId;
     TEACHER_ID = inf.teacherId;
 
-    // Canonical club id sometimes lives under teachers/{teacherId}/classData/club.
-    // If it exists, prefer it to avoid folder/DB drift (e.g., python vs py).
+    
+    
     try {
       const clubSnap = await TU.db.ref(`teachers/${TEACHER_ID}/classData/club`).once('value');
       const canonicalClub = (clubSnap.val() || '').toString().trim();
@@ -358,7 +358,7 @@
 
     MODULES_PATH = `online/${CLUB_ID}/${TEACHER_ID}/modules`;
 
-    // wait auth
+    
     TU.auth.onAuthStateChanged(async (user) => {
       if (!user) {
         canUpload = false;
@@ -367,12 +367,12 @@
       }
       canUpload = await canUploadForPage(user.uid, TEACHER_ID);
       attachRealtimeModulesOnce();
-      // Update Add card visibility immediately
+      
       ensureAddCard(canUpload);
     });
   }
 
-  // Start after DOM is ready (so legacy functions exist)
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
@@ -380,25 +380,25 @@
   }
 })();
 
-// ======================================================
-// GLOBAL LINK FIX (docs/downloads) for legacy online.html
-// Fixes cases where href becomes "/https://..." which 404s.
-// Applies across ALL pages that load this shared script.
-// ======================================================
+
+
+
+
+
 (function fixOnlineLinksGlobally() {
   const normalizeHref = (u) => {
     u = String(u ?? '').trim();
     if (!u) return '';
-    // If the page defines safeAssetUrl(), prefer it.
+    
     if (typeof window.safeAssetUrl === 'function') return window.safeAssetUrl(u);
 
-    // Keep full URLs
+    
     if (/^https?:\/\//i.test(u)) return u;
 
-    // Keep absolute paths
+    
     if (u.startsWith('/')) return u;
 
-    // Make relative paths absolute
+    
     return '/' + u;
   };
 
@@ -411,26 +411,26 @@
         const href = (a.getAttribute('href') || '').trim();
         if (!href) return;
 
-        // Critical bug: "/https://..." -> "https://..."
+        
         if (href.startsWith('/http://') || href.startsWith('/https://')) {
           a.setAttribute('href', href.slice(1));
         } else {
           a.setAttribute('href', normalizeHref(href));
         }
 
-        // Ensure safe new-tab behavior
+        
         a.setAttribute('target', '_blank');
         a.setAttribute('rel', 'noopener');
       });
     });
 
-    // Re-render icons if lucide is present
+    
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
   };
 
-  // Best path: wrap selectCourse so links are fixed right after render.
+  
   if (typeof window.selectCourse === 'function') {
     const original = window.selectCourse;
     window.selectCourse = function patchedSelectCourse(index) {
@@ -438,7 +438,7 @@
       fixContainers();
     };
   } else {
-    // Fallback: watch for DOM changes and re-fix when content updates.
+    
     const obs = new MutationObserver(() => fixContainers());
     if (document.body) {
       obs.observe(document.body, { childList: true, subtree: true });
@@ -449,7 +449,7 @@
     }
   }
 
-  // Initial run
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', fixContainers);
   } else {
@@ -459,7 +459,7 @@
 
 
 
-// ---- CLICK INTERCEPTOR (guaranteed fix even if DOM updates after render) ----
+
 (function interceptBrokenHttpLinks() {
   document.addEventListener('click', (e) => {
     const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
@@ -468,8 +468,8 @@
     const hrefAttr = a.getAttribute('href') || '';
     if (hrefAttr.startsWith('/http://') || hrefAttr.startsWith('/https://')) {
       e.preventDefault();
-      const fixed = hrefAttr.slice(1); // remove leading "/"
-      // preserve target behavior
+      const fixed = hrefAttr.slice(1); 
+      
       const target = a.getAttribute('target');
       if (target === '_blank') {
         window.open(fixed, '_blank', 'noopener');
@@ -478,5 +478,5 @@
       }
       return;
     }
-  }, true); // capture: run before default navigation
+  }, true); 
 })();

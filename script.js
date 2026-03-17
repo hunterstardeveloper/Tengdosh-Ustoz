@@ -914,15 +914,15 @@ function applyQuotesLanguage(lang) {
     }
 }
 
-// Initialize quotes array immediately
+
 const initialLang = localStorage.getItem("tu_lang") || "en";
 applyQuotesLanguage(initialLang);
 
-// Listen to language changes
+
 document.addEventListener("tu-lang-changed", (e) => {
     applyQuotesLanguage(e.detail.lang);
     
-    // Attempt to trigger the home page quote logic to instantly refresh text without advancing 
+    
     const nextBtn = document.getElementById('next-btn');
     if (nextBtn) {
         nextBtn.click();

@@ -17,9 +17,7 @@
     <div class="orb orb-3"></div>
   </div>
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
-
   <div class="page-scroll" id="page-scroll">
-
     <nav class="navbar" id="main-navbar">
       <a href="/home.html" class="navbar-brand">
         <div class="navbar-brand-logo"><img src="/logo.png" alt="logo"></div>
@@ -71,7 +69,6 @@
         </button>
       </div>
     </nav>
-
     <div class="account-wrap">
       <aside class="account-sidebar glass">
         <div class="account-userbox">
@@ -85,7 +82,6 @@
             <span id="subText">Subscribed</span>
           </div>
         </div>
-
         <nav class="account-menu">
           <button class="account-menu-btn active" data-tab="overview">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -106,14 +102,11 @@
             <span data-i18n="acc_liked">Liked</span>
           </button>
         </nav>
-
         <button class="account-btn danger" id="logoutBtn" style="width:100%;margin-top:auto;" data-i18n="acc_signout">
           Sign Out
         </button>
       </aside>
-
       <main class="account-main glass">
-
         <div id="tab-overview">
           <p class="account-tab-title" data-i18n="acc_dashboard">Learning Dashboard</p>
           <p class="account-tab-sub" data-i18n="acc_dashboard_sub">Your subscriptions and activity at a glance.</p>
@@ -139,15 +132,12 @@
             <div id="subsList"></div>
           </div>
         </div>
-
         <div id="tab-profile" style="display:none">
           <p class="account-tab-title" data-i18n="acc_profile_title">Profile</p>
           <p class="account-tab-sub" data-i18n="acc_profile_sub">Update your display name, phone number, and university group.</p>
-
           <div class="account-section">
             <label class="account-label" for="nameInput" data-i18n="acc_display_name">Display name</label>
             <input class="account-input" id="nameInput" type="text" placeholder="Your name" />
-
             <div class="account-input-row">
               <div>
                 <label class="account-label" for="surnameInput"><span data-i18n="acc_surname">Surname</span> <span style="opacity:.5;font-size:11px" data-i18n="acc_surname_opt">(optional)</span></label>
@@ -158,23 +148,19 @@
                 <input class="account-input" id="phoneInput" type="tel" placeholder="+998901234567" />
               </div>
             </div>
-
             <div style="margin-top:12px">
               <label class="account-label" for="groupInput"><span data-i18n="acc_group">Group</span> <span style="opacity:.65;font-size:11px" data-i18n="acc_group_req">(required)</span></label>
               <input class="account-input" id="groupInput" type="text" placeholder="e.g. 102" />
             </div>
-
             <div style="margin-top:18px">
               <button class="account-btn" id="saveProfile" type="button" data-i18n="acc_save">Save changes</button>
             </div>
             <div class="account-msg" id="profileMsg"></div>
           </div>
         </div>
-
         <div id="tab-settings" style="display:none">
           <p class="account-tab-title" data-i18n="acc_settings_title">Settings</p>
           <p class="account-tab-sub" data-i18n="acc_settings_sub">Manage your account and subscriptions.</p>
-
           <div class="account-section">
             <h3 data-i18n="acc_danger">Danger Zone</h3>
             <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="acc_danger_desc">
@@ -186,11 +172,9 @@
             <div class="account-msg" id="settingsMsg"></div>
           </div>
         </div>
-
         <div id="tab-liked" style="display:none">
           <p class="account-tab-title" data-i18n="acc_liked_title">Liked Quotes</p>
           <p class="account-tab-sub" data-i18n="acc_liked_sub">Quotes you liked on the Home page. Visible only to you.</p>
-
           <div class="account-section">
             <h3 data-i18n="acc_your_likes">Your likes</h3>
             <div class="account-msg" id="likesMsg"></div>
@@ -199,7 +183,6 @@
         </div>
       </main>
     </div>
-
     <footer class="edu-footer" aria-label="Footer">
       <div class="edu-footer-wrap">
         <div class="edu-footer-grid">
@@ -218,10 +201,8 @@
               platform for shared knowledge, growth, and academic excellence since 2026.
             </p>
           </div>
-  
           <div class="edu-footer-col">
             <h4 class="edu-footer-h" data-i18n="footer_contact">Contact Us</h4>
-  
             <div class="edu-contact">
               <div class="edu-contact-icon" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -233,7 +214,6 @@
                 <div class="edu-contact-value">+998 90 855 75 85</div>
               </div>
             </div>
-  
             <div class="edu-contact">
               <div class="edu-contact-icon" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -248,7 +228,6 @@
                 </div>
               </div>
             </div>
-  
             <div class="edu-contact">
               <div class="edu-contact-icon" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -262,7 +241,6 @@
               </div>
             </div>
           </div>
-  
           <div class="edu-footer-col">
             <h4 class="edu-footer-h" data-i18n="footer_support">Support</h4>
             <ul class="edu-footer-list">
@@ -272,7 +250,6 @@
             </ul>
           </div>
         </div>
-  
         <div class="edu-footer-bottom">
           <div class="edu-footer-rule" aria-hidden="true"></div>
           <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
@@ -280,25 +257,20 @@
       </div>
     </footer>
   </div>
-
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
   <script src="/assets/quote-likes.js"></script>
-  
   <script src="/assets/i18n.js"></script>
-
   <script>
   (function () {
     const nav = document.getElementById('main-navbar');
     const ham = document.getElementById('navbar-hamburger');
     const links = document.getElementById('navbar-links');
     if (!nav || !links) return;
-
     const isMobile = () => window.matchMedia('(max-width: 1000px)').matches;
-
     function setOpen(open) {
       links.classList.toggle('open', open);
       if (ham) {
@@ -307,7 +279,6 @@
       }
       document.body.classList.toggle('nav-open', open && isMobile());
     }
-
     const onScroll = () => {
       const scroller = document.getElementById('page-scroll');
       const scrolled = scroller ? scroller.scrollTop > 40 : window.scrollY > 40;
@@ -316,42 +287,34 @@
     const scrollTarget = document.getElementById('page-scroll') || window;
     scrollTarget.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-
     if (ham) {
       ham.addEventListener('click', (e) => {
         e.stopPropagation();
         setOpen(!links.classList.contains('open'));
       });
     }
-
     links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
-
     document.addEventListener('click', (e) => {
       if (!isMobile()) return;
       if (!links.classList.contains('open')) return;
       if (nav.contains(e.target)) return;
       setOpen(false);
     });
-
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') setOpen(false);
     });
-
     window.addEventListener('resize', () => {
       if (!isMobile()) setOpen(false);
     });
   })();
   </script>
-
   <script>
     (function () {
       const root = document.documentElement;
       const btn = document.getElementById("theme-toggle");
       const icon = document.getElementById("theme-icon");
-
       const MOON =
         '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-
       const SUN = `
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -363,13 +326,11 @@
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
       `;
-
       const saved = localStorage.getItem("theme") || "light";
       if (saved === "dark") {
         root.setAttribute("data-theme", "dark");
         if (icon) icon.innerHTML = SUN;
       }
-
       btn?.addEventListener("click", () => {
         const isDark = root.getAttribute("data-theme") === "dark";
         root.setAttribute("data-theme", isDark ? "light" : "dark");
@@ -377,25 +338,21 @@
         localStorage.setItem("theme", isDark ? "light" : "dark");
       });
     })();
-
     (function () {
       const canvas = document.getElementById("particles-canvas");
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       let W, H,
         particles = [];
-
       function resize() {
         W = canvas.width = window.innerWidth;
         H = canvas.height = window.innerHeight;
       }
       resize();
       window.addEventListener("resize", resize);
-
       function rand(a, b) {
         return Math.random() * (b - a) + a;
       }
-
       for (let i = 0; i < 60; i++) {
         particles.push({
           x: rand(0, W),
@@ -407,13 +364,11 @@
           od: 1,
         });
       }
-
       function col() {
         return document.documentElement.getAttribute("data-theme") === "dark"
           ? "165,180,252"
           : "124,140,255";
       }
-
       (function draw() {
         ctx.clearRect(0, 0, W, H);
         const c = col();
@@ -421,14 +376,12 @@
           p.x += p.dx;
           p.y += p.dy;
           p.opacity += p.od * 0.003;
-
           if (p.opacity > 0.7 || p.opacity < 0.1) p.od *= -1;
           if (p.y < -10) {
             p.y = H + 10;
             p.x = rand(0, W);
           }
           if (p.x < 0 || p.x > W) p.dx *= -1;
-
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${c},${p.opacity})`;
@@ -437,33 +390,25 @@
         requestAnimationFrame(draw);
       })();
     })();
-
     TU.init();
     const auth = TU.auth;
     const db = TU.db;
-
     const rootPath =
       (window.location.pathname.includes("/clubs")
         ? window.location.pathname.split("/clubs")[0]
         : window.location.pathname.replace(/\/[^\/]*$/, "")) || "";
-
     const qp = new URLSearchParams(window.location.search);
     const FORCE_COMPLETE = qp.get("complete") === "1";
-
     const avatarEl = document.getElementById("avatar");
     const displayNameEl = document.getElementById("displayName");
     const emailEl = document.getElementById("email");
-
     const subsCountEl = document.getElementById("subsCount");
     const lastSubEl = document.getElementById("lastSub");
     const subTextEl = document.getElementById("subText");
     const badgeDotEl = document.getElementById("badgeDot");
-
     const subsMsgEl = document.getElementById("subsMsg");
     const subsListEl = document.getElementById("subsList");
-
     const roleEl = document.getElementById("role");
-
     function initialsFrom(u) {
       if (u?.displayName) {
         const p = u.displayName.trim().split(" ");
@@ -471,7 +416,6 @@
       }
       return (u?.email || "?")[0].toUpperCase();
     }
-
     function fmtTime(ts) {
       if (!ts) return "—";
       return new Date(ts).toLocaleDateString("en-US", {
@@ -480,13 +424,11 @@
         year: "numeric",
       });
     }
-
     function setMsg(el, text, ok) {
       if (!el) return;
       el.textContent = text;
       el.className = "account-msg" + (text ? " " + (ok ? "ok" : "err") : "");
     }
-
     function openProfileTab() {
       document
         .querySelectorAll(".account-menu-btn")
@@ -495,56 +437,45 @@
         '.account-menu-btn[data-tab="profile"]'
       );
       if (profileBtn) profileBtn.classList.add("active");
-
       ["overview", "profile", "settings", "liked"].forEach((x) => {
         const el = document.getElementById(`tab-${x}`);
         if (el) el.style.display = x === "profile" ? "" : "none";
       });
     }
-
     function setNavbarAvatar(u) {
       const navAv = document.getElementById("navbar-avatar");
       if (!navAv) return;
-
       navAv.replaceChildren();
-
       if (u?.photoURL) {
         const img = document.createElement("img");
         img.src = u.photoURL; 
         img.alt = "Avatar";
         img.loading = "lazy";
         img.referrerPolicy = "no-referrer";
-
         img.onerror = () => {
           navAv.replaceChildren();
           navAv.textContent = initialsFrom(u);
         };
-
         navAv.appendChild(img);
       } else {
         navAv.textContent = initialsFrom(u);
       }
     }
-
     function setSidebarAvatar(u) {
       if (!avatarEl) return;
-
       avatarEl.replaceChildren();
-
       if (u?.photoURL) {
         const img = document.createElement("img");
         img.src = u.photoURL;
         img.alt = "Avatar";
         img.loading = "lazy";
         img.referrerPolicy = "no-referrer";
-
         img.onerror = () => {
           avatarEl.replaceChildren();
           const span = document.createElement("span");
           span.textContent = initialsFrom(u);
           avatarEl.appendChild(span);
         };
-
         avatarEl.appendChild(img);
       } else {
         const span = document.createElement("span");
@@ -552,15 +483,12 @@
         avatarEl.appendChild(span);
       }
     }
-
     async function renderSubscriptions(u) {
       subsListEl.innerHTML = "";
       subsMsgEl.textContent = "";
-
       const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
       const val = snap.val() || {};
       const items = [];
-
       Object.entries(val).forEach(([k, v]) => {
         if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
           items.push({
@@ -572,7 +500,6 @@
           });
           return;
         }
-
         if (v && typeof v === "object") {
           Object.entries(v).forEach(([teacherName, sub]) => {
             if (!sub || typeof sub !== "object") return;
@@ -587,18 +514,13 @@
           });
         }
       });
-
       subsCountEl.textContent = items.length;
-      
-      // Adapted to use i18n
       const noSubsDefault = "No subscriptions yet. Visit a teacher page and press Subscribe.";
       subsMsgEl.textContent = items.length 
         ? "" 
         : (window.TU_i18n ? TU_i18n.t("acc_no_subs") : noSubsDefault);
-
       const last = items.map((x) => x?.subscribedAt || 0).sort((a, b) => b - a)[0];
       lastSubEl.textContent = last ? fmtTime(last) : "—";
-
       if (items.length) {
         subTextEl.textContent = "Subscribed";
         badgeDotEl.classList.remove("inactive");
@@ -606,14 +528,12 @@
         subTextEl.textContent = "Not subscribed";
         badgeDotEl.classList.add("inactive");
       }
-
       items
         .sort((a, b) => (b?.subscribedAt || 0) - (a?.subscribedAt || 0))
         .forEach((s) => {
           const teacher = s?.teacher || "Teacher";
           const club = s?.club || "club";
           const when = fmtTime(s?.subscribedAt);
-
           const row = document.createElement("div");
           row.className = "sub-item";
           row.innerHTML = `
@@ -624,7 +544,6 @@
             </div>
             <button class="account-btn danger" type="button">Unsubscribe</button>
           `;
-
           row.querySelector("button").addEventListener("click", async () => {
             if (!confirm(`Unsubscribe from ${teacher}?`)) return;
             if (s?.__path) await db.ref(s.__path).remove();
@@ -632,15 +551,11 @@
             await renderSubscriptions(u);
               try { await renderLikedQuotes(u); } catch(e) {}
           });
-
           subsListEl.appendChild(row);
         });
-
     }
-
     const likesListEl = document.getElementById("likesList");
     const likesMsgEl = document.getElementById("likesMsg");
-
     function escapeHtml(s) {
       return String(s || "")
         .replace(/&/g, "&amp;")
@@ -649,14 +564,11 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
-
     let likesUnsub = null;
-
     function clearLikesUI() {
       if (likesListEl) likesListEl.innerHTML = "";
       setMsg(likesMsgEl, "", true);
     }
-
     function renderLikesEmpty() {
       if (!likesListEl) return;
       likesListEl.innerHTML = `
@@ -664,41 +576,32 @@
           You haven't liked any quotes yet. Go to <a href="/home.html">Home</a> and tap the ? button.
         </div>`;
     }
-
     async function renderLikedQuotes(u) {
       clearLikesUI();
       if (!u) return;
-
       try { likesUnsub && likesUnsub(); } catch(e) {}
       likesUnsub = null;
-
       const ref = db.ref(`userLikes/${u.uid}`);
       const handler = async (snap) => {
         const likedMap = snap.val() || {};
         const ids = Object.keys(likedMap);
-
         if (!likesListEl) return;
-
         if (ids.length === 0) {
           renderLikesEmpty();
           return;
         }
-
         const metas = await Promise.all(
           ids.map(async (id) => {
             const metaSnap = await db.ref(`quoteMeta/${id}`).once("value");
             return { id, meta: metaSnap.val() || null };
           })
         );
-
         metas.sort((a, b) => {
           const at = Number(a.meta?.updatedAt || a.meta?.createdAt || 0);
           const bt = Number(b.meta?.updatedAt || b.meta?.createdAt || 0);
           return bt - at;
         });
-
         likesListEl.innerHTML = "";
-
         metas.forEach(({ id, meta }) => {
           const text = meta?.text || meta?.raw || "(missing quote)";
           const author = meta?.author || "";
@@ -713,7 +616,6 @@
               <button class="account-btn danger" type="button">Remove like</button>
             </div>
           `;
-
           row.querySelector("button").addEventListener("click", async () => {
             try {
               await db.ref(`userLikes/${u.uid}/${id}`).remove();
@@ -730,24 +632,18 @@
               setMsg(likesMsgEl, "Could not remove like.", false);
             }
           });
-
           likesListEl.appendChild(row);
         });
       };
-
       ref.on("value", handler);
       likesUnsub = () => ref.off("value", handler);
     }
-
-
     document.getElementById("logoutBtn")?.addEventListener("click", async () => {
       await auth.signOut();
       window.location.href = `/auth/login.html`;
     });
-
     const TABS = ["overview", "profile", "settings", "liked"];
     if (FORCE_COMPLETE) openProfileTab();
-
     document.querySelectorAll(".account-menu-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         document
@@ -755,34 +651,27 @@
           .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         const t = btn.dataset.tab;
-
         TABS.forEach((x) => {
           const el = document.getElementById(`tab-${x}`);
           if (el) el.style.display = x === t ? "" : "none";
         });
       });
     });
-
     document.getElementById("saveProfile")?.addEventListener("click", async () => {
       const msgEl = document.getElementById("profileMsg");
       setMsg(msgEl, "", true);
-
       try {
         const u = auth.currentUser;
         if (!u) throw new Error("Not logged in");
-
         const name = document.getElementById("nameInput")?.value.trim() || "";
         const surename = document.getElementById("surnameInput")?.value.trim() || "";
         const phone = document.getElementById("phoneInput")?.value.trim() || "";
         const group = document.getElementById("groupInput")?.value.trim() || "";
-
         const phoneNorm = phone.replace(/[^0-9+]/g, "");
         if (!phoneNorm) throw new Error("Phone number is required");
         if (phoneNorm.length < 9) throw new Error("Enter a valid phone number");
         if (!group) throw new Error("Group is required");
-
         await u.updateProfile({ displayName: name || null });
-
         await db.ref(`users/${u.uid}`).update({
           displayName: name || null,
           surename: surename || null,
@@ -790,13 +679,10 @@
           groupInUniversity: group || null,
           updatedAt: firebase.database.ServerValue.TIMESTAMP,
         });
-
         setMsg(msgEl, "? Saved successfully.", true);
-
         displayNameEl.textContent = u.displayName || u.email || "User";
         setNavbarAvatar(u);
         setSidebarAvatar(u);
-
         if (FORCE_COMPLETE) {
           const back = TU.popReturnUrl(`${rootPath}/home.html`);
           window.location.href = back;
@@ -805,20 +691,16 @@
         setMsg(document.getElementById("profileMsg"), e?.message || "Failed", false);
       }
     });
-
     document.getElementById("clearSubs")?.addEventListener("click", async () => {
       const msgEl = document.getElementById("settingsMsg");
       setMsg(msgEl, "", true);
-
       try {
         const u = auth.currentUser;
         if (!u) throw new Error("Not logged in");
         if (!confirm("Unsubscribe from ALL teachers? This cannot be undone.")) return;
-
         const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
         const val = snap.val() || {};
         const paths = [];
-
         Object.entries(val).forEach(([k, v]) => {
           if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
             paths.push(`subscriptions/${k}/attendants/${u.uid}`);
@@ -832,48 +714,38 @@
             });
           }
         });
-
         await db.ref(`subscriptions/index/${u.uid}`).remove();
         await Promise.all(paths.map((p) => db.ref(p).remove()));
-
         setMsg(msgEl, "? All subscriptions removed.", true);
         await renderSubscriptions(u);
       } catch (e) {
         setMsg(document.getElementById("settingsMsg"), e?.message || "Failed", false);
       }
     });
-
     document.addEventListener("tu-auth-changed", async (ev) => {
       const u = ev.detail.user;
       if (!u) {
         TU.requireLogin(auth);
         return;
       }
-
       displayNameEl.textContent = u.displayName || u.email || "User";
       emailEl.textContent = u.email || "";
-
       const nameInput = document.getElementById("nameInput");
       if (nameInput) nameInput.value = u.displayName || "";
-
       setNavbarAvatar(u);
       setSidebarAvatar(u);
-
       try {
         const snap = await db.ref(`users/${u.uid}`).once("value");
         const doc = snap.val() || {};
-
         document.getElementById("surnameInput").value = doc.surename || "";
         document.getElementById("phoneInput").value = doc.phone || doc["phone number"] || "";
         document.getElementById("groupInput").value =
           doc.groupInUniversity || doc.group || "";
-
         if (FORCE_COMPLETE) {
           const phoneOk = String(doc.phone || doc["phone number"] || "")
             .replace(/[^0-9+]/g, "")
             .trim();
           const groupOk = String(doc.groupInUniversity || doc.group || "").trim();
-
           if (!phoneOk || !groupOk) {
             openProfileTab();
             setMsg(
@@ -884,12 +756,10 @@
           }
         }
       } catch (e) {}
-
       try {
         const role = await TU.getRole(db, u.uid);
         if (roleEl) roleEl.textContent = role;
       } catch (e) {}
-
       await renderSubscriptions(u);
         await renderLikedQuotes(u);
     });
@@ -898,22 +768,16 @@
     document.addEventListener("DOMContentLoaded", () => {
     const phoneInput = document.getElementById("phoneInput");
     if (!phoneInput) return;
-
     if (!phoneInput.value) {
       phoneInput.value = "+998 ";
     }
-
     phoneInput.addEventListener("input", function () {
       let numbers = this.value.replace(/\D/g, "");
-
       if (!numbers.startsWith("998")) {
         numbers = "998" + numbers;
       }
-
       numbers = numbers.substring(0, 12);
-
       let formatted = "+998 ";
-
       if (numbers.length > 3) {
         formatted += numbers.substring(3, 5);
       }
@@ -926,16 +790,13 @@
       if (numbers.length >= 11) {
         formatted += "-" + numbers.substring(10, 12);
       }
-
       this.value = formatted;
     });
-
     phoneInput.addEventListener("keydown", function (e) {
       if (this.selectionStart <= 5 && (e.key === "Backspace" || e.key === "Delete")) {
         e.preventDefault();
       }
     });
-
     const fy = document.getElementById("footer-year");
     if (fy) fy.textContent = String(new Date().getFullYear());
   });
@@ -943,4 +804,3 @@
 <script src="/assets/UI.js"></script>
 </body>
 </html>
-

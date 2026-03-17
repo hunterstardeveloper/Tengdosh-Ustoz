@@ -6,7 +6,7 @@
     blockShortcuts: true,
     blockAllCtrlCmdLetters: true,
     reactOnDevtools: true,
-    devtoolsReaction: "overlay", // "overlay" | "blur" | "redirect"
+    devtoolsReaction: "overlay", 
     redirectTo: "/auth/banned.html",
   };
 
@@ -98,7 +98,7 @@
     });
   }
 
-  // DevTools detection (heuristics) — not reliable, but adds friction
+  
   let devtoolsLikely = false;
 
   function checkDevtoolsBySize() {
@@ -109,7 +109,7 @@
 
   function checkDevtoolsByDebuggerTiming() {
     const t0 = performance.now();
-    debugger; // if DevTools open + pause on debugger, timing jumps
+    debugger; 
     const dt = performance.now() - t0;
     return dt > 120;
   }

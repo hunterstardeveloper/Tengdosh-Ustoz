@@ -30,7 +30,6 @@
       --primary:#4f7cff;
       --shadow:0 20px 40px rgba(0,0,0,0.12);
     }
-
     *{box-sizing:border-box}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -44,7 +43,6 @@
       padding:24px;
       overflow-x:hidden;
     }
-
     .wrap{width:100%;max-width:430px;position:relative}
     .card{
       width:100%;
@@ -56,12 +54,10 @@
       backdrop-filter: blur(22px) saturate(140%);
       -webkit-backdrop-filter: blur(22px) saturate(140%);
     }
-
     .brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
     .logo{width:36px;height:36px;border-radius:12px;border:1px solid var(--border);background:rgba(124,140,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary)}
     h1{margin:0;font-size:20px;letter-spacing:0.2px}
     .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
-
     label{display:block;font-size:13px;margin-top:14px;color:var(--muted)}
     input{
       width:100%;
@@ -76,12 +72,9 @@
       box-sizing:border-box;
     }
     input:focus{border-color:rgba(124,140,255,0.65)}
-
-    
     input[type="password"]{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
-/* Password field wrapper — flex so the button is a true sibling */
     .field{
       display:flex;
       align-items:center;
@@ -102,7 +95,6 @@
       padding-right:4px;
     }
     .field input:focus{border-color:transparent}
-
     .toggle-pass{
       flex-shrink:0;
       background:transparent;
@@ -120,7 +112,6 @@
       padding:0;
     }
     .toggle-pass:hover{background:rgba(124,140,255,0.12);color:var(--text)}
-
     button{
       width:100%;
       margin-top:16px;
@@ -135,7 +126,6 @@
       transition:transform .12s ease, opacity .2s ease;
     }
     button:hover{transform:translateY(-1px)}
-
     .google-btn{
       background:transparent;
       border:1px solid var(--border);
@@ -148,14 +138,11 @@
     .google-btn:hover{border-color:rgba(124,140,255,0.75)}
     .google-ico{width:18px;height:18px}
     button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
     .row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:14px}
     .row a{color:var(--primary);text-decoration:none;font-size:13px}
     .row a:hover{text-decoration:underline}
-
     .err{color:var(--danger);font-size:13px;min-height:18px;margin-top:10px}
     .small{font-size:13px;color:var(--muted);margin-top:12px}
-
     #theme-toggle{
       position:absolute;
       right:10px;
@@ -186,7 +173,6 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
-
     <div class="card">
       <div class="brand">
         <div class="logo">
@@ -200,12 +186,9 @@
           <p class="sub">Continue to your account</p>
         </div>
       </div>
-
       <div class="err" id="err"></div>
-
       <label for="email">Email</label>
       <input id="email" type="email" autocomplete="email" placeholder="yourname@gmail.com" />
-
       <label for="pass">Password</label>
       <div class="field">
         <input id="pass" type="password" autocomplete="current-password" placeholder="Password" />
@@ -216,9 +199,7 @@
           </svg>
         </button>
       </div>
-
       <button id="btn">Sign in</button>
-
       <button id="googleBtn" class="google-btn" type="button">
         <svg class="google-ico" viewBox="0 0 48 48" aria-hidden="true">
           <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.651 32.657 29.13 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z">
@@ -228,26 +209,20 @@
         </svg>
         Continue with Google
       </button>
-
       <div class="row">
         <a href="/auth/reset.html">Forgot password?</a>
         <a href="/auth/register.html">Create account</a>
       </div>
-
       <div class="small" id="who"></div>
     </div>
   </div>
-
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
   <script>
     TU.init();
-
-    // theme
     (function initTheme(){
       let saved = null;
       try { saved = sessionStorage.getItem('tu_theme'); } catch(e) {}
@@ -261,21 +236,17 @@
       document.documentElement.setAttribute('data-theme', next);
       try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
     });
-
     const err = document.getElementById('err');
     const btn = document.getElementById('btn');
     const togglePass = document.getElementById('togglePass');
     const googleBtn = document.getElementById('googleBtn');
-
     function setErr(e){ err.textContent = e || ''; }
-
     togglePass.addEventListener('click', () => {
       const pass = document.getElementById('pass');
       pass.type = pass.type === 'password' ? 'text' : 'password';
       togglePass.setAttribute('aria-label', pass.type === 'password' ? 'Show password' : 'Hide password');
       togglePass.setAttribute('title', pass.type === 'password' ? 'Show password' : 'Hide password');
     });
-
     async function doLogin(){
       setErr('');
       btn.disabled = true;
@@ -284,7 +255,6 @@
         const pass = document.getElementById('pass').value;
         if (!email || !pass) throw new Error('Enter email and password');
         if (!/^[^\s@]+@gmail\.com$/i.test(email)) throw new Error('Only Gmail addresses are allowed (example@gmail.com)');
-
         await TU.auth.signInWithEmailAndPassword(email, pass);
         const back = TU.popReturnUrl('/home.html');
         const ok = await TU.requireProfileCompletion(TU.db, TU.auth, { returnUrl: back });
@@ -296,10 +266,7 @@
         btn.disabled = false;
       }
     }
-
     btn.addEventListener('click', doLogin);
-
-
     googleBtn.addEventListener('click', async () => {
       setErr('');
       googleBtn.disabled = true;
@@ -307,12 +274,9 @@
         const provider = new firebase.auth.GoogleAuthProvider();
         const res = await TU.auth.signInWithPopup(provider);
         await TU.ensureUserDoc(TU.db, res.user);
-
-        // After Google sign-in, phone + group are REQUIRED.
         const ret = TU.popReturnUrl(`${TU.getRootPath()}/home.html`);
         const ok = await TU.requireProfileCompletion(TU.db, TU.auth, { returnUrl: ret });
-        if (!ok) return; // redirected to Account completion
-
+        if (!ok) return; 
         window.location.href = ret;
       } catch(e){
         setErr(e?.message || 'Google sign-in failed');
@@ -323,13 +287,9 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') doLogin();
     });
-
     document.addEventListener('tu-auth-changed', (ev) => {
       const u = ev.detail.user;
       document.getElementById('who').textContent = u ? `Logged in as: ${u.email}` : '';
-
-      // If user was redirected here from a protected page, automatically continue
-      // once the session is restored (prevents "infinite login" loops).
       try {
         const pending = sessionStorage.getItem('tu_return_url');
         if (u && pending) {
@@ -346,19 +306,15 @@
   <script>
     function attachUzPhoneMask(input) {
       if (!input) return;
-
       const PREFIX = "+998 ";
       const MAX_DIGITS = 9;
-
       function onlyDigits(s) { return (s || "").replace(/\D/g, ""); }
-
       function formatUzPhone(rawDigits) {
         const d = rawDigits.slice(0, MAX_DIGITS);
         const p1 = d.slice(0, 2);
         const p2 = d.slice(2, 5);
         const p3 = d.slice(5, 7);
         const p4 = d.slice(7, 9);
-
         let out = PREFIX;
         if (p1) out += p1;
         if (p2) out += (p1 ? "-" : "") + p2;
@@ -366,14 +322,12 @@
         if (p4) out += (p3 ? "-" : "") + p4;
         return out;
       }
-
       function setCaretToEnd(el) {
         requestAnimationFrame(() => {
           const len = el.value.length;
           el.setSelectionRange(len, len);
         });
       }
-
       function handleInput() {
         const allDigits = onlyDigits(input.value);
         let after998 = allDigits;
@@ -381,14 +335,11 @@
         input.value = formatUzPhone(after998);
         setCaretToEnd(input);
       }
-
       input.addEventListener("focus", () => {
         if (!input.value.startsWith(PREFIX)) input.value = PREFIX;
         setCaretToEnd(input);
       });
-
       input.addEventListener("input", handleInput);
-
       input.addEventListener("keydown", (e) => {
         if (e.key === "Backspace") {
           const pos = input.selectionStart || 0;
@@ -399,22 +350,17 @@
           }
         }
       });
-
       if (!input.value) input.value = PREFIX;
       handleInput();
     }
-
     function isValidGmail(email) {
       email = (email || "").trim();
       return /^[^\s@]+@gmail\.com$/i.test(email);
     }
-
     function attachGmailCheck(input) {
       if (!input) return;
-
       const form = input.closest("form") || document.querySelector("form");
       const ERROR_ID = "emailError";
-
       function ensureErrorBox() {
         let box = document.getElementById(ERROR_ID);
         if (!box) {
@@ -428,12 +374,10 @@
           box.style.fontSize = "13px";
           box.style.lineHeight = "1.4";
           box.style.display = "none";
-          // put right after the email input
           input.insertAdjacentElement("afterend", box);
         }
         return box;
       }
-
       function setError(msg) {
         const box = ensureErrorBox();
         if (msg) {
@@ -446,18 +390,15 @@
           input.removeAttribute("aria-invalid");
         }
       }
-
       function validate() {
         const ok = isValidGmail(input.value);
         setError(ok ? "" : "Please enter a valid Gmail address (example@gmail.com).");
         return ok;
       }
-
       input.addEventListener("blur", validate);
       input.addEventListener("input", () => {
         if (isValidGmail(input.value)) setError("");
       });
-
       if (form) {
         form.addEventListener("submit", (e) => {
           if (!validate()) {
@@ -467,16 +408,13 @@
         });
       }
     }
-
     (function () {
       const email = document.getElementById("email");
       if (email) attachGmailCheck(email);
-
       const phone = document.getElementById("phone");
       if (phone) attachUzPhoneMask(phone);
     })();
   </script>
-
   <script src="/assets/UI.js"></script>
 </body>
 </html>

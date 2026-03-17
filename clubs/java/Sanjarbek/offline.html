@@ -11,26 +11,20 @@
   <link rel="stylesheet" href="/assets/offline-tech.css">
 </head>
 <body>
-
   <button id="theme-toggle" aria-label="Toggle Theme">
     <svg id="theme-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
   </button>
-
   <a class="back" href="/clubs/java/Sanjarbek/index.html">
     <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="go back" draggable="false">
   </a>
-
   <header class="top">
     <div style="pointer-events: auto;">
        <img src="https://ik.imagekit.io/yefypajb8v/Elements/java%20teachers/Sanjarbek.webp?updatedAt=1771684253727" class="icon-top" id="main-logo" alt="Java" draggable="false">
     </div>
   </header>
-
   <h1 class="section-title">Sanjarbek Yuldashev</h1>
-
-
   <main class="features">
     <div class="card glass">
       <h3 style="text-align: center;">Subscribe to attend next class and stay aware</h3>
@@ -40,14 +34,12 @@
       <p id="subMsg"></p>
     </div>
   </main>
-  
   <main class="features">
     <div class="card glass">
       <h3 id="class-time" style="text-align: center;">Loading....</h3>
       <h4 id="class-room" style="text-align: center;"></h4>
     </div>
   </main>
-
   <div id="admin-overlay" class="admin-overlay hidden">
     <div class="admin-modal glass">
       <h2 style="text-align:center;margin-bottom:20px;">Admin Panel</h2>
@@ -71,7 +63,6 @@
       </div>
     </div>
   </div>
-
   <div id="security-dialog" class="security-modal-overlay hidden">
     <div class="security-card glass">
       <h2 id="security-title">Security Check</h2>
@@ -91,32 +82,24 @@
       </div>
     </div>
   </div>
-
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="/assets/firebase-config.js"></script>
 <script src="/assets/tu-firebase.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
 <script src="/assets/pdf.js"></script>
 <script>
 let isAuthenticating = false;
 const TEACHER_ID = "Sanjarbek";
 const CLUB_ID = "java";
-
 TU.init();
 const db = TU.db;
 const auth = TU.auth;
-
-
-// Shared PDF generator
 if (window.TU_PDF) {
   TU_PDF.bindViewListButton({ buttonId: 'viewListBtn', db, teacherId: TEACHER_ID });
 }
-
 const overlay = document.getElementById("admin-overlay");
 const hasClass = document.getElementById("has-class");
 const inputs = document.getElementById("class-inputs");
@@ -129,9 +112,6 @@ const securityDialog = document.getElementById('security-dialog');
 const securityInput = document.getElementById('security-input');
 const securityTitle = document.getElementById('security-title');
 const securityError = document.getElementById('security-error');
-
-
-
 const nav = document.querySelector('.topnav');
 if (nav) {
   const rootPath = TU.getRootPath();
@@ -139,7 +119,6 @@ if (nav) {
   const acc = nav.querySelector('a[href="/pages/account/account.html"]');
   if (home) home.href = `${rootPath}/index.html`;
   if (acc) acc.href = `${rootPath}/pages/account/account.html`;
-
   const logoutBtn = document.getElementById('navLogout');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -148,25 +127,17 @@ if (nav) {
     });
   }
 }
-
-// -------------------------
-// Subscribe logic (teacher list + user index)
-// -------------------------
 const subBtn = document.getElementById('subscribeBtn');
 const subBtnText = subBtn ? (subBtn.querySelector('.btn-text') || subBtn) : null;
 const subBtnMeta = subBtn ? subBtn.querySelector('.btn-meta') : null;
 const subMsg = document.getElementById('subMsg');
-
 function formatRegDate(dateObj){
-  // DD.MM.YYYY like your existing data
   const dd = String(dateObj.getDate()).padStart(2,'0');
   const mm = String(dateObj.getMonth()+1).padStart(2,'0');
   const yyyy = dateObj.getFullYear();
   return `${dd}.${mm}.${yyyy}`;
 }
-
 async function getSubscriberProfile(u){
-  // Try to use saved user profile (account page), fallback to auth displayName
   const snap = await db.ref(`users/${u.uid}`).once('value');
   const d = snap.val() || {};
   const display = (d.displayName || u.displayName || '').trim();
@@ -177,18 +148,14 @@ async function getSubscriberProfile(u){
   const group = (d.groupInUniversity || d.group || null);
   return { name, surename, phone, group };
 }
-
 async function refreshSubscriptionUI(){
   if (!subBtn) return;
   const u = auth.currentUser;
   const logoutBtn = document.getElementById('navLogout');
-
   const setBtn = (mode) => {
-    // mode: 'loggedOut' | 'subscribed' | 'unsubscribed'
     subBtn.classList.remove('is-subscribed', 'is-logged-out');
     if (mode === 'loggedOut') subBtn.classList.add('is-logged-out');
     if (mode === 'subscribed') subBtn.classList.add('is-subscribed');
-
     if (subBtnText){
       subBtnText.textContent =
         mode === 'loggedOut' ? 'Login to Subscribe' :
@@ -198,24 +165,19 @@ async function refreshSubscriptionUI(){
         mode === 'loggedOut' ? 'Login to Subscribe' :
         mode === 'subscribed' ? 'Subscribed' : 'Subscribe';
     }
-
     if (subBtnMeta){
       subBtnMeta.textContent = mode === 'subscribed' ? 'Unsubscribe' : '';
     }
   };
-
   if (!u){
     setBtn('loggedOut');
     if (subMsg) subMsg.textContent = 'Login with Google to manage your subscription.';
     if (logoutBtn) logoutBtn.style.display = 'none';
     return;
   }
-
   if (logoutBtn) logoutBtn.style.display = '';
-
   const snap = await db.ref(`subscriptions/index/${u.uid}/${TEACHER_ID}`).once('value');
   const subscribed = !!snap.val();
-
   if (subscribed){
     setBtn('subscribed');
     if (subMsg) subMsg.textContent = 'You are subscribed to this teacher.';
@@ -224,11 +186,9 @@ async function refreshSubscriptionUI(){
     if (subMsg) subMsg.textContent = 'Subscribe to get updates for this teacher.';
   }
 }
-
 document.addEventListener('tu-auth-changed', () => {
   refreshSubscriptionUI().catch(() => {});
 });
-
 if (subBtn) {
   subBtn.addEventListener('click', async () => {
     const u = auth.currentUser;
@@ -242,26 +202,19 @@ if (subBtn) {
     const indexRef = db.ref(`subscriptions/index/${u.uid}/${TEACHER_ID}`);
     const listRef  = db.ref(`subscriptions/${TEACHER_ID}/attendants/${u.uid}`);
     const snap = await indexRef.once('value');
-
     if (snap.exists()){
       if (!confirm('Unsubscribe from this teacher?')) return;
       await indexRef.remove();
       await listRef.remove();
     } else {
-      // Phone + Group are REQUIRED so we can identify who is joining.
       const ok = await TU.requireProfileCompletion(db, auth, { returnUrl: window.location.href });
       if (!ok) return;
-
       const prof = await getSubscriberProfile(u);
-
-      // 1) index (for the student's UI)
       await indexRef.set({
         teacher: TEACHER_ID,
         club: CLUB_ID,
         subscribedAt: firebase.database.ServerValue.TIMESTAMP,
       });
-
-      // 2) teacher list (for the admin "View Registered Students" button)
       await listRef.set({
         uid: u.uid,
         name: prof.name,
@@ -272,13 +225,11 @@ if (subBtn) {
         regDate: formatRegDate(new Date()),
         timestamp: firebase.database.ServerValue.TIMESTAMP,
       });
-
       await db.ref(`users/${u.uid}`).update({
         lastSubscribedAt: firebase.database.ServerValue.TIMESTAMP,
         updatedAt: firebase.database.ServerValue.TIMESTAMP,
       });
     }
-
     await refreshSubscriptionUI();
     } finally {
       subBtn.classList.remove('is-loading');
@@ -286,8 +237,6 @@ if (subBtn) {
     }
   });
 }
-
-
 function formatTime(timeString) {
   if (!timeString) return '';
   const [hour, minute] = timeString.split(':');
@@ -296,7 +245,6 @@ function formatTime(timeString) {
   h = h % 12 || 12;
   return `${h}:${minute} ${ampm}`;
 }
-
 function applyData(data){
   if (!data.hasClass){
     timeEl.innerText = "There won't be any class today!";
@@ -318,7 +266,6 @@ function applyData(data){
     inputs.style.display = data.hasClass ? "grid" : "none";
   }
 }
-
 async function saveAdmin() {
     const data = { 
         hasClass: hasClass.checked, 
@@ -333,27 +280,21 @@ async function saveAdmin() {
         .then(() => closeAdmin())
         .catch((error) => alert("Error: " + error.message));
 }
-
 function openAdmin(){ overlay.classList.remove("hidden"); }
 function closeAdmin(){ overlay.classList.add("hidden"); }
-
 db.ref(`teachers/${TEACHER_ID}/classData`).on("value", snapshot => {
   const data = snapshot.val();
   if (data) applyData(data);
 });
-
 hasClass.onchange = () => { 
   inputs.style.display = hasClass.checked ? "grid" : "none"; 
 };
-
 let securityResolve;
 let failedAttempts = 0; 
-
 securityInput.addEventListener('input', () => { securityError.innerText = ""; });
 securityInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('security-confirm').click();
 });
-
 function openSecurityDialog(title, isPassword = false, errorMsg = "") {
   return new Promise((resolve) => {
     securityTitle.innerText = title;
@@ -365,16 +306,13 @@ function openSecurityDialog(title, isPassword = false, errorMsg = "") {
     securityResolve = resolve;
   });
 }
-
 function closeSecurityDialog() {
   securityDialog.classList.add('hidden');
   if(securityResolve) securityResolve(null);
 }
-
 document.getElementById('security-confirm').onclick = () => {
   if(securityResolve) securityResolve(securityInput.value);
 };
-
 function togglePasswordVisibility() {
   const icon = document.getElementById('eye-icon');
   if (securityInput.type === "password") {
@@ -385,39 +323,30 @@ function togglePasswordVisibility() {
     icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
   }
 }
-
-
 async function canEditThisClassroom() {
   const u = auth.currentUser;
   if (!u) {
-    // Don't auto-redirect from offline pages (prevents mobile login/register redirect loops)
     return false;
   }
   try {
     const doc = (window.TU && TU.getUserDoc) ? await TU.getUserDoc(db, u.uid) : {};
     const role = doc && doc.role ? doc.role : 'user';
     const tid  = doc ? doc.teacherId : null;
-
     if (role === 'admin') return true;
     if (role === 'teacher' && tid && String(tid) === String(TEACHER_ID)) return true;
   } catch (e) {}
   return false;
 }
-
 async function handleAuth() {
   try {
     isAuthenticating = true;
     const snapshot = await db.ref(`teachers/${TEACHER_ID}/classData`).once("value");
     let data = snapshot.val() || {};
-
-    // First-time setup: if securityID/password are missing, let the teacher create them.
     if (!data.securityID || !data.password) {
       const newId = await openSecurityDialog("First-time setup: Create Security ID");
       if (newId === null) { isAuthenticating = false; return; }
-
       const newPass = await openSecurityDialog("First-time setup: Create Admin Password", true);
       if (newPass === null) { isAuthenticating = false; return; }
-
       await db.ref(`teachers/${TEACHER_ID}/classData`).update({
         securityID: String(newId),
         password: String(newPass),
@@ -434,7 +363,6 @@ async function handleAuth() {
       userID = await openSecurityDialog("Enter Security ID", false, "? Invalid Security ID");
     }
     if (userID === null) { isAuthenticating = false; return; }
-
     let userPass = await openSecurityDialog("Enter Admin Password", true);
     while (userPass !== null && userPass !== String(data.password)) {
       failedAttempts++;
@@ -445,7 +373,6 @@ async function handleAuth() {
       }
       userPass = await openSecurityDialog("Enter Admin Password", true, `? Wrong password (${failedAttempts}/3)`);
     }
-
     if (userPass !== null) {
       failedAttempts = 0;
       securityDialog.classList.add('hidden');
@@ -458,13 +385,10 @@ async function handleAuth() {
     closeSecurityDialog();
   }
 }
-
-// Admin / Teacher edit button (replaces Ctrl+Alt+I so it works on Mac too)
 (async function addAdminEditButton() {
   try {
     const ok = await canEditThisClassroom();
     if (!ok) return;
-
     const btn = document.createElement('button');
     btn.id = 'tu-admin-edit-btn';
     btn.type = 'button';
@@ -484,25 +408,21 @@ async function handleAuth() {
       'box-shadow:0 10px 25px rgba(0,0,0,.25)',
       'cursor:pointer'
     ].join(';');
-
     btn.addEventListener('click', async () => {
       if (overlay && overlay.classList && overlay.classList.contains('hidden')) {
         await handleAuth();
       }
     });
-
     document.body.appendChild(btn);
   } catch (e) {
     console.warn(e);
   }
 })();
-
 const allCards = document.querySelectorAll('.card');
 allCards.forEach(card => {
   card.addEventListener('mouseenter', () => { card.style.transform = "translateY(-15px)"; });
   card.addEventListener('mouseleave', () => { card.style.transform = "translateY(0)"; });
 });
-
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -511,25 +431,21 @@ const revealObserver = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1 });
-
 allCards.forEach(el => {
   el.style.opacity = "0";
   el.style.transform = "translateY(30px)";
   el.style.transition = "all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)";
   revealObserver.observe(el);
 });
-
 const toggleBtn = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const moonSVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
 const sunSVG = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-
 const savedTheme = sessionStorage.getItem('theme') || 'light';
 if (savedTheme === 'dark') {
   document.documentElement.setAttribute('data-theme', 'dark');
   themeIcon.innerHTML = sunSVG;
 }
-
 toggleBtn.addEventListener('click', () => {
   let theme = document.documentElement.getAttribute('data-theme');
   if (theme === 'dark') {
@@ -542,32 +458,22 @@ toggleBtn.addEventListener('click', () => {
     sessionStorage.setItem('theme', 'dark');
   }
 });
-
 window.addEventListener('blur', () => {
   if (!isAuthenticating && overlay && !overlay.classList.contains("hidden")) {
       closeAdmin(); 
   }
 });
-
 let holdTimer;
 toggleBtn.addEventListener('touchstart', (e) => {
   toggleBtn.classList.add('holding-btn');
   holdTimer = setTimeout(handleAuth, 8000);
 });
-
 toggleBtn.addEventListener('touchend', () => {
   clearTimeout(holdTimer);
   if (!isAuthenticating) toggleBtn.classList.remove('holding-btn');
 });
-
 toggleBtn.addEventListener('contextmenu', e => e.preventDefault());
 </script>
-
   <script src="/assets/UI.js"></script>
 </body>
 </html>
-
-
-
-
-

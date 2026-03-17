@@ -50,7 +50,7 @@
   if (guest === 'dark') setTheme(true, false);
   else if (guest === 'light') setTheme(false, false);
   else {
-    // Default theme: DARK (ignore system preference)
+    
     setTheme(true, false);
   }
 

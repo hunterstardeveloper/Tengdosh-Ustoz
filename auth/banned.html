@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Banned • Tengdosh Ustoz</title>
-
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,10 +35,8 @@
   --danger2:#f43f5e;
   --shadow:0 22px 55px rgba(0,0,0,0.12);
 }
-
 *{box-sizing:border-box}
 html,body{height:100%}
-
 body{
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   margin:0;
@@ -58,7 +55,6 @@ body{
     linear-gradient(180deg, var(--bg1), var(--bg0));
   background-attachment: fixed;
 }
-
 .orb{
   position:fixed;
   width:520px;
@@ -73,12 +69,10 @@ body{
 .orb.one{left:-180px; top:-180px; background: radial-gradient(circle, rgba(124,140,255,.85), transparent 60%)}
 .orb.two{right:-220px; top:10%; background: radial-gradient(circle, rgba(34,211,238,.72), transparent 60%); animation-duration: 12s;}
 .orb.three{left:10%; bottom:-240px; background: radial-gradient(circle, rgba(251,113,133,.65), transparent 60%); animation-duration: 14s;}
-
 @keyframes floaty{
   0%,100%{transform:translate(0,0) scale(1)}
   50%{transform:translate(28px,18px) scale(1.03)}
 }
-
 body:before{
   content:"";
   position:fixed;
@@ -87,7 +81,6 @@ body:before{
   opacity:.04;
   pointer-events:none;
 }
-
 .anim{
   width:100%; 
   display:flex;
@@ -100,28 +93,22 @@ body:before{
   height: auto;
   display: block;
 }
-
 @media (max-width: 640px){
   #anim3{
     width: 200px;
   }
 }
-
-/* TABLET */
 @media (min-width: 641px) and (max-width: 1024px){
   #anim3{
     width: 240px;
   }
 }
-
-/* DESKTOP */
 @media (min-width: 1025px){
   #anim3{
     width: 260px;
   }
 }
 .wrap{width:100%;max-width:520px;position:relative}
-
 .card{
   width:100%;
   background:var(--card);
@@ -132,7 +119,6 @@ body:before{
   position:relative;
   overflow:hidden;
 }
-
 .card:after{
   content:"";
   position:absolute;
@@ -147,7 +133,6 @@ body:before{
   mask-composite: exclude;
   pointer-events:none;
 }
-
 .brand{display:flex;gap:12px;align-items:center;margin-bottom:12px}
 .logo{
   width:42px;height:42px;border-radius:14px;border:1px solid var(--border);
@@ -156,10 +141,8 @@ body:before{
   font-weight:900;color:var(--danger2);
   box-shadow: 0 10px 24px rgba(0,0,0,.25);
 }
-
 h1{margin:0;font-size:22px;letter-spacing:0.2px}
 .sub{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
-
 .alert{
   margin-top:14px;
   border:1px solid rgba(251,113,133,0.35);
@@ -169,7 +152,6 @@ h1{margin:0;font-size:22px;letter-spacing:0.2px}
   font-size:13px;
   line-height:1.55;
 }
-
 .pill{
   display:inline-flex;
   align-items:center;
@@ -184,7 +166,6 @@ h1{margin:0;font-size:22px;letter-spacing:0.2px}
 }
 [data-theme="light"] .pill{background: rgba(255,255,255,.55)}
 .dot{width:8px;height:8px;border-radius:999px;background:var(--danger2); box-shadow:0 0 0 4px rgba(244,63,94,.15)}
-
 .meta{
   margin-top:10px;
   padding-top:10px;
@@ -200,7 +181,6 @@ h1{margin:0;font-size:22px;letter-spacing:0.2px}
 }
 .label{color:var(--muted); font-weight:800}
 .value{font-weight:900}
-
 .timeLeft{
   font-variant-numeric: tabular-nums;
   padding:6px 10px;
@@ -208,7 +188,6 @@ h1{margin:0;font-size:22px;letter-spacing:0.2px}
   background: rgba(124,140,255,.14);
   border:1px solid rgba(124,140,255,.25);
 }
-
 .actions{display:grid; gap:10px; margin-top:16px}
 button{
   width:100%;
@@ -225,17 +204,14 @@ button{
 button:hover{transform:translateY(-1px); filter:brightness(1.03)}
 button:active{transform:translateY(0px)}
 button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
 .btn-ghost{
   background:transparent;
   border:1px solid var(--border);
   color:var(--text);
 }
 .btn-ghost:hover{filter:none}
-
 a{color:var(--primary2); text-decoration:none; font-weight:800}
 a:hover{text-decoration:underline}
-
 #theme-toggle{
   position:fixed;
   right:10px;
@@ -256,28 +232,23 @@ a:hover{text-decoration:underline}
   transition:transform .12s ease;
 }
 #theme-toggle:hover{transform:translateY(-1px)}
-
 @supports (backdrop-filter: blur(1px)) {
   .card{
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 }
-
 @media (prefers-reduced-motion: reduce){
   .orb{animation:none !important;}
   button{transition:none !important;}
 }
-
 .orb{will-change: transform; transform: translate3d(0,0,0);}
-
 @media (max-width: 640px){
   .orb{width:360px;height:360px;filter: blur(20px);opacity:.18;}
   #theme-toggle{top:10px;}
 }
   </style>
 </head>
-
 <body>
   <div class="orb one"></div>
   <div class="orb two"></div>
@@ -299,10 +270,8 @@ a:hover{text-decoration:underline}
           <p class="sub">Your access to this site has been restricted.</p>
         </div>
       </div>
-
       <div class="alert">
         <div id="banMessage">Your access to this site has been restricted.</div>
-
         <div id="banMeta" class="meta">
           <div class="metaRow">
             <div class="label">Status</div>
@@ -310,29 +279,24 @@ a:hover{text-decoration:underline}
               <span class="pill"><span class="dot"></span><span id="banStatus">Checking...</span></span>
             </div>
           </div>
-
           <div id="banReasonRow" class="metaRow" style="display:none;">
             <div class="label">Reason</div>
             <div class="value" id="banReason"></div>
           </div>
-
           <div id="banTimeRow" class="metaRow" style="display:none;">
             <div class="label">Time left</div>
             <div class="value"><span class="timeLeft" id="banTimeLeft"></span></div>
           </div>
         </div>
-
         <div style="margin-top:10px;color:var(--muted);">
           If you believe this is a mistake, you can report/appeal using the button below.
         </div>
       </div>
-
       <div class="actions">
         <button onclick="location.href='https://t.me/Hunters1ar'" id="reportBlock" type="button">Report / Appeal this block</button>
       </div>
     </div>
   </div>
-
   <script>
     (function initTheme(){
       let saved = null;
@@ -341,21 +305,18 @@ a:hover{text-decoration:underline}
       const theme = saved || (prefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
     })();
-
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const cur = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
     });
-
     function formatDuration(ms) {
       const total = Math.max(0, Math.floor(ms / 1000));
       const d = Math.floor(total / 86400);
       const h = Math.floor((total % 86400) / 3600);
       const m = Math.floor((total % 3600) / 60);
       const s = total % 60;
-
       const parts = [];
       if (d) parts.push(d + "d");
       if (h || d) parts.push(h + "h");
@@ -363,19 +324,15 @@ a:hover{text-decoration:underline}
       parts.push(s + "s");
       return parts.join(" ");
     }
-
     function setText(id, text) {
       const el = document.getElementById(id);
       if (el) el.textContent = text;
     }
-
     function show(id, yes) {
       const el = document.getElementById(id);
       if (el) el.style.display = yes ? "" : "none";
     }
-
     let countdownTimer = null;
-
     function renderBan(meta) {
       if (!meta || !meta.active) {
         setText("banStatus", "Not banned");
@@ -383,24 +340,19 @@ a:hover{text-decoration:underline}
         show("banTimeRow", false);
         return;
       }
-
       const until = (typeof meta.until === "number" && meta.until > 0) ? meta.until : null;
       const reason = (typeof meta.reason === "string" && meta.reason.trim()) ? meta.reason.trim() : "";
-
       const isTemporary = !!until && Date.now() < until;
       const statusText = isTemporary ? "Banned (temporary)" : "Suspended";
       setText("banStatus", statusText);
-
       if (reason) {
         setText("banReason", reason);
         show("banReasonRow", true);
       } else {
         show("banReasonRow", false);
       }
-
       if (isTemporary) {
         show("banTimeRow", true);
-
         const tick = () => {
           const left = until - Date.now();
           if (left <= 0) {
@@ -412,7 +364,6 @@ a:hover{text-decoration:underline}
           }
           setText("banTimeLeft", formatDuration(left));
         };
-
         tick();
         if (countdownTimer) clearInterval(countdownTimer);
         countdownTimer = setInterval(tick, 1000);
@@ -422,15 +373,12 @@ a:hover{text-decoration:underline}
         countdownTimer = null;
       }
     }
-
     function readCachedBan() {
       try {
         const bannedFlag = sessionStorage.getItem("tu_banned");
         if (bannedFlag !== "1") return null;
-
         const untilRaw = sessionStorage.getItem("tu_banned_until") || "";
         const reasonRaw = sessionStorage.getItem("tu_banned_reason") || "";
-
         const until = untilRaw ? Number(untilRaw) : null;
         return {
           active: true,
@@ -441,24 +389,18 @@ a:hover{text-decoration:underline}
         return null;
       }
     }
-
-    
     async function fetchBanFromFirebase() {
       try {
         if (!window.TU_FIREBASE) return null;
-
         const TU = window.TU_FIREBASE.init ? window.TU_FIREBASE.init() : null;
         const db = TU && TU.db ? TU.db : null;
         if (!db) return null;
-
         let user = TU && TU.user ? TU.user : null;
-
         try {
           if (!user && window.firebase && firebase.auth) {
             user = firebase.auth().currentUser || null;
           }
         } catch(e) {}
-
         let uid = null;
         try {
           uid =
@@ -469,9 +411,7 @@ a:hover{text-decoration:underline}
             sessionStorage.getItem("TU_UID") ||
             null;
         } catch(e) {}
-
         if (!user && !uid) return null;
-
         let meta = null;
         try {
           meta = await window.TU_FIREBASE.getBanStatus(db, user || uid);
@@ -480,7 +420,6 @@ a:hover{text-decoration:underline}
             try { meta = await window.TU_FIREBASE.getBanStatus(db, uid); } catch(e2) {}
           }
         }
-
         if (meta === true) {
           return { active: true, until: null, reason: null, suspended: true };
         }
@@ -490,22 +429,18 @@ a:hover{text-decoration:underline}
             return { active: true, until: null, reason: meta.reason || null, suspended: true };
           }
         }
-
         return null;
       } catch (e) {
         return null;
       }
     }
-
     (async function initBanDetails() {
       setText("banStatus", "Checking...");
-
       const cached = readCachedBan();
       if (cached) {
         renderBan(cached);
         return;
       }
-
       function waitFor(pred, timeoutMs = 8000, intervalMs = 120) {
         return new Promise((resolve) => {
           const start = Date.now();
@@ -517,7 +452,6 @@ a:hover{text-decoration:underline}
           }, intervalMs);
         });
       }
-
       const hasTU = await waitFor(() => window.TU_FIREBASE && typeof window.TU_FIREBASE.init === "function");
       if (!hasTU) {
         setText("banStatus", "Suspended");
@@ -525,10 +459,8 @@ a:hover{text-decoration:underline}
         show("banTimeRow", false);
         return;
       }
-
       let TU = null;
       try { TU = window.TU_FIREBASE.init(); } catch(e) { TU = null; }
-
       async function tryRead() {
         const meta = await fetchBanFromFirebase();
         if (meta) {
@@ -537,7 +469,6 @@ a:hover{text-decoration:underline}
         }
         return false;
       }
-
       if (TU && TU.user) {
         const ok = await tryRead();
         if (!ok) {
@@ -547,7 +478,6 @@ a:hover{text-decoration:underline}
         }
         return;
       }
-
       const hasAuth = await waitFor(() => window.firebase && firebase.auth);
       if (hasAuth) {
         try {
@@ -584,7 +514,6 @@ a:hover{text-decoration:underline}
           return;
         } catch(e) {}
       }
-
       const ok = await tryRead();
       if (!ok) {
         setText("banStatus", "Suspended");
@@ -610,14 +539,11 @@ a:hover{text-decoration:underline}
         if (p.includes('/auth/')) return p.split('/auth/')[0] || '';
         return '';
       }
-
       firebase.auth().onAuthStateChanged((user) => {
         if (!user) return;
-
         const uid = user.uid;
         const refA = firebase.database().ref('banned/' + uid);
         const refB = firebase.database().ref('users/' + uid + '/banned');
-
         function isActive(raw){
           if (!raw) return false;
           if (raw === true) return true;
@@ -629,23 +555,19 @@ a:hover{text-decoration:underline}
           }
           return false;
         }
-
         function goHome(){
           const root = getRoot();
           location.href = root + '/home.html';
         }
-
         function handle(snap){
           const v = snap.val();
           if (!isActive(v)) goHome();
         }
-
         refA.on('value', handle);
         refB.on('value', handle);
       });
     })();
   </script>
-
   <script src="/assets/preventer.js"></script>
   <script src="/assets/UI.js"></script>
 </body>

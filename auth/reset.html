@@ -31,7 +31,6 @@
       --primary:#4f7cff;
       --shadow:0 20px 40px rgba(0,0,0,0.12);
     }
-
     *{box-sizing:border-box}
     body{
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -45,7 +44,6 @@
       padding:24px;
       overflow-x:hidden;
     }
-
     .wrap{width:100%;max-width:430px;position:relative}
     .card{
       width:100%;
@@ -57,12 +55,10 @@
       backdrop-filter: blur(22px) saturate(140%);
       -webkit-backdrop-filter: blur(22px) saturate(140%);
     }
-
     .brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
     .logo{width:36px;height:36px;border-radius:12px;border:1px solid var(--border);background:rgba(124,140,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary)}
     h1{margin:0;font-size:20px;letter-spacing:0.2px}
     .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
-
     label{display:block;font-size:13px;margin-top:14px;color:var(--muted)}
     input{
       width:100%;
@@ -77,7 +73,6 @@
       font-family:inherit;
     }
     input:focus{border-color:rgba(124,140,255,0.65)}
-
     button{
       width:100%;
       margin-top:16px;
@@ -94,17 +89,13 @@
     }
     button:hover{transform:translateY(-1px)}
     button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-
     .msg{font-size:13px;min-height:18px;margin-top:10px}
     .msg.ok{color:var(--ok)}
     .msg.err{color:var(--danger)}
-
     .row{display:flex;gap:10px;align-items:center;margin-top:14px}
     .row a{color:var(--primary);text-decoration:none;font-size:13px}
     .row a:hover{text-decoration:underline}
-
     .hint{font-size:12px;color:var(--muted);margin-top:10px}
-
     #theme-toggle{
       position:absolute;
       right:10px;
@@ -134,7 +125,6 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
       </svg>
     </button>
-
     <div class="card">
       <div class="brand">
         <div class="logo">TU</div>
@@ -143,31 +133,22 @@
           <p class="sub">We'll send a reset link to your email</p>
         </div>
       </div>
-
       <div class="msg" id="msg"></div>
-
       <label for="email">Email</label>
       <input id="email" type="email" autocomplete="email" placeholder="you@example.com" />
-
       <button id="btn">Send reset email</button>
-
       <div class="row">
         <a href="/auth/login.html">? Back to sign in</a>
       </div>
-
     </div>
   </div>
-
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
   <script>
     TU.init();
-
-    // theme
     (function initTheme(){
       let saved = null;
       try { saved = sessionStorage.getItem('tu_theme'); } catch(e) {}
@@ -181,15 +162,12 @@
       document.documentElement.setAttribute('data-theme', next);
       try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
     });
-
     const msg = document.getElementById('msg');
     const btn = document.getElementById('btn');
-
     function setMsg(t, ok){
       msg.textContent = t || '';
       msg.className = 'msg ' + (ok ? 'ok' : 'err');
     }
-
     async function doReset(){
       btn.disabled = true;
       setMsg('', true);
@@ -205,13 +183,11 @@
         btn.disabled = false;
       }
     }
-
     btn.addEventListener('click', doReset);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') doReset();
     });
   </script>
-
   <script src="/assets/UI.js"></script>
 </body>
 </html>

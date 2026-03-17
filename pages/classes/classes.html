@@ -11,7 +11,6 @@
   <link rel="icon" href="/icon.png">
   <link rel="stylesheet" href="/pages/classes/classes.css">
 </head>
-
 <body>
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb-1"></div>
@@ -19,9 +18,7 @@
     <div class="orb orb-3"></div>
   </div>
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
-
   <div class="page-scroll" id="page-scroll">
-
     <nav class="navbar" id="main-navbar">
       <a href="/home.html" class="navbar-brand">
         <div class="navbar-brand-logo"><img src="/logo.png" alt="logo"></div>
@@ -73,7 +70,6 @@
         </button>
       </div>
     </nav>
-
     <section class="classes-hero">
       <span class="pill">
         <svg style="width:14px;height:14px;margin-right:7px;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -82,7 +78,6 @@
       <h1 data-i18n="classes_title">O'qituvchilar va<br>Ularning Darslari</h1>
       <p data-i18n="classes_desc">Platformadagi barcha ustozlarning yuklangan darslari va dars jadvallari.</p>
     </section>
-
     <div class="search-wrap">
       <div class="search-wrap-inner">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -94,7 +89,6 @@
           aria-label="Search classes" autocomplete="off">
       </div>
     </div>
-
     <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter by club">
       <button class="filter-chip active" data-club="all" data-i18n="classes_filter_all">Hammasi</button>
       <button class="filter-chip" data-club="full-stack">Full-Stack</button>
@@ -106,9 +100,7 @@
       <button class="filter-chip" data-club="mathematics">Matematika</button>
       <button class="filter-chip" data-club="prodev">ProDev</button>
     </div>
-
     <p class="results-count" id="results-count" aria-live="polite"></p>
-
     <main class="classes-grid" id="classes-grid" aria-label="Classes list">
       <div class="tc glass tc-skeleton" aria-hidden="true">
         <div class="tc-header">
@@ -179,7 +171,6 @@
         <div class="skel skel-btn"></div>
       </div>
     </main>
-
   <footer class="edu-footer" aria-label="Footer">
     <div class="edu-footer-wrap">
       <div class="edu-footer-grid">
@@ -198,10 +189,8 @@
             platform for shared knowledge, growth, and academic excellence since 2026.
           </p>
         </div>
-
         <div class="edu-footer-col">
           <h4 class="edu-footer-h" data-i18n="footer_contact">Contact Us</h4>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -213,7 +202,6 @@
               <div class="edu-contact-value">+998 90 855 75 85</div>
             </div>
           </div>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -228,7 +216,6 @@
               </div>
             </div>
           </div>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -242,7 +229,6 @@
             </div>
           </div>
         </div>
-
         <div class="edu-footer-col">
           <h4 class="edu-footer-h" data-i18n="footer_support">Support</h4>
           <ul class="edu-footer-list">
@@ -252,23 +238,19 @@
           </ul>
         </div>
       </div>
-
       <div class="edu-footer-bottom">
         <div class="edu-footer-rule" aria-hidden="true"></div>
         <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
       </div>
     </div>
   </footer>
-
   </div>
-
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
   <script src="/assets/i18n.js"></script>
-
   <script>
   (function () {
     const nav = document.getElementById('main-navbar');
@@ -297,7 +279,6 @@
     window.addEventListener('resize', () => { if (!isMobile()) setOpen(false); });
   })();
   </script>
-
   <script>
   (function () {
     const btn = document.getElementById('theme-toggle');
@@ -315,7 +296,6 @@
     });
   })();
   </script>
-
   <script>
   (function () {
     const setOut = () => {
@@ -341,16 +321,13 @@
     setOut();
   })();
   </script>
-
   <script>
     const _fy = document.getElementById('footer-year');
     if (_fy) _fy.textContent = new Date().getFullYear();
   </script>
-
   <script>
   'use strict';
   (function () {
-
     const CLUB_META = {
       'full-stack':  { label: 'Full-Stack Dasturlash', tags: ['React', 'Node.js', 'PostgreSQL'], accent: '#6366f1' },
       'py':          { label: 'Python Dasturlash',    tags: ['Python', 'Django', 'Data'],      accent: '#22c55e' },
@@ -361,20 +338,17 @@
       'mathematics': { label: 'Matematika',             tags: ['Algebra', 'Calculus', 'Proofs'],  accent: '#ef4444' },
       'prodev':      { label: 'ProDev Master Course',   tags: ['Architecture', 'Docker', 'AI'],   accent: '#f97316' },
     };
-
     function initials(name) {
       if (!name) return '?';
       const clean = name.replace(/-[^-]+$/, '').trim();
       const parts = clean.split(/[\s-]+/).filter(Boolean);
       return (parts.length >= 2 ? parts[0][0] + parts[1][0] : clean.slice(0, 2)).toUpperCase();
     }
-
     function fmt12h(t) {
       if (!t || !String(t).includes(':')) return t || '';
       const [h, m] = String(t).split(':').map(Number);
       return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
     }
-
     function fmtDate(d) {
       if (!d) return '';
       if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
@@ -383,17 +357,14 @@
       }
       return d;
     }
-
     function esc(s) {
       return String(s ?? '')
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
-
     function i(key) {
       return (window.TU_i18n && window.TU_i18n.t(key)) || key;
     }
-
     function buildCard(teacherKey, classData, profile, moduleCount) {
       const club    = classData?.club || '';
       const meta    = CLUB_META[club] || { label: club || 'Educational Club', tags: [], accent: '#7c8cff' };
@@ -402,14 +373,11 @@
       const date    = classData?.date || '';
       const time    = classData?.time || '';
       const photoURL = profile?.photoURL || profile?.avatarURL || '';
-
       const avatarHTML = photoURL
         ? `<img src="${esc(photoURL)}" alt="${esc(teacherKey)}" loading="lazy"
                onerror="this.remove(); this.parentElement.textContent='${esc(initials(teacherKey))}';">`
         : esc(initials(teacherKey));
-
       const tagsHTML = meta.tags.map(t => `<span class="tc-tag">${esc(t)}</span>`).join('');
-
       const uploadsHTML = moduleCount > 0
         ? `<div class="tc-uploads" aria-label="${moduleCount} ${i('classes_uploads')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -426,7 +394,6 @@
             </svg>
             <span>${i('classes_no_uploads')}</span>
           </div>`;
-
       const hasRoom = room && room !== '?';
       const hasTime = date && time;
       let classinfoHTML = '';
@@ -444,9 +411,7 @@
           </div>`;
         classinfoHTML += `</div>`;
       }
-
       const href = `/clubs/${encodeURIComponent(club || 'SI')}/${encodeURIComponent(teacherKey)}/online.html`;
-
       return `
         <article class="tc glass"
           style="--tc-accent:${esc(meta.accent)}"
@@ -454,7 +419,6 @@
           data-teacher="${esc(teacherKey.toLowerCase())}"
           data-subject="${esc(meta.label.toLowerCase())}"
           aria-label="${esc(teacherKey)} darslari">
-
           <div class="tc-header">
             <div class="tc-avatar" aria-hidden="true">${avatarHTML}</div>
             <div class="tc-nameblock">
@@ -465,32 +429,24 @@
               ${isActive ? i('classes_active') : i('classes_inactive')}
             </div>
           </div>
-
           <div class="tc-divider"></div>
-
           <div class="tc-subject">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
             ${esc(meta.label)}
           </div>
-
           <div class="tc-tags">${tagsHTML}</div>
-
           ${uploadsHTML}
           ${classinfoHTML}
-
           <a href="${esc(href)}" class="tc-btn">${i('classes_view_btn')}</a>
         </article>`;
     }
-
     const grid    = document.getElementById('classes-grid');
     const countEl = document.getElementById('results-count');
     const search  = document.getElementById('search-input');
     const filterBar = document.getElementById('filter-bar');
-
     let allCards   = [];
     let activeClub = 'all';
     let searchQ    = '';
-
     function applyFilters() {
       const q = searchQ.toLowerCase().trim();
       const visible = allCards.filter(c => {
@@ -501,7 +457,6 @@
           || ((CLUB_META[c.classData?.club]?.label || '').toLowerCase().includes(q));
         return clubOk && searchOk;
       });
-
       if (visible.length === 0) {
         grid.innerHTML = `
           <div class="state-screen" role="status">
@@ -512,10 +467,8 @@
         countEl.textContent = '';
         return;
       }
-
       grid.innerHTML = visible.map(c => c.html).join('');
       countEl.textContent = `${visible.length} ${i('classes_results')}`;
-
       requestAnimationFrame(() => {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((e, i) => {
@@ -528,11 +481,9 @@
         grid.querySelectorAll('.tc').forEach(el => io.observe(el));
       });
     }
-
     let _teachers    = null;
     let _profileMap  = {};
     let _moduleCounts = {};
-
     function rebuild() {
       if (!_teachers) return;
       allCards = Object.entries(_teachers)
@@ -551,10 +502,8 @@
         });
       applyFilters();
     }
-
     let _onlineSnap  = null;
     let _offlineSnap = null;
-
     function parseModuleNode(nodeVal) {
       const root = nodeVal || {};
       Object.values(root).forEach(clubNode => {
@@ -567,14 +516,12 @@
         });
       });
     }
-
     function recomputeAndRebuild() {
       _moduleCounts = {};
       parseModuleNode(_onlineSnap);
       parseModuleNode(_offlineSnap);
       rebuild();
     }
-
     function init() {
       if (typeof TU === 'undefined' || !TU.init) {
         showFatal('Firebase moduli topilmadi.');
@@ -583,7 +530,6 @@
       TU.init();
       const db = TU.db;
       if (!db) { showFatal('Firebase ulanishi muvaffaqiyatsiz.'); return; }
-
       db.ref('users').once('value')
         .then(snap => {
           _profileMap = {};
@@ -595,7 +541,6 @@
           });
         })
         .catch(e => console.warn('[classes] profiles:', e.message));
-
       db.ref('teachers').on('value', snap => {
         const data = snap.val();
         if (!data) {
@@ -620,22 +565,18 @@
             <p>${i('classes_error_sub')}</p>
           </div>`;
       });
-
       db.ref('online').on('value', snap => {
         _onlineSnap = snap.val();
         recomputeAndRebuild();
       }, e => console.warn('[classes] online:', e.message));
-
       db.ref('offline').on('value', snap => {
         _offlineSnap = snap.val();
         recomputeAndRebuild();
       }, e => console.warn('[classes] offline:', e.message));
     }
-
     function showFatal(msg) {
       if (grid) grid.innerHTML = `<div class="state-screen" role="alert"><h3>${esc(msg)}</h3></div>`;
     }
-
     filterBar?.querySelectorAll('.filter-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         filterBar.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -644,19 +585,15 @@
         applyFilters();
       });
     });
-
     let searchTimer;
     search?.addEventListener('input', () => {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => { searchQ = search.value; applyFilters(); }, 250);
     });
-
     init();
-
     document.addEventListener('tu-lang-changed', () => rebuild());
   })();
   </script>
 <script src="/assets/UI.js"></script>
 </body>
 </html>
-

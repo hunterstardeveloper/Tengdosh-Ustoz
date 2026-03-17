@@ -4,21 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Tengdosh Ustoz | Private Chat</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-
-  <!-- Firebase compat CDN (match site version) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
   <style>
-    /* -------------------------------------------------
-       DESIGN TOKENS
-    ------------------------------------------------- */
     :root {
       --bg-deep:       radial-gradient(circle at top, #0f172a, #030712);
       --bg-panel:      rgba(17,24,39,0.92);
@@ -27,28 +19,22 @@
       --bg-active:     rgba(124,140,255,0.12);
       --border:        rgba(255,255,255,0.10);
       --border-light:  rgba(255,255,255,0.16);
-
       --gold:          #7c8cff;
       --gold-dim:      rgba(124,140,255,0.18);
       --gold-glow:     rgba(124,140,255,0.35);
-
       --teal:          #60a5fa;
       --teal-dim:      rgba(96,165,250,0.16);
-
       --text-primary:  #e5e7eb;
       --text-secondary:#9ca3af;
       --text-muted:    #6b7280;
-
       --online:        #4ade80;
       --danger:        #fca5a5;
       --unread-badge:  #7c8cff;
-
       --radius-sm:     6px;
       --radius-md:     12px;
       --radius-lg:     18px;
       --radius-xl:     24px;
       --radius-full:   9999px;
-
       --shadow-sm:  0 2px 8px rgba(0,0,0,0.35);
       --shadow-md:  0 8px 30px rgba(0,0,0,0.45);
       --shadow-lg:  0 20px 60px rgba(0,0,0,0.55);
@@ -59,13 +45,8 @@
     @supports (height: 100dvh) {
       :root { --app-height: 100dvh; }
     }
-
-    /* -------------------------------------------------
-       RESET + BASE
-    ------------------------------------------------- */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; min-height: 100%; overflow: hidden; }
-
     body {
       font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 14px;
@@ -75,17 +56,12 @@
       position: fixed;
       inset: 0;
     }
-
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
     input, textarea { font-family: inherit; }
     a { color: inherit; text-decoration: none; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
-
-    /* -------------------------------------------------
-       NOISE OVERLAY (texture)
-    ------------------------------------------------- */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -93,16 +69,11 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
     }
-
-    /* -------------------------------------------------
-       AUTH SCREEN
-    ------------------------------------------------- */
     #auth-screen {
       position: fixed; inset: 0; z-index: 100;
       display: flex; align-items: center; justify-content: center;
       background: var(--bg-deep);
     }
-
     .auth-card {
       width: min(420px, calc(100vw - 32px));
       background: linear-gradient(135deg, rgba(31,41,55,0.82), rgba(17,24,39,0.72));
@@ -114,12 +85,10 @@
       -webkit-backdrop-filter: blur(20px);
       animation: fadeUp 0.5s cubic-bezier(0.4,0,0.2,1) both;
     }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     .auth-logo {
       font-family: 'Playfair Display', serif;
       font-size: 36px;
@@ -135,7 +104,6 @@
       margin-bottom: 18px;
       letter-spacing: 0.2px;
     }
-
     .auth-actions {
       display: flex;
       flex-direction: column;
@@ -143,7 +111,6 @@
       margin-top: 12px;
     }
     .auth-actions .btn-primary { margin-top: 0; }
-
     .btn-outline {
       width: 100%;
       padding: 12px;
@@ -160,13 +127,11 @@
       border-color: rgba(124,140,255,0.5);
       transform: translateY(-1px);
     }
-
     .auth-hint {
       margin-top: 12px;
       font-size: 12px;
       color: var(--text-muted);
     }
-
     .auth-tabs {
       display: flex;
       gap: 0;
@@ -191,9 +156,7 @@
       background: var(--gold);
       color: #0d0f14;
     }
-
     .auth-form { display: flex; flex-direction: column; gap: 14px; }
-
     .input-group { position: relative; }
     .input-group label {
       display: block;
@@ -220,7 +183,6 @@
       box-shadow: 0 0 0 3px var(--gold-dim);
     }
     .input-group input::placeholder { color: var(--text-muted); }
-
     .btn-primary {
       width: 100%;
       padding: 13px;
@@ -242,7 +204,6 @@
     }
     .btn-primary:active { transform: translateY(0); }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
     .auth-divider {
       display: flex; align-items: center; gap: 12px;
       color: var(--text-muted); font-size: 12px; margin: 4px 0;
@@ -250,7 +211,6 @@
     .auth-divider::before, .auth-divider::after {
       content: ''; flex: 1; height: 1px; background: var(--border);
     }
-
     .btn-google {
       width: 100%;
       padding: 12px;
@@ -268,7 +228,6 @@
       background: var(--bg-active);
       border-color: var(--border-light);
     }
-
     .auth-error {
       background: rgba(248,113,113,0.1);
       border: 1px solid rgba(248,113,113,0.25);
@@ -279,10 +238,6 @@
       display: none;
     }
     .auth-error.show { display: block; }
-
-    /* -------------------------------------------------
-       MAIN APP LAYOUT
-    ------------------------------------------------- */
     #app {
       display: none;
       height: var(--app-height);
@@ -297,10 +252,6 @@
     #app.visible {
       display: flex;
     }
-
-    /* -------------------------------------------------
-       LEFT SIDEBAR - USERS
-    ------------------------------------------------- */
     #sidebar {
       width: 320px;
       flex-shrink: 0;
@@ -313,13 +264,11 @@
       height: var(--app-height);
       overflow: hidden;
     }
-
     .sidebar-header {
       padding: calc(22px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) 18px calc(20px + env(safe-area-inset-left, 0px));
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-
     .app-brand {
       font-family: 'Playfair Display', serif;
       font-size: 24px;
@@ -333,7 +282,6 @@
       gap: 10px;
       margin-bottom: 14px;
     }
-
     .btn-back {
       width: 32px;
       height: 32px;
@@ -351,7 +299,6 @@
       border-color: rgba(124,140,255,0.5);
       transform: translateY(-1px);
     }
-
     .current-user-row {
       display: flex;
       align-items: center;
@@ -390,7 +337,6 @@
       width: 6px; height: 6px;
       border-radius: 50%; background: var(--online);
     }
-
     .btn-signout {
       padding: 6px 8px;
       border-radius: var(--radius-sm);
@@ -400,8 +346,6 @@
       flex-shrink: 0;
     }
     .btn-signout:hover { color: var(--danger); background: rgba(248,113,113,0.08); }
-
-    /* Search */
     .search-wrap {
       padding: 14px 16px 12px;
       border-bottom: 1px solid var(--border);
@@ -431,7 +375,6 @@
     }
     .search-input:focus { border-color: var(--gold); }
     .search-input::placeholder { color: var(--text-muted); }
-
     .filter-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -459,8 +402,6 @@
       background: var(--gold-dim);
       border-color: rgba(124,140,255,0.5);
     }
-
-    /* Section label */
     .section-label {
       padding: 14px 18px 8px;
       font-size: 10px;
@@ -469,14 +410,11 @@
       text-transform: uppercase;
       color: var(--text-muted);
     }
-
-    /* Users list */
     #users-list {
       flex: 1;
       overflow-y: auto;
       padding: 0 8px 12px;
     }
-
     .user-item {
       display: flex;
       align-items: center;
@@ -492,7 +430,6 @@
       background: var(--gold-dim);
       border: 1px solid rgba(124,140,255,0.35);
     }
-
     .avatar-wrap {
       position: relative;
       flex-shrink: 0;
@@ -517,7 +454,6 @@
       position: absolute; inset: 0;
       z-index: 1;
     }
-
     .presence-dot {
       position: absolute;
       bottom: 0; right: 0;
@@ -528,7 +464,6 @@
       transition: background var(--transition);
     }
     .presence-dot.online { background: var(--online); }
-
     .user-info { flex: 1; min-width: 0; }
     .user-name {
       font-size: 14px; font-weight: 500; color: var(--text-primary);
@@ -541,7 +476,6 @@
       max-width: 155px;
     }
     .user-last-msg.unread-preview { color: var(--text-secondary); font-weight: 500; }
-
     .user-meta {
       display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
       flex-shrink: 0;
@@ -559,7 +493,6 @@
       min-width: 18px;
       text-align: center;
     }
-
     .users-empty {
       padding: 32px 20px;
       text-align: center;
@@ -567,10 +500,6 @@
       font-size: 13px;
       line-height: 1.7;
     }
-
-    /* -------------------------------------------------
-       RIGHT - CHAT PANEL
-    ------------------------------------------------- */
     #chat-panel {
       flex: 1;
       display: flex;
@@ -580,8 +509,6 @@
       overflow: hidden;
       position: relative;
     }
-
-    /* Empty state */
     #chat-empty {
       flex: 1;
       display: flex;
@@ -606,8 +533,6 @@
       color: var(--text-secondary);
     }
     #chat-empty p { font-size: 13px; font-weight: 300; }
-
-    /* Chat header */
     #chat-header {
       display: none;
       align-items: center;
@@ -618,7 +543,6 @@
       flex-shrink: 0;
     }
     #chat-header.visible { display: flex; }
-
     .chat-back {
       width: 32px;
       height: 32px;
@@ -636,7 +560,6 @@
       border-color: rgba(124,140,255,0.5);
       transform: translateY(-1px);
     }
-
     .chat-header-avatar {
       width: 40px; height: 40px;
       border-radius: var(--radius-full);
@@ -654,7 +577,6 @@
       position: absolute; inset: 0;
       z-index: 1;
     }
-
     .chat-header-info { flex: 1; }
     .chat-header-name {
       font-size: 15px; font-weight: 600; color: var(--text-primary);
@@ -669,7 +591,6 @@
       background: var(--online);
       flex-shrink: 0;
     }
-
     .notify-btn {
       width: 34px;
       height: 34px;
@@ -698,8 +619,6 @@
       cursor: not-allowed;
       transform: none;
     }
-
-    /* Messages area */
     #messages-wrap {
       display: none;
       flex: 1;
@@ -711,7 +630,6 @@
       scroll-behavior: smooth;
     }
     #messages-wrap.visible { display: flex; }
-
     .day-divider {
       display: flex; align-items: center; gap: 12px;
       padding: 8px 0;
@@ -723,9 +641,7 @@
       font-size: 11px; color: var(--text-muted); white-space: nowrap;
       letter-spacing: 0.5px;
     }
-
     .msg-group { display: flex; flex-direction: column; }
-
     .msg-row {
       display: flex;
       gap: 10px;
@@ -736,9 +652,7 @@
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     .msg-row.mine { flex-direction: row-reverse; }
-
     .msg-avatar-sm {
       width: 30px; height: 30px;
       border-radius: var(--radius-full);
@@ -758,10 +672,8 @@
       z-index: 1;
     }
     .msg-avatar-sm.hidden { visibility: hidden; }
-
     .msg-bubble-col { display: flex; flex-direction: column; max-width: 68%; }
     .msg-row.mine .msg-bubble-col { align-items: flex-end; }
-
     .msg-bubble {
       padding: 10px 15px;
       border-radius: var(--radius-lg);
@@ -782,11 +694,8 @@
       border-color: rgba(201,168,108,0.2);
       color: var(--text-primary);
     }
-
-    /* Consecutive messages */
     .msg-row.mine  .msg-bubble { border-bottom-right-radius: 4px; }
     .msg-row.their .msg-bubble { border-bottom-left-radius: 4px; }
-
     .msg-time {
       font-size: 10px;
       color: var(--text-muted);
@@ -796,13 +705,11 @@
       gap: 4px;
     }
     .msg-row.mine .msg-time { justify-content: flex-end; }
-
     .read-tick {
       display: inline-flex;
       color: var(--gold);
       font-size: 10px;
     }
-
     .msg-actions {
       display: flex;
       gap: 6px;
@@ -840,8 +747,6 @@
     .msg-action.delete:hover {
       background: rgba(248,113,113,0.08);
     }
-
-    /* Typing indicator */
     #typing-indicator {
       display: none;
       align-items: center;
@@ -870,8 +775,6 @@
       0%, 60%, 100% { transform: translateY(0); }
       30%           { transform: translateY(-5px); }
     }
-
-    /* Input area */
     #input-area {
       display: none;
       padding: 14px calc(20px + env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) calc(20px + env(safe-area-inset-left, 0px));
@@ -883,7 +786,6 @@
     }
     #input-area.visible { display: flex; }
     #input-area.editing #cancel-edit { display: inline-flex; }
-
     #msg-input {
       flex: 1;
       background: var(--bg-surface);
@@ -905,7 +807,6 @@
       box-shadow: 0 0 0 3px var(--gold-dim);
     }
     #msg-input::placeholder { color: var(--text-muted); }
-
     #send-btn {
       width: 46px; height: 46px;
       border-radius: var(--radius-full);
@@ -922,7 +823,6 @@
     #send-btn:active { transform: scale(0.97); }
     #send-btn svg { color: #0d0f14; }
     #send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
     #cancel-edit {
       width: 38px; height: 38px;
       border-radius: var(--radius-full);
@@ -940,10 +840,6 @@
       color: var(--text-primary);
       border-color: rgba(124,140,255,0.4);
     }
-
-    /* -------------------------------------------------
-       LOADING SPINNER
-    ------------------------------------------------- */
     #loading-screen {
       position: fixed; inset: 0; z-index: 200;
       background: var(--bg-deep);
@@ -965,10 +861,6 @@
       color: var(--gold);
       letter-spacing: -0.3px;
     }
-
-    /* -------------------------------------------------
-       TOAST NOTIFICATIONS
-    ------------------------------------------------- */
     #toast-container {
       position: fixed; bottom: 24px; right: 24px; z-index: 9999;
       display: flex; flex-direction: column; gap: 10px;
@@ -990,12 +882,7 @@
       from { opacity: 0; transform: translateX(20px); }
       to   { opacity: 1; transform: translateX(0); }
     }
-
-    /* -------------------------------------------------
-       RESPONSIVE
-    ------------------------------------------------- */
     @media (max-width: 700px) {
-      /* Sidebar takes full width and overlays the chat panel */
       #sidebar {
         width: 100vw;
         position: absolute;
@@ -1005,46 +892,25 @@
         height: var(--app-height);
       }
       #sidebar.hidden-mobile { display: none; }
-
-      /* Chat panel always full width on mobile */
       #chat-panel { width: 100vw; }
-
-      /* Show the in-chat back-to-list button on mobile */
       .chat-back { display: inline-flex; }
-
-      /* Reduce message area padding */
       #messages-wrap { padding: 16px 14px; }
       #typing-indicator { padding: 0 14px 10px; }
-
-      /* Reduce input area padding */
       #input-area { padding: 10px 12px; }
-
-      /* Compact message bubbles */
       .msg-bubble-col { max-width: 82%; }
-
-      /* Shrink filter tabs to 2 columns */
       .filter-tabs { grid-template-columns: repeat(2, 1fr); }
-
-      /* Auth card padding */
       .auth-card { padding: 32px 24px; }
     }
-
-    /* Hide the chat-back arrow on desktop (it's for mobile only) */
     @media (min-width: 701px) {
       .chat-back { display: none; }
     }
   </style>
 </head>
-
 <body>
-
-<!-- -- LOADING -- -->
 <div id="loading-screen">
   <div class="spinner"></div>
   <div class="loading-label">Tengdosh Ustoz</div>
 </div>
-
-<!-- -- AUTH SCREEN -- -->
 <div id="auth-screen" style="display:none">
   <div class="auth-card">
     <div class="auth-logo">Tengdosh Ustoz</div>
@@ -1056,11 +922,7 @@
     <div class="auth-hint">You will return to this chat after signing in.</div>
   </div>
 </div>
-
-<!-- -- MAIN APP -- -->
 <div id="app">
-
-  <!-- Sidebar -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="app-brand-row">
@@ -1084,7 +946,6 @@
         </button>
       </div>
     </div>
-
     <div class="search-wrap">
       <div class="search-input-wrap">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1099,17 +960,12 @@
         <button class="filter-btn" type="button" data-filter="admins" aria-pressed="false">Admin</button>
       </div>
     </div>
-
     <div class="section-label" id="users-section-label">Users</div>
     <div id="users-list">
       <div class="users-empty">Loading users...</div>
     </div>
   </aside>
-
-  <!-- Chat panel -->
   <main id="chat-panel">
-
-    <!-- Empty state -->
     <div id="chat-empty">
       <div class="empty-icon">
         <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -1119,8 +975,6 @@
       <h3>Select a user</h3>
       <p>Click on a user to start a private chat</p>
     </div>
-
-    <!-- Chat header -->
     <div id="chat-header">
       <button class="chat-back" id="chat-back" type="button" aria-label="Back to home" title="Back to home">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1142,19 +996,13 @@
         </svg>
       </button>
     </div>
-
-    <!-- Messages -->
     <div id="messages-wrap"></div>
-
-    <!-- Typing indicator -->
     <div id="typing-indicator">
       <div class="typing-dots">
         <span></span><span></span><span></span>
       </div>
       <span class="typing-text" id="typing-text">typing...</span>
     </div>
-
-    <!-- Input area -->
     <div id="input-area">
       <textarea id="msg-input" rows="1" placeholder="Type a message..."
         oninput="autoResize(this); handleTyping()"
@@ -1172,18 +1020,9 @@
         </svg>
       </button>
     </div>
-
   </main>
 </div>
-
-<!-- Toast container -->
 <div id="toast-container"></div>
-
-<!-- --------------------------------------------------
-     FIREBASE CONFIGURATION
-     Using shared project config (assets/firebase-config.js)
-     Loaded via assets/tu-firebase.js
--------------------------------------------------- -->
 <script src="/assets/firebase-config.js"></script>
 <script src="/assets/tu-firebase.js"></script>
 <script>
@@ -1191,12 +1030,7 @@
   const auth = TU.auth;
   const db   = TU.db;
 </script>
-
-<!-- --------------------------------------------------
-     APPLICATION LOGIC
--------------------------------------------------- -->
 <script>
-  /* Viewport height fix for mobile browser UI + keyboards */
   const setAppHeight = () => {
     const vv = window.visualViewport;
     const height = vv ? vv.height : window.innerHeight;
@@ -1211,8 +1045,6 @@
     window.visualViewport.addEventListener('resize', setAppHeight);
     window.visualViewport.addEventListener('scroll', setAppHeight);
   }
-
-  /* Service worker registration (needed for system notifications) */
   function isLocalhost() {
     return (
       location.hostname === 'localhost' ||
@@ -1220,32 +1052,26 @@
       location.hostname === '[::1]'
     );
   }
-
   function isSecureOrigin() {
     return location.protocol === 'https:' || isLocalhost();
   }
-
   function registerSwForNotifications() {
     if (!('serviceWorker' in navigator)) return;
     if (!isSecureOrigin()) return;
     navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
   }
-
   registerSwForNotifications();
-  /* -----------------------------------------
-     STATE
-  ----------------------------------------- */
-  let currentUser      = null;   // Firebase Auth user object
-  let currentUserData  = null;   // /users/{uid} data
-  let allUsers         = {};     // { uid: userData }
-  let activeChat       = null;   // uid of the peer we're chatting with
-  let activeChatId     = null;   // sorted chat ID string
-  let msgListener      = null;   // active Firebase messages listener
+  let currentUser      = null;   
+  let currentUserData  = null;   
+  let allUsers         = {};     
+  let activeChat       = null;   
+  let activeChatId     = null;   
+  let msgListener      = null;   
   let msgChangedListener = null;
   let msgRemovedListener = null;
-  let typingListener   = null;   // active typing listener
-  let typingTimeout    = null;   // debounce timer
-  let unsubUsers       = null;   // Firebase users listener
+  let typingListener   = null;   
+  let typingTimeout    = null;   
+  let unsubUsers       = null;   
   let autoOpenedMentor = false;
   let currentFilter    = 'all';
   let editingMessageKey = null;
@@ -1257,22 +1083,13 @@
       return '';
     }
   })();
-
-  /* -----------------------------------------
-     HELPERS - Chat ID
-  ----------------------------------------- */
   function getChatId(uid1, uid2) {
     return [uid1, uid2].sort().join('_');
   }
-
-  /* -----------------------------------------
-     HELPERS - Avatar
-  ----------------------------------------- */
   function getInitials(name) {
     if (!name) return '...';
     return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
-
   function getUserName(u) {
     if (!u) return '';
     const first = String(u.displayName || u.name || u.username || u.userName || '').trim();
@@ -1285,7 +1102,6 @@
     }
     return (first || String(u.email || '').trim());
   }
-
   function getUserSearchText(u) {
     if (!u) return '';
     const parts = [
@@ -1302,7 +1118,6 @@
     ].filter(Boolean);
     return parts.join(' ').toLowerCase();
   }
-
   function matchesMentorParam(u, key) {
     if (!u || !key) return false;
     const k = key.toLowerCase();
@@ -1320,7 +1135,6 @@
     if (fields.some(v => v === k)) return true;
     return getUserSearchText(u).includes(k);
   }
-
   function tryAutoOpenMentor() {
     if (autoOpenedMentor || !mentorParam) return;
     const key = mentorParam.trim().toLowerCase();
@@ -1332,7 +1146,6 @@
       openChat(match.uid);
     }
   }
-
   function getUserRoleBucket(u) {
     const role = String(u?.role || '').toLowerCase().trim();
     if (role === 'admin') return 'admin';
@@ -1342,11 +1155,9 @@
     if (tid) return 'mentor';
     return 'student';
   }
-
   function isMentor(u) {
     return getUserRoleBucket(u) === 'mentor';
   }
-
   function matchesRoleFilter(u, filter) {
     if (!filter || filter === 'all') return true;
     const bucket = getUserRoleBucket(u);
@@ -1355,19 +1166,16 @@
     if (filter === 'admins') return bucket === 'admin';
     return true;
   }
-
   function getFilterLabel(filter) {
     if (filter === 'mentors') return 'Mentors';
     if (filter === 'students') return 'Students';
     if (filter === 'admins') return 'Admins';
     return 'Users';
   }
-
   function updateSectionLabel() {
     const label = document.getElementById('users-section-label');
     if (label) label.textContent = getFilterLabel(currentFilter);
   }
-
   function updateFilterUI() {
     const wrap = document.getElementById('role-filters');
     if (!wrap) return;
@@ -1378,14 +1186,12 @@
     });
     updateSectionLabel();
   }
-
   function setRoleFilter(filter) {
     currentFilter = filter || 'all';
     updateFilterUI();
     const q = (document.getElementById('search-input') || {}).value || '';
     renderUsersList(allUsers, q);
   }
-
   function setupRoleFilters() {
     const wrap = document.getElementById('role-filters');
     if (!wrap) return;
@@ -1394,12 +1200,10 @@
     });
     updateFilterUI();
   }
-
   function getUserAvatar(u) {
     if (!u) return '';
     return String(u.avatarURL || u.photoURL || '').trim();
   }
-
   function normalizeAssetUrl(url) {
     const s = String(url || '').trim();
     if (!s) return '';
@@ -1407,7 +1211,6 @@
     if (s.startsWith('/')) return s;
     return `/${s.replace(/^\/+/, '')}`;
   }
-
   function avatarColors(uid) {
     const palette = [
       ['#c9a86c','rgba(201,168,108,0.2)'],
@@ -1420,7 +1223,6 @@
     for (let i = 0; i < uid.length; i++) hash = uid.charCodeAt(i) + ((hash << 5) - hash);
     return palette[Math.abs(hash) % palette.length];
   }
-
   function bindAvatarImg(img) {
     if (!img || img.dataset.bound) return;
     img.dataset.bound = '1';
@@ -1428,7 +1230,6 @@
       img.remove();
     }, { once: true });
   }
-
   function renderAvatarEl(el, name, uid, photoURL) {
     const [fg, bg] = avatarColors(uid);
     el.style.background = bg;
@@ -1445,7 +1246,6 @@
       el.appendChild(img);
     }
   }
-
   /* -----------------------------------------
      HELPERS - Time
   ----------------------------------------- */
@@ -1462,12 +1262,10 @@
     if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
     return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
-
   function formatMsgTime(ts) {
     if (!ts) return '';
     return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
-
   function formatDayDivider(ts) {
     const d = new Date(ts);
     const now = new Date();
@@ -1477,7 +1275,6 @@
     if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
     return d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
   }
-
   /* -----------------------------------------
      TOAST
   ----------------------------------------- */
@@ -1489,16 +1286,13 @@
     container.appendChild(t);
     setTimeout(() => t.remove(), 3500);
   }
-
   /* NOTIFICATIONS */
   const notifyBtn = document.getElementById('notify-btn');
   let notificationsEnabled = false;
   let lastNotifyAt = 0;
-
   function isNotificationSupported() {
     return typeof Notification !== 'undefined' && isSecureOrigin();
   }
-
   function loadNotificationPref() {
     try {
       notificationsEnabled = localStorage.getItem('tu_notifications_enabled') === '1';
@@ -1506,7 +1300,6 @@
       notificationsEnabled = false;
     }
   }
-
   function setNotificationPref(val) {
     notificationsEnabled = !!val;
     try {
@@ -1514,7 +1307,6 @@
     } catch (e) {}
     updateNotifyButton();
   }
-
   function updateNotifyButton() {
     if (!notifyBtn) return;
     if (!isNotificationSupported()) {
@@ -1530,7 +1322,6 @@
       ? 'Notifications enabled'
       : (perm === 'denied' ? 'Notifications blocked by browser' : 'Enable notifications');
   }
-
   async function requestNotifications() {
     if (!isNotificationSupported()) {
       showToast('Notifications require HTTPS in this browser.', 'error');
@@ -1549,26 +1340,22 @@
       showToast('Notifications not enabled', 'error');
     }
   }
-
   if (notifyBtn) {
     loadNotificationPref();
     updateNotifyButton();
     notifyBtn.addEventListener('click', requestNotifications);
   }
-
   function shouldNotify() {
     if (!notificationsEnabled) return false;
     if (!isNotificationSupported()) return false;
     if (Notification.permission !== 'granted') return false;
     return document.hidden || !document.hasFocus();
   }
-
   async function showChatNotification(peerName, msgText, peerUid) {
     if (!shouldNotify()) return;
     const now = Date.now();
     if (now - lastNotifyAt < 1500) return;
     lastNotifyAt = now;
-
     const title = 'Tengdosh Ustoz';
     const cleanText = String(msgText || '').trim();
     const body = cleanText
@@ -1582,7 +1369,6 @@
       data: { url: '/pages/private%20chat/private_chat.html' },
       renotify: true,
     };
-
     try {
       if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.getRegistration().catch(() => null);
@@ -1594,31 +1380,26 @@
       new Notification(title, options);
     } catch (e) {}
   }
-
     /* -----------------------------------------
      AUTH - REDIRECT TO SITE LOGIN
   ----------------------------------------- */
   function rememberReturnUrl() {
     try { sessionStorage.setItem('tu_return_url', window.location.href); } catch (e) {}
   }
-
   function goToLogin() {
     rememberReturnUrl();
     const root = (window.TU && typeof TU.getRootPath === 'function') ? TU.getRootPath() : '';
     window.location.href = `${root}/auth/login.html`;
   }
-
   function goToRegister() {
     rememberReturnUrl();
     const root = (window.TU && typeof TU.getRootPath === 'function') ? TU.getRootPath() : '';
     window.location.href = `${root}/auth/register.html`;
   }
-
   const loginBtn = document.getElementById('go-login');
   if (loginBtn) loginBtn.addEventListener('click', goToLogin);
   const registerBtn = document.getElementById('go-register');
   if (registerBtn) registerBtn.addEventListener('click', goToRegister);
-
   function goBackOrHome() {
     const root = (window.TU && typeof TU.getRootPath === 'function') ? TU.getRootPath() : '';
     if (history.length > 1) {
@@ -1627,22 +1408,17 @@
       window.location.href = `${root}/home.html`;
     }
   }
-
   const backHomeBtn = document.getElementById('back-home');
   if (backHomeBtn) backHomeBtn.addEventListener('click', goBackOrHome);
-
   function isMobileView() { return window.innerWidth <= 700; }
-
   function showSidebarMobile() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) sidebar.classList.remove('hidden-mobile');
   }
-
   function hideSidebarMobile() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar && isMobileView()) sidebar.classList.add('hidden-mobile');
   }
-
   const chatBackBtn = document.getElementById('chat-back');
   if (chatBackBtn) chatBackBtn.addEventListener('click', () => {
     if (isMobileView()) {
@@ -1651,7 +1427,6 @@
       goBackOrHome();
     }
   });
-
   async function doSignOut() {
     if (!currentUser) return;
     // Mark offline
@@ -1659,7 +1434,6 @@
     await db.ref(`users/${currentUser.uid}/lastSeen`).set(firebase.database.ServerValue.TIMESTAMP);
     await auth.signOut();
   }
-
   /* -----------------------------------------
      USER PROFILE
   ----------------------------------------- */
@@ -1677,12 +1451,10 @@
     if (name) payload.name = name; // back-compat for older records
     await db.ref(`users/${user.uid}`).update(payload);
   }
-
   function setupPresence(uid) {
     const userStatusRef   = db.ref(`users/${uid}/online`);
     const lastSeenRef     = db.ref(`users/${uid}/lastSeen`);
     const connectedRef    = db.ref('.info/connected');
-
     connectedRef.on('value', snap => {
       if (!snap.val()) return;
       userStatusRef.onDisconnect().set(false);
@@ -1690,13 +1462,11 @@
       userStatusRef.set(true);
     });
   }
-
   /* -----------------------------------------
      LOAD ALL USERS
   ----------------------------------------- */
   function loadUsers() {
     if (unsubUsers) unsubUsers();
-
     unsubUsers = db.ref('users').on('value', snap => {
       allUsers = {};
       snap.forEach(child => {
@@ -1709,7 +1479,6 @@
       renderUsersList(allUsers);
     });
   }
-
   function renderUsersList(users, filter = '') {
     const container = document.getElementById('users-list');
     const q = (filter || '').toLowerCase();
@@ -1718,36 +1487,30 @@
       if (!q) return true;
       return getUserSearchText(u).includes(q);
     });
-
     if (!filtered.length) {
       const label = getFilterLabel(currentFilter).toLowerCase();
       container.innerHTML = `<div class="users-empty">No ${label} found</div>`;
       return;
     }
-
     // Sort: online first, then by name
     filtered.sort((a, b) => {
       if (a.online && !b.online) return -1;
       if (!a.online && b.online) return 1;
       return getUserName(a).localeCompare(getUserName(b));
     });
-
     container.innerHTML = '';
     filtered.forEach(u => {
       const item = createUserItem(u);
       container.appendChild(item);
     });
-
     tryAutoOpenMentor();
   }
-
   function createUserItem(u) {
     const isActive = activeChat === u.uid;
     const div = document.createElement('div');
     div.className = `user-item${isActive ? ' active' : ''}`;
     div.id = `user-item-${u.uid}`;
     div.onclick = () => openChat(u.uid);
-
     const [fg, bg] = avatarColors(u.uid);
     const name = getUserName(u) || 'User';
     const initials = getInitials(name);
@@ -1755,7 +1518,6 @@
     const avatarInner = photo
       ? `${initials}<img src="${photo}" alt="${name}" />`
       : initials;
-
     div.innerHTML = `
       <div class="avatar-wrap">
         <div class="user-avatar" style="background:${bg};color:${fg};border-color:${fg}40">
@@ -1773,15 +1535,11 @@
         <div class="user-time" id="last-time-${u.uid}"></div>
         <div id="badge-${u.uid}"></div>
       </div>`;
-
     // Load last message preview for this conversation
     loadLastMsgPreview(u.uid);
-
     bindAvatarImg(div.querySelector('.user-avatar img'));
-
     return div;
   }
-
   function loadLastMsgPreview(peerUid) {
     const chatId = getChatId(currentUser.uid, peerUid);
     db.ref(`chats/${chatId}/messages`).orderByChild('timestamp').limitToLast(1)
@@ -1796,7 +1554,6 @@
             el.classList.toggle('unread-preview', !isMe && !msg.read);
           }
           if (tel) tel.textContent = formatTime(msg.timestamp);
-
           // Unread badge
           if (msg.senderId !== currentUser.uid && !msg.read) {
             countUnread(peerUid);
@@ -1804,7 +1561,6 @@
         });
       });
   }
-
   function countUnread(peerUid) {
     const chatId = getChatId(currentUser.uid, peerUid);
     db.ref(`chats/${chatId}/messages`).orderByChild('senderId').equalTo(peerUid)
@@ -1817,17 +1573,14 @@
         }
       });
   }
-
   function filterUsers(val) {
     renderUsersList(allUsers, val);
   }
-
   /* -----------------------------------------
      OPEN CHAT
   ----------------------------------------- */
   function openChat(peerUid) {
     if (activeChat === peerUid) return;
-
     // Detach old listeners
     if (msgListener) {
       db.ref(`chats/${activeChatId}/messages`).off('child_added', msgListener);
@@ -1845,66 +1598,49 @@
       db.ref(`chats/${activeChatId}/typing/${peerUid}`).off('value', typingListener);
       typingListener = null;
     }
-
     cancelEdit();
-
     activeChat  = peerUid;
     activeChatId = getChatId(currentUser.uid, peerUid);
-
     // Update active state in list
     document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
     const item = document.getElementById(`user-item-${peerUid}`);
     if (item) item.classList.add('active');
-
     // Clear badge
     const badge = document.getElementById(`badge-${peerUid}`);
     if (badge) badge.innerHTML = '';
-
     const peer = allUsers[peerUid];
     if (!peer) return;
-
     // Show header
     const header = document.getElementById('chat-header');
     header.classList.add('visible');
     const peerName = getUserName(peer) || 'User';
     document.getElementById('chat-header-name').textContent = peerName;
-
     const avatarEl = document.getElementById('chat-header-avatar');
     renderAvatarEl(avatarEl, peerName, peer.uid, getUserAvatar(peer));
-
     updatePeerStatus(peer);
-
     // Listen for peer status changes
     db.ref(`users/${peerUid}`).on('value', snap => {
       const data = snap.val();
       if (data) updatePeerStatus(data);
     });
-
     // Show chat area
     document.getElementById('chat-empty').style.display    = 'none';
     document.getElementById('messages-wrap').classList.add('visible');
     document.getElementById('input-area').classList.add('visible');
-
     // On mobile: hide the sidebar so the chat panel is visible
     hideSidebarMobile();
-
     // Clear messages
     const wrap = document.getElementById('messages-wrap');
     wrap.innerHTML = '';
-
     // Mark all messages from peer as read
     markAsRead(peerUid);
-
     // Attach message listener
     listenMessages(peerUid);
-
     // Typing indicator
     listenTyping(peerUid);
-
     // Focus input
     document.getElementById('msg-input').focus();
   }
-
   function updatePeerStatus(peer) {
     const dot    = document.getElementById('chat-header-dot');
     const label  = document.getElementById('chat-header-status-text');
@@ -1916,7 +1652,6 @@
       label.textContent = peer.lastSeen ? 'Last seen ' + formatTime(peer.lastSeen) : 'Offline';
     }
   }
-
   /* -----------------------------------------
      MESSAGES - LISTEN
   ----------------------------------------- */
@@ -1925,32 +1660,25 @@
     const ref    = db.ref(`chats/${activeChatId}/messages`).orderByChild('timestamp');
     let lastDate = null;
     let lastSender = null;
-
     msgListener = ref.on('child_added', snap => {
       const msg = snap.val();
       msg._key = snap.key;
-
       if (msg.deleted) return;
-
       const msgDate = new Date(msg.timestamp).toDateString();
       if (msgDate !== lastDate) {
         wrap.appendChild(createDayDivider(msg.timestamp));
         lastDate = msgDate;
         lastSender = null;
       }
-
       const isMine = msg.senderId === currentUser.uid;
       const senderChanged = lastSender !== msg.senderId;
       wrap.appendChild(createMsgRow(msg, isMine, senderChanged));
       lastSender = msg.senderId;
-
       scrollToBottom();
-
       // Mark as read if from peer
       if (!isMine && !msg.read) {
         db.ref(`chats/${activeChatId}/messages/${msg._key}`).update({ read: true });
       }
-
       // Update sidebar preview
       const el = document.getElementById(`last-msg-${peerUid}`);
       if (el) {
@@ -1959,13 +1687,11 @@
       }
       const tel = document.getElementById(`last-time-${peerUid}`);
       if (tel) tel.textContent = formatTime(msg.timestamp);
-
       // Browser notification for new incoming messages (when tab is hidden)
       if (!isMine) {
         maybeNotify(peerUid, msg);
       }
     });
-
     msgChangedListener = ref.on('child_changed', snap => {
       const msg = snap.val();
       msg._key = snap.key;
@@ -1981,14 +1707,12 @@
       }
       loadLastMsgPreview(peerUid);
     });
-
     msgRemovedListener = ref.on('child_removed', snap => {
       const row = wrap.querySelector(`[data-key="${snap.key}"]`);
       if (row) row.remove();
       loadLastMsgPreview(peerUid);
     });
   }
-
   function maybeNotify(peerUid, msg) {
     if (!msg || !msg.timestamp) return;
     const now = Date.now();
@@ -1998,14 +1722,12 @@
     const peerName = getUserName(peer) || 'Someone';
     showChatNotification(peerName, msg.text || '', peerUid);
   }
-
   function createDayDivider(ts) {
     const d = document.createElement('div');
     d.className = 'day-divider';
     d.innerHTML = `<span>${formatDayDivider(ts)}</span>`;
     return d;
   }
-
   function renderMsgContent(row, msg, isMine) {
     if (!row || !msg) return;
     if (msg.deleted) {
@@ -2015,26 +1737,22 @@
     row.dataset.sender = msg.senderId || '';
     row.dataset.text = msg.text || '';
     row.dataset.deleted = '0';
-
     const bubble = row.querySelector('.msg-bubble');
     if (bubble) {
       bubble.classList.remove('deleted');
       bubble.innerHTML = escHtml(msg.text || '');
     }
-
     const timeEl = row.querySelector('.msg-time');
     if (timeEl) {
       const edited = msg.editedAt ? ' - edited' : '';
       const readTick = isMine ? `<span class="read-tick">${msg.read ? '&#9679;' : '&#9675;'}</span>` : '';
       timeEl.innerHTML = `${formatMsgTime(msg.timestamp)}${edited}${readTick}`;
     }
-
     const actions = row.querySelector('.msg-actions');
     if (actions) {
       actions.style.display = (isMine && !msg.deleted) ? 'flex' : 'none';
     }
   }
-
   function createMsgRow(msg, isMine, showAvatar) {
     const peer   = allUsers[activeChat] || {};
     const me     = currentUserData;
@@ -2043,17 +1761,14 @@
     const senderName = getUserName(sender);
     const initials = sender ? getInitials(senderName) : '...';
     const photo    = normalizeAssetUrl(getUserAvatar(sender));
-
     const row = document.createElement('div');
     row.className = `msg-row ${isMine ? 'mine' : 'their'}`;
     row.dataset.key = msg._key;
-
     const avatarHtml = showAvatar
       ? `<div class="msg-avatar-sm" style="background:${bg};color:${fg}">
            ${photo ? `${initials}<img src="${photo}" alt="" />` : initials}
          </div>`
       : `<div class="msg-avatar-sm hidden"></div>`;
-
     const actionsHtml = isMine
       ? `<div class="msg-actions">
            <button class="msg-action edit" type="button" data-action="edit" title="Edit">
@@ -2073,7 +1788,6 @@
            </button>
          </div>`
       : '';
-
     row.innerHTML = `
       ${avatarHtml}
       <div class="msg-bubble-col">
@@ -2081,17 +1795,14 @@
         <div class="msg-time"></div>
         ${actionsHtml}
       </div>`;
-
     renderMsgContent(row, msg, isMine);
     bindAvatarImg(row.querySelector('.msg-avatar-sm img'));
     return row;
   }
-
   function scrollToBottom() {
     const wrap = document.getElementById('messages-wrap');
     requestAnimationFrame(() => { wrap.scrollTop = wrap.scrollHeight; });
   }
-
   const msgInput = document.getElementById('msg-input');
   const inputArea = document.getElementById('input-area');
   const sendBtn = document.getElementById('send-btn');
@@ -2100,14 +1811,12 @@
   const saveIconHtml = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="20 6 9 17 4 12"></polyline>
   </svg>`;
-
   function setEditingMode(on) {
     if (!inputArea) return;
     inputArea.classList.toggle('editing', !!on);
     if (sendBtn) sendBtn.innerHTML = on ? saveIconHtml : sendIconHtml;
     if (msgInput) msgInput.placeholder = on ? 'Edit message...' : 'Type a message...';
   }
-
   function startEditMessageByRow(row) {
     if (!row || !currentUser) return;
     if (row.dataset.sender !== currentUser.uid) return;
@@ -2122,7 +1831,6 @@
     }
     setEditingMode(true);
   }
-
   function cancelEdit() {
     editingMessageKey = null;
     if (msgInput) {
@@ -2131,7 +1839,6 @@
     }
     setEditingMode(false);
   }
-
   async function deleteMessageByRow(row) {
     if (!row || !currentUser) return;
     if (row.dataset.sender !== currentUser.uid) return;
@@ -2145,9 +1852,7 @@
       showToast('Failed to delete message', 'error');
     }
   }
-
   if (cancelEditBtn) cancelEditBtn.addEventListener('click', cancelEdit);
-
   const messagesWrapEl = document.getElementById('messages-wrap');
   if (messagesWrapEl) {
     messagesWrapEl.addEventListener('click', (e) => {
@@ -2171,14 +1876,11 @@
       }
     });
   }
-
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.msg-row.mine')) {
       document.querySelectorAll('.msg-row.mine.show-actions').forEach(r => r.classList.remove('show-actions'));
     }
   });
-
-
   /* -----------------------------------------
      MARK AS READ
   ----------------------------------------- */
@@ -2195,7 +1897,6 @@
         }
       });
   }
-
   /* -----------------------------------------
      SEND MESSAGE
   ----------------------------------------- */
@@ -2203,7 +1904,6 @@
     const input = document.getElementById('msg-input');
     const text  = input.value.trim();
     if (!text || !activeChat) return;
-
     if (editingMessageKey) {
       try {
         await db.ref(`chats/${activeChatId}/messages/${editingMessageKey}`).update({
@@ -2218,13 +1918,10 @@
       input.focus();
       return;
     }
-
     input.value = '';
     autoResize(input);
-
     // Clear typing
     clearTyping();
-
     const msgRef = db.ref(`chats/${activeChatId}/messages`).push();
     await msgRef.set({
       senderId:  currentUser.uid,
@@ -2232,10 +1929,8 @@
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       read:      false,
     });
-
     input.focus();
   }
-
   /* -----------------------------------------
      TYPING INDICATOR
   ----------------------------------------- */
@@ -2245,12 +1940,10 @@
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(clearTyping, 2000);
   }
-
   function clearTyping() {
     if (!activeChatId) return;
     db.ref(`chats/${activeChatId}/typing/${currentUser.uid}`).set(false);
   }
-
   function listenTyping(peerUid) {
     const peer = allUsers[peerUid];
     const ref  = db.ref(`chats/${activeChatId}/typing/${peerUid}`);
@@ -2267,7 +1960,6 @@
       }
     });
   }
-
   /* -----------------------------------------
      INPUT HELPERS
   ----------------------------------------- */
@@ -2277,12 +1969,10 @@
       sendMessage();
     }
   }
-
   function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 140) + 'px';
   }
-
   /* -----------------------------------------
      SECURITY - HTML ESCAPE
   ----------------------------------------- */
@@ -2295,17 +1985,11 @@
       .replace(/'/g, '&#039;')
       .replace(/\n/g, '<br>');
   }
-
   setupRoleFilters();
-
-  /* -----------------------------------------
-     AUTH STATE OBSERVER  <- main entry point
-  ----------------------------------------- */
   auth.onAuthStateChanged(async user => {
     const loading = document.getElementById('loading-screen');
     const authScr = document.getElementById('auth-screen');
     const appEl   = document.getElementById('app');
-
     if (user) {
       currentUser = user;
       const ok = await TU.requireProfileCompletion(db, auth, { returnUrl: window.location.href });
@@ -2313,8 +1997,6 @@
         loading.style.display = 'none';
         return;
       }
-
-      // Fetch/update user profile in DB
       const snap = await db.ref(`users/${user.uid}`).once('value');
       if (!snap.exists()) {
         await saveUserProfile(user, user.displayName || user.email.split('@')[0]);
@@ -2322,40 +2004,26 @@
         await db.ref(`users/${user.uid}`).update({ online: true });
       }
       currentUserData = (await db.ref(`users/${user.uid}`).once('value')).val();
-
-      // Presence
       setupPresence(user.uid);
-
-      // Populate current user UI
       const myName   = document.getElementById('my-name');
       const myAvatar = document.getElementById('my-avatar');
       const meName = getUserName(currentUserData) || getUserName(user) || 'User';
       myName.textContent = meName;
       renderAvatarEl(myAvatar, meName, user.uid, getUserAvatar(currentUserData) || getUserAvatar(user));
-
-      // Load users
       loadUsers();
-
-      // Switch screens
       loading.style.display = 'none';
       authScr.style.display = 'none';
       appEl.classList.add('visible');
-
     } else {
       currentUser     = null;
       currentUserData = null;
       activeChat      = null;
       activeChatId    = null;
-
       loading.style.display = 'none';
       authScr.style.display = 'flex';
       appEl.classList.remove('visible');
     }
   });
-
-  /* -----------------------------------------
-     KEYBOARD SHORTCUT: Escape to close chat
-  ----------------------------------------- */
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (editingMessageKey) {
@@ -2376,5 +2044,3 @@
 </script>
 </body>
 </html>
-
-

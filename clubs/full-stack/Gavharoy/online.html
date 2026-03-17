@@ -13,20 +13,17 @@
 <link rel="stylesheet" href="/assets/online-tech.css">
 </head>
 <body>
-
 <button id="theme-toggle" aria-label="Toggle Theme">
   <svg id="theme-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
   </svg>
 </button>
-
 <header>
   <a class="back-btn" href="/clubs/full-stack/Gavharoy/index.html">
     <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="go back" draggable="false">
   </a>
   <div class="logo">Full-stack</div>
 </header>
-
 <main>
   <section class="hero">
     <div class="mentor-hero">
@@ -36,10 +33,8 @@
       </div>
     </div>
   </section>
-
   <section id="courses" class="courses">
   </section>
-
   <section class="video-section" id="videoSection">
     <div class="video-scrollable" id="videoScrollable">
       <div class="video-container" id="videoPlayer" style="display:none;">
@@ -47,7 +42,6 @@
       </div>
     </div>
     <p id="noVideoMsg" style="display:none;" class="no-video-msg"><i data-lucide="video-off" class="inline-icon"></i> Bu dars uchun video mavjud emas.</p>
-
     <div class="tabs">
       <div class="tab active" data-tab="tab1">Mavzu</div>
       <div class="tab" data-tab="tab2">Vazifalar</div>
@@ -55,7 +49,6 @@
       <div class="tab" data-tab="tab4">Yuklab olish</div>
       <div class="tab" data-tab="tab5">Fikrlar</div>
     </div>
-
     <div id="tab1" class="content active">
       <div id="qa-container"></div>
     </div>
@@ -68,7 +61,6 @@
     <div id="tab4" class="content">
       <div id="download-container"></div>
     </div>
-
     <div id="tab5" class="content">
       <div class="content-card">
         <h4>Fikr qoldirish</h4>
@@ -94,7 +86,6 @@
               <img decoding="async" loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzZkdTB5NzByamx6MnBsYTA5ZmMzYTA4ZWE1d3RobzVweDhiZnRxaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MC6eSuC3yypCU/giphy.gif" class="avatar-item" id="hiddenAvatar" onclick="pickAvatar(this)">
               <img decoding="async" loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MHgyYnBzb3NxY25qcjl6cndjeXA0cjV3cXdqcGtoeHptMzBnZDBnbiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/aCPLIC91DHRdkM4c6D/giphy.gif" class="avatar-item" id="hiddenAvatar" onclick="pickAvatar(this)">
               <img decoding="async" loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjRyNGlxMTVlaXpxZG95bWg3ZXAzMm90c3I3c2l2dDZwc2JuNDh2YyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/k735iGy8AvA0WYbuZa/giphy.gif" class="avatar-item" id="hiddenAvatar" onclick="pickAvatar(this)">
-
               <div id="moreAvatars"> 
                   <img decoding="async" loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MzQyajh4cWxndW9obnpqZ3VmdWU3eHZwbjg2OHA5bTlra2Q3OWF4MSZlcD12MV9naWZzX3RyZW5kaW5nJmN0PWc/DAGAgaS8sIZmjpnihn/giphy.gif" class="avatar-item extra-avatar" onclick="pickAvatar(this)">
                   <img decoding="async" loading="lazy" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczBwYXl2ZjRyYzE2cGI1Z3FoMDBkYmJwYTVueTI1aDY2MDVtYXRpbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3orif0olmGNHtrBnXO/giphy.gif" class="avatar-item extra-avatar" onclick="pickAvatar(this)">
@@ -116,7 +107,6 @@
             Ko'proq ko'rish...
           </button>
         </div>
-
         <div id="identity-section">
           <input type="text" id="fb-name" placeholder="Ismingiz" class="input-field">
           <input type="text" id="fb-surname" placeholder="Familyangiz" class="input-field">
@@ -141,12 +131,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="/assets/firebase-config.js"></script>
 <script src="/assets/tu-firebase.js"></script>
-
-
-
 <script>
 let selectedUserAvatar = "https://cdn-icons-png.flaticon.com/512/8241/8241956.png";
-
 async function pickAvatar(el) {
   if (!auth.currentUser) {
     alert("Avatar tanlash uchun avval akkauntga kiring.");
@@ -157,7 +143,6 @@ async function pickAvatar(el) {
   document.querySelectorAll('.avatar-item').forEach(img => img.classList.remove('selected'));
   el.classList.add('selected');
   selectedUserAvatar = el.src;
-
   try {
     await db.ref(`users/${auth.currentUser.uid}`).update({
       avatarURL: selectedUserAvatar,
@@ -171,9 +156,7 @@ async function pickAvatar(el) {
     console.warn(e);
   }
 }
-
 TU.init();
-
 function safeAssetUrl(u){
   const s = String(u||'').trim();
   if(!s) return '';
@@ -181,17 +164,13 @@ function safeAssetUrl(u){
   if(s.startsWith('/')) return s;
   return '/' + s;
 }
-
 function checkSavedUser(){
-  // Back-compat: older pages call this; real boot is handled elsewhere.
   return true;
 }
-
 const db = TU.db;
 const auth = TU.auth;
 const TEACHER_ID = "Gavharoy"; 
 const CLUB_ID = "full-stack";
-
 const courseData = window.courseData = [];
 function renderCourses() {
   const courseContainer = document.getElementById('courses');  
@@ -211,7 +190,6 @@ function renderCourses() {
     </div>
   `).join('');
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     renderCourses();
     checkSavedUser();
@@ -220,13 +198,11 @@ const toggleBtn = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const moonSVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
 const sunSVG = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-
 const savedTheme = sessionStorage.getItem('theme') || 'light';
 if (savedTheme === 'dark') {
   document.documentElement.setAttribute('data-theme', 'dark');
   themeIcon.innerHTML = sunSVG;
 }
-
 toggleBtn.addEventListener('click', () => {
   let theme = document.documentElement.getAttribute('data-theme');
   if (theme === 'dark') {
@@ -239,7 +215,6 @@ toggleBtn.addEventListener('click', () => {
     sessionStorage.setItem('theme', 'dark');
   }
 });
-
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -250,10 +225,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (targetContent) targetContent.classList.add('active');
   });
 });
-
 const ROOT_ASSET = '/';
-
-
 function toYouTubeEmbed(url){
   if(!url) return '';
   const raw=String(url).trim();
@@ -278,20 +250,15 @@ function toYouTubeEmbed(url){
   }catch(e){}
   return raw;
 }
-
 let currentCourseKey = "";
-
 function selectCourse(index) {
   const data = courseData[index];
   const videoSection = document.getElementById('videoSection');
   const videoPlayer = document.getElementById('videoPlayer');
   const videoIframe = document.getElementById('videoIframe');
   const noVideoMsg = document.getElementById('noVideoMsg');
-
   currentCourseKey = data.qa.replace(/[.#$/[\]]/g, "_");
-
   videoSection.classList.add('open');
-
   if (data.video) {
     videoPlayer.style.display = 'block';
     noVideoMsg.style.display = 'none';
@@ -301,41 +268,31 @@ function selectCourse(index) {
     noVideoMsg.style.display = 'block';
     videoIframe.src = "";
   }
-
   document.getElementById('qa-container').innerHTML = `<div class="content-card"><p>${data.qa}</p></div>`;
-
   document.getElementById('task-container').innerHTML = data.tasks.map(t => 
     `<div class="content-card task">${t}</div>`
   ).join('');
-
   document.getElementById('doc-container').innerHTML = (data.docs||[]).map(d => `<div class="content-card pdf"><a href="${(String(d.link||'').startsWith('/') ? String(d.link) : '/' + String(d.link))}" target="_blank" rel="noopener"><i data-lucide="file-text" class="inline-icon"></i> ${d.title||'Fayl'}</a></div>`).join('');
 document.getElementById('download-container').innerHTML = (data.downloads||[]).map(dl => `<div class="content-card pdf"><a href="${(String(dl.link||'').startsWith('/') ? String(dl.link) : '/' + String(dl.link))}"><i data-lucide="download" class="inline-icon"></i> ${dl.title||'Yuklab olish'}</a></div>`).join('');
 if (window.lucide) lucide.createIcons();
-
   loadFeedbacks();
-
   setTimeout(() => {
     document.querySelector('.tab').focus();
     videoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
 }
-
 function loadFeedbacks() {
   const list = document.getElementById('feedback-list');
   list.innerHTML = ""; 
-
   db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`).on('value', (snapshot) => {
     const data = snapshot.val();
     list.innerHTML = ""; 
-    
     if (!data) {
       list.innerHTML = "<p style='color:var(--muted); font-size:0.9rem;'>Hozircha fikrlar yo'q.</p>";
       return;
     }
-
     Object.values(data).reverse().forEach(fb => {
       const specialClass = fb.isAdmin ? 'admin-comment' : '';
-
       list.innerHTML += `
       <div class="content-card ${specialClass}">
         <div class="comment-user-box">
@@ -349,13 +306,8 @@ function loadFeedbacks() {
     });
   });
 }
-
-// =========================
-// Feedback identity (from account)
-// =========================
 let currentUserProfile = null;
 let currentUserRole = 'guest';
-
 function getRootPathSafe(){
   try {
     return (window.TU && TU.getRootPath) ? TU.getRootPath() : '';
@@ -363,7 +315,6 @@ function getRootPathSafe(){
     return '';
   }
 }
-
 async function loadCurrentUserProfile() {
   return new Promise((resolve) => {
     auth.onAuthStateChanged(async (user) => {
@@ -377,12 +328,10 @@ async function loadCurrentUserProfile() {
         currentUserRole = await TU.getRole(db, user.uid);
         const snap = await db.ref(`users/${user.uid}`).once('value');
         const doc = snap.val() || {};
-
         const displayName = (doc.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'User')).trim();
         const surename = (doc.surename || '').trim();
         const group = (doc.groupInUniversity || doc.group || '').trim();
         const avatar = (doc.avatarURL || doc.photoURL || user.photoURL || 'https://cdn-icons-png.flaticon.com/512/8241/8241956.png');
-
         currentUserProfile = {
           uid: user.uid,
           email: user.email || '',
@@ -392,19 +341,15 @@ async function loadCurrentUserProfile() {
           avatar,
           role: currentUserRole,
         };
-
-        // keep avatar variable used by UI
         selectedUserAvatar = avatar;
       } catch (e) {
         console.warn(e);
       }
-
       updateFeedbackUI();
       resolve(currentUserProfile);
     });
   });
 }
-
 function updateFeedbackUI() {
   const identitySection = document.getElementById('identity-section');
   const avatarWrapper = document.querySelector('.avatar-selection-wrapper');
@@ -412,25 +357,18 @@ function updateFeedbackUI() {
   const nameField = document.getElementById('fb-name');
   const surnameField = document.getElementById('fb-surname');
   const groupField = document.getElementById('fb-group');
-
   if (!identitySection) return;
-
-  // If not logged in, keep the inputs visible but do NOT save to localStorage anymore
   if (!currentUserProfile) {
     identitySection.style.display = 'block';
     if (avatarWrapper) avatarWrapper.style.display = 'block';
     if (welcome) welcome.style.display = 'none';
     return;
   }
-
-  // Logged in -> use account info (no localStorage identity)
   identitySection.style.display = 'none';
   if (avatarWrapper) avatarWrapper.style.display = 'none';
-
   if (nameField) nameField.value = currentUserProfile.displayName || '';
   if (surnameField) surnameField.value = currentUserProfile.surename || '';
   if (groupField) groupField.value = currentUserProfile.group || '';
-
   if (welcome) {
     const g = currentUserProfile.group ? ` <small>(${currentUserProfile.group})</small>` : '';
     welcome.innerHTML = `
@@ -441,12 +379,9 @@ function updateFeedbackUI() {
     welcome.style.alignItems = 'center';
   }
 }
-
-// boot
 document.addEventListener('DOMContentLoaded', () => {
   loadCurrentUserProfile();
 });
-
 function normalizeName(str) {
   if (!str) return "";
   return str.toLowerCase()
@@ -460,36 +395,27 @@ function normalizeName(str) {
     .replace(/G'/g, 'G')
     .replace(/\s+/g, '');
 }
-
 async function submitFeedback() {
   const messageField = document.getElementById('fb-message');
   const message = (messageField?.value || '').trim();
-
   if (!message) {
     alert("Iltimos, xabar maydonini to'ldiring!");
     return;
   }
-
-  // Must be logged in to submit feedback
   if (!currentUserProfile || !auth.currentUser) {
     alert("Feedback qoldirish uchun avval akkauntga kiring.");
     const root = getRootPathSafe();
     window.location.href = `${root}/auth/login.html`;
     return;
   }
-
-  // If user didn't set a display name, force them to set it in Account page
   if (!currentUserProfile.displayName || currentUserProfile.displayName.length < 2) {
     alert("Account sahifasidan ismingizni sozlab oling.");
     const root = getRootPathSafe();
     window.location.href = `${root}/pages/account/account.html`;
     return;
   }
-
   const courseRef = db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`);
-
   try {
-    // Admin/teacher is ONLY from DB role (no secret keys / no DevTools hacks)
     const role = currentUserRole || 'user';
     const feedbackEntry = {
       uid: auth.currentUser.uid,
@@ -502,19 +428,16 @@ async function submitFeedback() {
       isAdmin: role === 'admin',
       isTeacher: role === 'teacher'
     };
-
     await courseRef.push(feedbackEntry);
     messageField.value = "";
   } catch (err) {
     alert("Xatolik yuz berdi: " + (err?.message || err));
   }
 }
-
 const slider = document.getElementById('videoScrollable');
 let isDown = false;
 let startX;
 let scrollLeft;
-
 if (slider) {
   slider.addEventListener('mousedown', (e) => {
     isDown = true;
@@ -531,13 +454,10 @@ if (slider) {
     slider.scrollLeft = scrollLeft - walk;
   });
 }
-
 function toggleAvatars() {
   const container = document.getElementById('moreAvatars');
   const btn = document.getElementById('toggleAvatarsBtn');
-  
   container.classList.toggle('open');
-
   if (container.classList.contains('open')) {
     btn.innerText = "Yashirish";
   } else {
@@ -561,10 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const elements = Array.from(document.querySelectorAll(focusableSelectors))
             .filter(el => el.offsetWidth > 0 && el.offsetHeight > 0);
         if (elements.length === 0) return;
-
         const firstEl = elements[0];
         const lastEl = elements[elements.length - 1];
-
         if (e.shiftKey && document.activeElement === firstEl) {
             e.preventDefault();
             lastEl.focus();
@@ -589,21 +507,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 (cards[idx - 1] || cards[cards.length - 1]).focus();
             }
         }
-
         if (active.classList.contains('tab')) {
             const tabs = Array.from(document.querySelectorAll('.tab'));
             const idx = tabs.indexOf(active);
             let nextTab;
             if (e.key === 'ArrowRight') nextTab = tabs[idx + 1] || tabs[0];
             if (e.key === 'ArrowLeft') nextTab = tabs[idx - 1] || tabs[tabs.length - 1];
-            
             if (nextTab) {
                 nextTab.focus();
                 nextTab.click();
             }
         }
     });
-
     const observer = new MutationObserver(makeFocusable);
     observer.observe(document.body, { childList: true, subtree: true });
 });
@@ -612,15 +527,6 @@ document.addEventListener('DOMContentLoaded', () => {
   <script>lucide.createIcons();</script>
   <script type="module" src="/assets/online-lessons-uploader.js"></script>
 <script type="module" src="/assets/online-enhancements.js"></script>
-
   <script src="/assets/UI.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-

@@ -5,16 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
   <title>Tengdosh-Ustoz | Contact</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/pages/contact/contact.css?v=2" />
   <link rel="icon" href="/icon.png" />
 </head>
-
 <body>
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb-1"></div>
@@ -22,7 +19,6 @@
     <div class="orb orb-3"></div>
   </div>
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
-
   <div class="page-scroll" id="page-scroll">
     <nav class="navbar" id="main-navbar">
       <a href="/home.html" class="navbar-brand">
@@ -75,26 +71,22 @@
         </button>
       </div>
     </nav>
-
     <main>
       <section class="contact-hero">
         <h1 data-i18n="contact_title">Contact</h1>
         <p data-i18n="contact_desc">Send a message to the team. If you are logged in, your name, surname and group are auto-filled from your account.</p>
       </section>
-
       <section class="contact-wrap">
         <div class="glass contact-card">
           <div class="contact-section-title">
             <div class="dot" aria-hidden="true"></div>
             <h2 data-i18n="contact_message_title">Message</h2>
           </div>
-
           <form id="contactForm" autocomplete="off">
             <div class="inline-toggle">
               <input type="checkbox" id="anonymousToggle" />
               <span data-i18n="contact_anon">Send anonymously</span>
             </div>
-
             <div id="personalBlock">
               <div class="form-grid">
                 <div>
@@ -106,15 +98,12 @@
                   <input class="contact-input" id="surname" name="surname" data-i18n-ph="contact_surname_ph" placeholder="Your surname" />
                 </div>
               </div>
-
               <div class="form-row">
                 <label class="contact-label" for="group" data-i18n="contact_group">Group</label>
                 <input class="contact-input" id="group" name="group" data-i18n-ph="contact_group_ph" placeholder="e.g. 1-A" />
               </div>
-
               <div class="small-note" id="autofillHint"></div>
             </div>
-
             <div class="form-row">
               <label class="contact-label" for="message" data-i18n="contact_msg">Message</label>
               <textarea class="contact-input contact-textarea" id="message" name="message" data-i18n-ph="contact_msg_ph" placeholder="Write your message here..."></textarea>
@@ -136,14 +125,11 @@
                 </svg>
                 <span data-i18n="contact_send">Send message</span>
               </button>
-
               <div class="cooldown-pill" id="cooldownPill" data-i18n="contact_cooldown">Cooldown: ready</div>
             </div>
-
             <div class="status-line" id="statusLine" aria-live="polite"></div>
           </form>
         </div>
-
         <aside class="glass helper-card">
           <h3 data-i18n="contact_rules">Rules</h3>
           <p data-i18n="contact_rules_desc">
@@ -156,7 +142,6 @@
         </aside>
       </section>
     </main>
-
   <footer class="edu-footer" aria-label="Footer">
     <div class="edu-footer-wrap">
       <div class="edu-footer-grid">
@@ -175,10 +160,8 @@
             platform for shared knowledge, growth, and academic excellence since 2026.
           </p>
         </div>
-
         <div class="edu-footer-col">
           <h4 class="edu-footer-h" data-i18n="footer_contact">Contact Us</h4>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -190,7 +173,6 @@
               <div class="edu-contact-value">+998 90 855 75 85</div>
             </div>
           </div>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -205,7 +187,6 @@
               </div>
             </div>
           </div>
-
           <div class="edu-contact">
             <div class="edu-contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -219,7 +200,6 @@
             </div>
           </div>
         </div>
-
         <div class="edu-footer-col">
           <h4 class="edu-footer-h" data-i18n="footer_support">Support</h4>
           <ul class="edu-footer-list">
@@ -229,7 +209,6 @@
           </ul>
         </div>
       </div>
-
       <div class="edu-footer-bottom">
         <div class="edu-footer-rule" aria-hidden="true"></div>
         <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
@@ -237,16 +216,13 @@
     </div>
   </footer>
   </div>
-  
   <script>
     (function () {
       const nav = document.getElementById('main-navbar');
       const ham = document.getElementById('navbar-hamburger');
       const links = document.getElementById('navbar-links');
       if (!nav || !links) return;
-
       const isMobile = () => window.matchMedia('(max-width: 1000px)').matches;
-
       function setOpen(open) {
         links.classList.toggle('open', open);
         if (ham) {
@@ -255,7 +231,6 @@
         }
         document.body.classList.toggle('nav-open', open && isMobile());
       }
-
       const scrollEl = document.getElementById('page-scroll');
       const onScroll = () => {
         const top = scrollEl ? scrollEl.scrollTop : window.scrollY;
@@ -264,27 +239,22 @@
       const scrollTarget = scrollEl || window;
       scrollTarget.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
-
       if (ham) {
         ham.addEventListener('click', (e) => {
           e.stopPropagation();
           setOpen(!links.classList.contains('open'));
         });
       }
-
       links.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-
       document.addEventListener('click', (e) => {
         if (!isMobile()) return;
         if (!links.classList.contains('open')) return;
         if (nav.contains(e.target)) return;
         setOpen(false);
       });
-
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') setOpen(false);
       });
-
       window.addEventListener('resize', () => {
         if (!isMobile()) setOpen(false);
       });
@@ -295,10 +265,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="/assets/firebase-config.js"></script>
   <script src="/assets/tu-firebase.js"></script>
-
   <script src="/pages/contact/contact.js?v=24"></script>
   <script src="/assets/i18n.js"></script>
   <script src="/assets/UI.js"></script>
 </body>
 </html>
-

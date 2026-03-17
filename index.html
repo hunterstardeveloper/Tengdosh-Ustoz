@@ -18,7 +18,6 @@
       --yellow:#FFE95A;
       --text:#E9ECEF;
     }
-
     html,body{
       height:100%;
       margin:0;
@@ -26,7 +25,6 @@
       overflow:hidden;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
-
     .stage{
       position:fixed; inset:0;
       display:grid; place-items:center;
@@ -35,7 +33,6 @@
         radial-gradient(900px 520px at 50% 58%, rgba(20,255,130,0.06), rgba(0,0,0,0) 58%),
         linear-gradient(180deg,var(--bg1),var(--bg0));
     }
-
     .logoWrap{
       position:relative;
       display:flex;
@@ -43,10 +40,9 @@
       align-items:center;
       gap:14px;
       transform: translateY(-6px);
-      padding: 0;           /* no box padding */
-      width: auto;          /* no fixed width */
+      padding: 0;           
+      width: auto;          
     }
-
     .logo{
       width:min(190px,36vw);
       opacity:0;
@@ -56,7 +52,6 @@
         drop-shadow(0 0 12px rgba(0,255,140,0.28))
         drop-shadow(0 0 26px rgba(0,255,140,0.14));
     }
-
     .brand{
       font-size: clamp(20px, 6vw, 34px);
       letter-spacing:0.4px;
@@ -86,7 +81,6 @@
         0 0 28px rgba(80,255,160,0.14);
       font-weight:700;
     }
-
     .bar{
       width:min(520px,78vw);
       height:8px;
@@ -124,20 +118,17 @@
       from{ transform: translateX(0); }
       to{ transform: translateX(740px); }
     }
-
     .bar.pulse{ animation: pulse 520ms ease-out 1; }
     @keyframes pulse{
       0%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 0 rgba(0,0,0,0); }
       40%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset, 0 0 34px rgba(0,255,140,0.14); }
       100%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 0 rgba(0,0,0,0); }
     }
-
     .vignette{
       position:fixed; inset:0;
       background: radial-gradient(70% 55% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.66) 86%, rgba(0,0,0,0.90));
       pointer-events:none;
     }
-
     .fadeout{
       animation: fadeout 380ms ease-in forwards;
     }
@@ -149,7 +140,6 @@
 <body>
   <div class="stage">
     <div class="logoWrap" id="group">
-      
       <svg class="logo" id="logo" viewBox="0 0 256 256" aria-label="Logo" role="img">
         <path fill="url(#gMain)"
           d="
@@ -180,20 +170,16 @@
           </linearGradient>
         </defs>
       </svg>
-
-      
       <div class="brand" id="brand">
         <div class="brandLine">
           <span>Tengdosh</span>
           <span class="accent">Ustoz</span>
         </div>
-
         <div class="bar" id="bar" aria-label="Loading bar">
           <div class="fill" id="fill"></div>
         </div>
       </div>
     </div>
-
     <div class="vignette"></div>
   </div>
   <script>
@@ -202,32 +188,25 @@
     const brandEl = document.getElementById("brand");
     const barEl   = document.getElementById("bar");
     const fillEl  = document.getElementById("fill");
-
     const clamp01 = (x)=>Math.max(0,Math.min(1,x));
     const easeOutCubic = (x)=>1-Math.pow(1-x,3);
-
     const REVEAL_MS = 850;
     const BAR_DELAY_MS = 380;
     const FILL_MS = 2400;
     const HOLD_MS = 450;
     const FADE_MS = 320;
-
     let start = performance.now();
     let barStart = null;
     let redirected = false;
-
     function setReveal(p){
       const e = easeOutCubic(clamp01(p));
-
       logoEl.style.opacity = e.toFixed(3);
       logoEl.style.transform = `translateY(${(1-e)*12}px) scale(${0.985 + e*0.015})`;
       logoEl.style.filter =
         `drop-shadow(0 0 ${12 + e*8}px rgba(0,255,140,${0.22 + e*0.18}))
          drop-shadow(0 0 ${26 + e*28}px rgba(150,255,80,${0.10 + e*0.12}))`;
-
       brandEl.style.opacity = e.toFixed(3);
       brandEl.style.transform = `translateY(${(1-e)*14}px)`;
-
       barEl.style.opacity = e.toFixed(3);
       barEl.style.transform = `translateY(${(1-e)*10}px)`;
     }
@@ -250,7 +229,6 @@
         } else {
           fillEl.style.width = "100%";
           if (!barEl.classList.contains("pulse")) barEl.classList.add("pulse");
-
           if (bt > FILL_MS + HOLD_MS) redirectToHome();
         }
       }
@@ -265,5 +243,3 @@
   <script src="/assets/UI.js"></script>
 </body>
 </html>
-
-

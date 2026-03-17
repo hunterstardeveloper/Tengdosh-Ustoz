@@ -1,14 +1,14 @@
 (function(){
-  // Quote Likes v1 (Realtime DB)
-  // Schema:
-  //   quoteLikes/{quoteId}/count: number
-  //   quoteMeta/{quoteId}: { raw, text, author, updatedAt }
-  //   userLikes/{uid}/{quoteId}: true
+  
+  
+  
+  
+  
 
   function djb2(str){
     let h = 5381;
     for (let i=0;i<str.length;i++) h = ((h<<5)+h) + str.charCodeAt(i);
-    // unsigned 32-bit -> base36
+    
     return (h >>> 0).toString(36);
   }
 
@@ -36,12 +36,12 @@
     if (!db) return;
     const ref = db.ref(`quoteMeta/${quoteId}`);
 
-    // Create once (atomic) — avoids race conditions.
-    // NOTE: Requires RTDB rules that allow creating quoteMeta when it doesn't exist.
+    
+    
     await new Promise((resolve, reject) => {
       ref.transaction(
         (curr) => {
-          if (curr) return curr; // already exists
+          if (curr) return curr; 
           return {
             raw: meta.raw || null,
             text: meta.text || null,
@@ -73,7 +73,7 @@
   async function toggleLike(db, auth, quoteId, meta){
     const u = auth.currentUser;
     if (!u) {
-      // redirect to login preserving return url
+      
       if (window.TU && TU.requireLogin) TU.requireLogin(auth);
       else window.location.href = '/auth/login.html';
       return { liked: false, redirected: true };
@@ -82,7 +82,7 @@
     const uid = u.uid;
     const likeRef = db.ref(`userLikes/${uid}/${quoteId}`);
 
-    // Toggle user like atomically
+    
     const result = await new Promise((resolve, reject) => {
       likeRef.transaction(
         (curr) => (curr ? null : true),
@@ -97,10 +97,10 @@
 
     if (!result.committed) return { liked: result.liked, committed: false };
 
-    // Ensure meta exists (best effort)
+    
     ensureMeta(db, quoteId, meta).catch(()=>{});
 
-    // Update aggregate count
+    
     const delta = result.liked ? 1 : -1;
     await new Promise((resolve, reject) => {
       db.ref(`quoteLikes/${quoteId}/count`).transaction(
@@ -115,7 +115,7 @@
     return { liked: result.liked, committed: true };
   }
 
-  // Public API
+  
   window.TUQuoteLikes = {
     parseQuote,
     quoteIdFromRaw,

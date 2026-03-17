@@ -75,13 +75,13 @@
     return snap.val() || {};
   }
 
-  // -----------------------------
-  // BAN SYSTEM
-  // -----------------------------
-  // Supported shapes in RTDB:
-  // 1) /banned/{uid}: true
-  // 2) /banned/{uid}: { active: true, until: <ms timestamp|null>, reason: "..." }
-  // 3) /users/{uid}/banned: same shapes as above (legacy/alternative)
+  
+  
+  
+  
+  
+  
+  
   function isBanActive(raw) {
     if (!raw) return false;
     if (raw === true) return true;
@@ -91,7 +91,7 @@
       if (typeof until === 'number' && until > 0) {
         return Date.now() < until;
       }
-      // if "until" is missing/null and active isn't explicitly false -> treat as active
+      
       return raw.active === true || raw.active === undefined;
     }
     return false;
@@ -139,7 +139,7 @@
   }
 
   async function getBanStatus(db, uid) {
-    // Prefer /banned/{uid}, fallback to /users/{uid}/banned
+    
     try {
       const snap = await db.ref(`banned/${uid}`).once('value');
       const v = snap.val();
@@ -156,20 +156,20 @@
 
   function redirectToBanned() {
     const root = getRootPath();
-    // avoid redirect loop
+    
     if (window.location.pathname.includes('/auth/banned.html')) return;
     window.location.href = `${root}/auth/banned.html`;
   }
 
   function redirectToHome() {
     const root = getRootPath();
-    // avoid redirect loop
+    
     if (window.location.pathname.includes('/home.html')) return;
     window.location.href = `${root}/home.html`;
   }
 
-  // Realtime ban listener (no refresh needed)
-  // Returns an "unsubscribe" function.
+  
+  
   function watchBan(db, uid, onChange) {
     const refA = db.ref(`banned/${uid}`);
     const refB = db.ref(`users/${uid}/banned`);
@@ -267,7 +267,7 @@
   }
 
   function redirectToLogin() {
-    // Avoid redirect loops on auth pages
+    
     const p = window.location.pathname || "";
     if (p.includes("/auth/login.html") || p.includes("/auth/register.html") || p.includes("/auth/forgot.html") || p.includes("/auth/banned.html") || p.includes("/auth/forbidden.html")) {
       return;
@@ -547,14 +547,14 @@
 
   function requireLogin(auth) {
     if (!auth.currentUser) {
-      // Firebase may take a moment to restore the session (LOCAL persistence).
-      // Delay redirect slightly to prevent infinite login/register loops.
+      
+      
       setTimeout(() => {
         if (!auth.currentUser) redirectToLogin();
       }, 450);
       return false;
     }
-    // Fast path: if we already know the session is banned, don't allow access.
+    
     if (isCachedBanned()) {
       redirectToBanned();
       return false;
@@ -574,10 +574,10 @@
   }
 
   
-  // -----------------------------
-  // ADMIN FAB (Offline admin panel access without keyboard shortcuts)
-  // Shows only for admins, or the matching teacher for the current classroom.
-  // Requires an element with id="admin-overlay" on the page.
+  
+  
+  
+  
   function getPageTeacherIdFromPath() {
     try {
       const parts = (window.location.pathname || "").split("/").filter(Boolean);
@@ -586,7 +586,7 @@
         const candidate = decodeURIComponent(parts[i + 2] || "").trim();
         if (!candidate) return "";
         const lower = candidate.toLowerCase();
-        // Ignore list pages like teachers-sec-*.html
+        
         if (lower.includes(".html")) return "";
         if (lower.startsWith("teachers-sec")) return "";
         return candidate;
@@ -603,7 +603,7 @@
       const tid = (userDoc.teacherId || "").toString().trim();
       if (tid && teacherId && tid === teacherId) return true;
 
-      // Back-compat: teacherIdonline can be validated against teachers/{teacherId}/classData/securityID
+      
       const online = (userDoc.teacherIdonline || userDoc[" teacherIdonline"] || "").toString().trim();
       if (online && teacherId) {
         try {
@@ -646,12 +646,12 @@
     ].join(";");
 
     btn.addEventListener("click", () => {
-      // Prefer page-provided openAdmin()
+      
       if (typeof window.openAdmin === "function") {
         window.openAdmin();
         return;
       }
-      // Fallback: just unhide the overlay
+      
       overlay.classList.remove("hidden");
     });
 
@@ -679,13 +679,13 @@
       }
     }
 
-    // refresh on auth change and once after DOM settles
+    
     document.addEventListener("tu-auth-changed", () => refresh());
     setTimeout(() => refresh(), 700);
   }
 
-  // -----------------------------
-  // MENTOR CHAT CTA (visible on mentor pages)
+  
+  
   function setupMentorChatCta() {
     const p = window.location.pathname || "";
     if (p.includes("/private chat/")) return;
@@ -731,7 +731,7 @@
     btn.id = "tu-mentor-chat-btn";
     btn.className = "tu-mentor-chat-btn";
     btn.href = href;
-    // If a floating theme toggle exists, offset the CTA so they don't overlap.
+    
     const themeToggle = document.getElementById("theme-toggle");
     if (themeToggle) {
       try {
@@ -761,8 +761,8 @@
     document.body.appendChild(btn);
   }
 
-  // -----------------------------
-  // CHAT NOTIFICATION BADGE (bell)
+  
+  
   function findChatBellAnchors() {
     try {
       return document.querySelectorAll('a.navbar-icon[href*="/pages/private chat/private_chat.html"]');
@@ -902,7 +902,7 @@ window.TU = {
       window.TU.auth = auth;
       window.TU.db = db;
 
-      // Auto-inject admin panel button on pages that have an admin overlay
+      
       try { setupAdminFab(db, auth); } catch (e) {}
       try { setupMentorChatCta(); } catch (e) {}
       if (!stub) {
@@ -914,13 +914,13 @@ window.TU = {
       auth.onAuthStateChanged((user) => {
         window.TU.user = user || null;
 
-        // stop previous ban listener
+        
         if (banUnsub) { banUnsub(); banUnsub = null; }
 
         if (user) {
           ensureUserDoc(db, user).catch(() => {});
 
-          // Realtime ban watch (redirect both ways)
+          
           banUnsub = watchBan(db, user.uid, (meta) => {
             cacheBan(meta);
 
@@ -929,7 +929,7 @@ window.TU = {
               return;
             }
 
-            // If user just got unbanned and is currently on banned page -> go home
+            
             if (window.location.pathname.includes('/auth/banned.html')) {
               redirectToHome();
             }
@@ -955,7 +955,7 @@ window.TU = {
     needsProfileCompletion,
     requireProfileCompletion,
     getUserDoc,
-    // ban helpers
+    
     getBanStatus,
     checkBanAndRedirect,
     isCachedBanned,

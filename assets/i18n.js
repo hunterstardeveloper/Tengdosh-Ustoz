@@ -142,7 +142,7 @@
       classes_error_sub: "Please reload the page.",
       classes_results: "teachers",
 
-      /* ── Global Chat ── */
+      
       chat_pill: "Community",
       chat_title: "Global Chat",
       chat_header_title: "Global Student Chat",
@@ -315,7 +315,7 @@
       classes_error_sub: "Iltimos, sahifani yangilang.",
       classes_results: "o\u2018qituvchi",
 
-      /* ── Global Chat ── */
+      
       chat_pill: "Jamiyat",
       chat_title: "Global Chat",
       chat_header_title: "Global talabalar chati",
@@ -488,7 +488,7 @@
       classes_error_sub: "\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443.",
       classes_results: "\u0443\u0447\u0438\u0442\u0435\u043b\u0435\u0439",
 
-      /* ── Global Chat ── */
+      
       chat_pill: "\u0421\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u043e",
       chat_title: "\u041e\u0431\u0449\u0438\u0439 \u0447\u0430\u0442",
       chat_header_title: "\u041e\u0431\u0449\u0438\u0439 \u0447\u0430\u0442 \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u043e\u0432",
