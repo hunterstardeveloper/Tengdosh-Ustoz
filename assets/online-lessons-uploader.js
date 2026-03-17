@@ -333,6 +333,9 @@
         try { window.renderCourses(); } catch (e) { console.warn(e); }
       }
 
+      // Mark courses ready (first data snapshot received)
+      window.__TU_COURSES_READY = true;
+
       // Add "Add lesson" card after render
       ensureAddCard(canUpload);
     });

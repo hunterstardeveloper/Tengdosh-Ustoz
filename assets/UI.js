@@ -322,13 +322,31 @@
   window.__TENGDOSH_USTOZ_CHECKER_LOADER__ = true;
 
   const CHECKER_SRC = "/script-internet-checker.js";
+  const CHECKER_VERSION = "1";
 
-  const already = [...document.scripts].some((s) => (s.src || "").includes(CHECKER_SRC));
-  if (already) return;
+  function injectChecker() {
+    const already = [...document.scripts].some((s) => (s.src || "").includes(CHECKER_SRC));
+    if (already) return;
 
-  const s = document.createElement("script");
-  s.src = CHECKER_SRC + (CHECKER_SRC.includes("?") ? "&" : "?") + "v=" + Date.now();
-  s.defer = true;
+    const s = document.createElement("script");
+    const v = CHECKER_VERSION ? `v=${encodeURIComponent(CHECKER_VERSION)}` : "";
+    s.src = v ? (CHECKER_SRC + (CHECKER_SRC.includes("?") ? "&" : "?") + v) : CHECKER_SRC;
+    s.defer = true;
 
-  (document.head || document.documentElement).appendChild(s);
+    (document.head || document.documentElement).appendChild(s);
+  }
+
+  function schedule() {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(injectChecker, { timeout: 3000 });
+    } else {
+      setTimeout(injectChecker, 1500);
+    }
+  }
+
+  if (document.readyState === "complete") {
+    schedule();
+  } else {
+    window.addEventListener("load", schedule, { once: true });
+  }
 })();

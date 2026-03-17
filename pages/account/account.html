@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account • Tengdosh Ustoz</title>
+  <title>Account � Tengdosh Ustoz</title>
   <link rel="icon" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,7 +78,7 @@
           <div class="account-avatar" id="avatar">
             <span id="avatarInitials">--</span>
           </div>
-          <p class="account-name" id="displayName">Loading…</p>
+          <p class="account-name" id="displayName">Loading�</p>
           <p class="account-email" id="email">&nbsp;</p>
           <div class="account-badge" id="subTag">
             <span class="account-badge-dot" id="badgeDot"></span>
@@ -119,16 +119,16 @@
           <p class="account-tab-sub" data-i18n="acc_dashboard_sub">Your subscriptions and activity at a glance.</p>
           <div class="account-stats">
             <div class="account-stat">
-              <div class="account-stat-icon">★</div>
+              <div class="account-stat-icon">?</div>
               <div>
                 <b id="subsCount">0</b>
                 <small data-i18n="acc_teachers_sub">Teachers subscribed</small>
               </div>
             </div>
             <div class="account-stat">
-              <div class="account-stat-icon">⏱</div>
+              <div class="account-stat-icon">?</div>
               <div>
-                <b id="lastSub">—</b>
+                <b id="lastSub">�</b>
                 <small data-i18n="acc_last_sub">Last subscription</small>
               </div>
             </div>
@@ -275,7 +275,7 @@
   
         <div class="edu-footer-bottom">
           <div class="edu-footer-rule" aria-hidden="true"></div>
-          <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
+          <p class="edu-footer-copy">� <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
         </div>
       </div>
     </footer>
@@ -473,7 +473,7 @@
     }
 
     function fmtTime(ts) {
-      if (!ts) return "—";
+      if (!ts) return "�";
       return new Date(ts).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -597,7 +597,7 @@
         : (window.TU_i18n ? TU_i18n.t("acc_no_subs") : noSubsDefault);
 
       const last = items.map((x) => x?.subscribedAt || 0).sort((a, b) => b - a)[0];
-      lastSubEl.textContent = last ? fmtTime(last) : "—";
+      lastSubEl.textContent = last ? fmtTime(last) : "�";
 
       if (items.length) {
         subTextEl.textContent = "Subscribed";
@@ -661,7 +661,7 @@
       if (!likesListEl) return;
       likesListEl.innerHTML = `
         <div class="account-msg" style="margin-top:10px">
-          You haven't liked any quotes yet. Go to <a href="/home.html">Home</a> and tap the ❤ button.
+          You haven't liked any quotes yet. Go to <a href="/home.html">Home</a> and tap the ? button.
         </div>`;
     }
 
@@ -791,7 +791,7 @@
           updatedAt: firebase.database.ServerValue.TIMESTAMP,
         });
 
-        setMsg(msgEl, "✓ Saved successfully.", true);
+        setMsg(msgEl, "? Saved successfully.", true);
 
         displayNameEl.textContent = u.displayName || u.email || "User";
         setNavbarAvatar(u);
@@ -836,7 +836,7 @@
         await db.ref(`subscriptions/index/${u.uid}`).remove();
         await Promise.all(paths.map((p) => db.ref(p).remove()));
 
-        setMsg(msgEl, "✓ All subscriptions removed.", true);
+        setMsg(msgEl, "? All subscriptions removed.", true);
         await renderSubscriptions(u);
       } catch (e) {
         setMsg(document.getElementById("settingsMsg"), e?.message || "Failed", false);
@@ -940,8 +940,7 @@
     if (fy) fy.textContent = String(new Date().getFullYear());
   });
   </script>
-	<script src="/sw.js"></script>
-	<script src="/script-internet-checker.js"></script>
-	<script src="/assets/UI.js"></script>
+<script src="/assets/UI.js"></script>
 </body>
 </html>
+

@@ -1,6 +1,17 @@
-import { animations } from "./base64.js";
 (function () {
   'use strict';
+
+  let animationsCache = null;
+  async function getAnimations() {
+    if (animationsCache) return animationsCache;
+    try {
+      const mod = await import("./base64.js");
+      animationsCache = mod?.animations || {};
+    } catch (_) {
+      animationsCache = {};
+    }
+    return animationsCache;
+  }
   
   function fixSymbols(input) {
     if (input == null) return '';
@@ -151,19 +162,22 @@ import { animations } from "./base64.js";
     });
   }
 
-  function enhancedRenderCourses() {
-    const courseContainer = document.getElementById('courses');
+  function renderEmptyState(courseContainer, ready) {
     if (!courseContainer) return;
-    const key = "1 animation";
-    const cd = window.courseData;
-    if (!cd || !Array.isArray(cd) || cd.length === 0) {
-    // console.log("anim exists?", !!animations[key]);
-    // console.log("anim preview:", animations[key].slice(0, 40));
+    if (!ready) {
+      courseContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
+          <h3 style="color: var(--muted, #6b7280); font-size: 20px;">Darslar yuklanmoqda...</h3>
+        </div>`;
+      return;
+    }
+
     courseContainer.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
         <h3 style="color: var(--muted, #6b7280); font-size: 20px;">Bu yerda darslar mavjud emas</h3>
         <img
-          src="${animations[key]}"
+          data-empty-anim="1"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
           alt="No courses"
           loading="lazy"
           decoding="async"
@@ -171,6 +185,29 @@ import { animations } from "./base64.js";
           draggable="false"
         >
       </div>`;
+  }
+
+  function loadEmptyAnimation(courseContainer) {
+    if (!courseContainer) return;
+    const img = courseContainer.querySelector('img[data-empty-anim="1"]');
+    if (!img) return;
+    const key = "1 animation";
+    getAnimations().then((animations) => {
+      const src = animations && animations[key];
+      if (src && img.getAttribute('src') !== src) {
+        img.setAttribute('src', src);
+      }
+    }).catch(() => {});
+  }
+
+  function enhancedRenderCourses() {
+    const courseContainer = document.getElementById('courses');
+    if (!courseContainer) return;
+    const cd = window.courseData;
+    if (!cd || !Array.isArray(cd) || cd.length === 0) {
+      const ready = !!window.__TU_COURSES_READY;
+      renderEmptyState(courseContainer, ready);
+      if (ready) loadEmptyAnimation(courseContainer);
       return;
     }
 

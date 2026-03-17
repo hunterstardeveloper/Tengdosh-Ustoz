@@ -1,9 +1,9 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Register • Tengdosh Ustoz</title>
+  <title>Register � Tengdosh Ustoz</title>
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,7 +80,7 @@
     }
     input:focus, select:focus{border-color:rgba(124,140,255,0.65)}
 
-    /* Password field wrapper — flex so the button is a true sibling */
+    /* Password field wrapper � flex so the button is a true sibling */
     .field{
       display:flex;
       align-items:center;
@@ -121,7 +121,7 @@
 
     select{appearance:none;-webkit-appearance:none;cursor:pointer}
     .select-wrap{position:relative}
-    .select-wrap::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(calc(-50% + 4px));color:var(--muted);pointer-events:none;font-size:14px}
+    .select-wrap::after{content:"?";position:absolute;right:14px;top:50%;transform:translateY(calc(-50% + 4px));color:var(--muted);pointer-events:none;font-size:14px}
 
     button{
       width:100%;
@@ -487,7 +487,7 @@
       handleInput();
     }
 
-// ✅ Gmail CHECK only (does NOT auto-write anything)
+// ? Gmail CHECK only (does NOT auto-write anything)
 function isValidGmail(email) {
   email = (email || "").trim();
   // must be something@gmail.com
@@ -564,7 +564,5 @@ function attachGmailCheck(input) {
 </script>
 
   <script src="/assets/UI.js"></script>
-	<script src="/sw.js"></script>
-	<script src="/script-internet-checker.js"></script>
 </body>
 </html>

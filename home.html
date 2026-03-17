@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -230,20 +230,20 @@
       <div class="card-img-container">
         <img src="https://ik.imagekit.io/yefypajb8v/Elements/prodev?updatedAt=1771909961755" alt="Full-stack" draggable="false">
       </div>
-      <h3>ProDevâ€™s Master Course</h3>
+      <h3>ProDev’s Master Course</h3>
       
       <div class="card-content">
         <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.</p>
         
         <div id="more-text" style="display: none;">
           <p>
-            Kurs davomida siz quyidagilarni oâ€˜rganashingiz mumkin: <br>
-            â€¢ Architecture: Monolith, Modular Monolith, Microservices <br>
-            â€¢ System Design va production-level engineering thinking <br>
-            â€¢ Design Patterns, scalability, real backend architecture <br>
-            â€¢ Docker, Kubernetes va infrastructure fundamentals <br>
-            â€¢ AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
-            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda oâ€™rganamiz.
+            Kurs davomida siz quyidagilarni o‘rganashingiz mumkin: <br>
+            • Architecture: Monolith, Modular Monolith, Microservices <br>
+            • System Design va production-level engineering thinking <br>
+            • Design Patterns, scalability, real backend architecture <br>
+            • Docker, Kubernetes va infrastructure fundamentals <br>
+            • AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
+            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o’rganamiz.
           </p>
         </div>
         
@@ -251,7 +251,7 @@
       </div>
 
       <br>
-      Savollar uchunðŸ‘‡: <br>
+      Savollar uchun??: <br>
       <a href="https://t.me/abdumalik_prodev" target="_blank" onclick="event.stopPropagation();" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
       <a href="/clubs/prodev/Abdumalik/index.html" data-i18n="card_view" onclick="event.stopPropagation();">View Club</a>
     </div>
@@ -282,7 +282,7 @@
           <img src="https://ik.imagekit.io/yefypajb8v/Elements/math.webp" alt="Mathematics" draggable="false">
         </div>
         <h3 data-i18n="card_math">Mathematics</h3>
-        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofsâ€”perfect for olympiad-style thinking and STEM success.</p>
+        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs—perfect for olympiad-style thinking and STEM success.</p>
         <a href="/clubs/mathematics/teachers-sec-mathematic.html" data-i18n="card_view">View Club</a>
       </div>
     </div>
@@ -363,7 +363,7 @@
 
       <div class="edu-footer-bottom">
         <div class="edu-footer-rule" aria-hidden="true"></div>
-        <p class="edu-footer-copy">Â© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
+        <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
       </div>
     </div>
   </footer>
@@ -378,8 +378,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="/script.js"></script>
   <script src="/assets.js"></script>
-  <script src="/script-internet-checker.js"></script>
-  <script src="/assets/i18n.js"></script>
+<script src="/assets/i18n.js"></script>
   <script type="module">
     import { animations } from "/assets/base64.js"; 
     const img = document.getElementById("anim2");
@@ -869,7 +868,7 @@
         const { text, author } = parseQuote(raw);
         const full = `"${text}"${author ? "  " + author : ""}`;
         navigator.clipboard.writeText(full)
-          .then(() => showToast(window.TU_i18n ? "âœ… " + window.TU_i18n.t("quote_copied") : "âœ… Copied to clipboard"))
+          .then(() => showToast(window.TU_i18n ? "? " + window.TU_i18n.t("quote_copied") : "? Copied to clipboard"))
           .catch(() => showToast('Could not copy'));
       });
 
@@ -881,7 +880,7 @@
           navigator.share({ title: 'Inspirational Quote', text: full }).catch(() => {});
         } else {
           navigator.clipboard.writeText(full)
-            .then(() => showToast(window.TU_i18n ? "âœ… " + window.TU_i18n.t("quote_copied") : "âœ… Copied to clipboard"))
+            .then(() => showToast(window.TU_i18n ? "? " + window.TU_i18n.t("quote_copied") : "? Copied to clipboard"))
             .catch(() => showToast('Could not copy'));
         }
       });
@@ -1004,6 +1003,6 @@
   })();
   </script>
   <script src="/assets/UI.js"></script>
-	<script src="/sw.js"></script>
 </body>
 </html>
+
