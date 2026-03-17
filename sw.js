@@ -74,6 +74,23 @@ self.addEventListener("message", (event) => {
   }
 });
 
+self.addEventListener("notificationclick", (event) => {
+  try { event.notification.close(); } catch (_) {}
+  const url = (event.notification && event.notification.data && event.notification.data.url) || "/";
+  const target = new URL(url, SCOPE).toString();
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientsArr) => {
+      for (const client of clientsArr) {
+        if (client.url && client.url.startsWith(target)) {
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(target);
+    })
+  );
+});
+
 function isHtmlRequest(req) {
   if (req.mode === "navigate") return true;
   const accept = req.headers.get("accept") || "";

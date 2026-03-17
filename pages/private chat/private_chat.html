@@ -54,6 +54,7 @@
       --shadow-lg:  0 20px 60px rgba(0,0,0,0.55);
       --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
       --app-height: 100vh;
+      --app-offset-top: 0px;
     }
     @supports (height: 100dvh) {
       :root { --app-height: 100dvh; }
@@ -71,6 +72,8 @@
       background: var(--bg-deep);
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
+      position: fixed;
+      inset: 0;
     }
 
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
@@ -284,8 +287,12 @@
       display: none;
       height: var(--app-height);
       width: 100vw;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 1;
+      transform: translateY(var(--app-offset-top));
     }
     #app.visible {
       display: flex;
@@ -643,6 +650,35 @@
       width: 7px; height: 7px; border-radius: 50%;
       background: var(--online);
       flex-shrink: 0;
+    }
+
+    .notify-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      flex-shrink: 0;
+    }
+    .notify-btn:hover {
+      background: var(--bg-active);
+      border-color: rgba(124,140,255,0.5);
+      transform: translateY(-1px);
+    }
+    .notify-btn.active {
+      background: var(--gold-dim);
+      border-color: rgba(124,140,255,0.5);
+      color: var(--gold);
+    }
+    .notify-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
 
     /* Messages area */
@@ -1014,6 +1050,12 @@
           <span id="chat-header-status-text">Offline</span>
         </div>
       </div>
+      <button class="notify-btn" id="notify-btn" type="button" aria-pressed="false" title="Enable notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
     </div>
 
     <!-- Messages -->
@@ -1065,8 +1107,11 @@
 <script>
   /* Viewport height fix for mobile browser UI + keyboards */
   const setAppHeight = () => {
-    const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const vv = window.visualViewport;
+    const height = vv ? vv.height : window.innerHeight;
+    const offsetTop = vv ? vv.offsetTop : 0;
     document.documentElement.style.setProperty('--app-height', `${height}px`);
+    document.documentElement.style.setProperty('--app-offset-top', `${offsetTop}px`);
   };
   setAppHeight();
   window.addEventListener('resize', setAppHeight);
@@ -1316,6 +1361,108 @@
     t.textContent = msg;
     container.appendChild(t);
     setTimeout(() => t.remove(), 3500);
+  }
+
+  /* NOTIFICATIONS */
+  const notifyBtn = document.getElementById('notify-btn');
+  let notificationsEnabled = false;
+  let lastNotifyAt = 0;
+
+  function isNotificationSupported() {
+    return typeof Notification !== 'undefined';
+  }
+
+  function loadNotificationPref() {
+    try {
+      notificationsEnabled = localStorage.getItem('tu_notifications_enabled') === '1';
+    } catch (e) {
+      notificationsEnabled = false;
+    }
+  }
+
+  function setNotificationPref(val) {
+    notificationsEnabled = !!val;
+    try {
+      localStorage.setItem('tu_notifications_enabled', notificationsEnabled ? '1' : '0');
+    } catch (e) {}
+    updateNotifyButton();
+  }
+
+  function updateNotifyButton() {
+    if (!notifyBtn) return;
+    if (!isNotificationSupported()) {
+      notifyBtn.disabled = true;
+      notifyBtn.style.display = 'none';
+      return;
+    }
+    const perm = Notification.permission;
+    const enabled = notificationsEnabled && perm === 'granted';
+    notifyBtn.classList.toggle('active', enabled);
+    notifyBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    notifyBtn.title = enabled
+      ? 'Notifications enabled'
+      : (perm === 'denied' ? 'Notifications blocked by browser' : 'Enable notifications');
+  }
+
+  async function requestNotifications() {
+    if (!isNotificationSupported()) return;
+    if (Notification.permission === 'denied') {
+      showToast('Notifications are blocked in browser settings.', 'error');
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      setNotificationPref(true);
+      showToast('Notifications enabled', 'success');
+    } else {
+      setNotificationPref(false);
+      showToast('Notifications not enabled', 'error');
+    }
+  }
+
+  if (notifyBtn) {
+    loadNotificationPref();
+    updateNotifyButton();
+    notifyBtn.addEventListener('click', requestNotifications);
+  }
+
+  function shouldNotify() {
+    if (!notificationsEnabled) return false;
+    if (!isNotificationSupported()) return false;
+    if (Notification.permission !== 'granted') return false;
+    return document.hidden || !document.hasFocus();
+  }
+
+  async function showChatNotification(peerName, msgText, peerUid) {
+    if (!shouldNotify()) return;
+    const now = Date.now();
+    if (now - lastNotifyAt < 1500) return;
+    lastNotifyAt = now;
+
+    const title = 'Tengdosh Ustoz';
+    const cleanText = String(msgText || '').trim();
+    const body = cleanText
+      ? `${peerName}: ${cleanText}`.slice(0, 140)
+      : `${peerName} sent a message.`;
+    const options = {
+      body,
+      icon: '/icon.png',
+      badge: '/icon.png',
+      tag: `chat-${peerUid || 'general'}`,
+      data: { url: '/pages/private%20chat/private_chat.html' },
+      renotify: true,
+    };
+
+    try {
+      if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration().catch(() => null);
+        if (reg && reg.showNotification) {
+          await reg.showNotification(title, options);
+          return;
+        }
+      }
+      new Notification(title, options);
+    } catch (e) {}
   }
 
     /* ─────────────────────────────────────────
@@ -1667,7 +1814,22 @@
       }
       const tel = document.getElementById(`last-time-${peerUid}`);
       if (tel) tel.textContent = formatTime(msg.timestamp);
+
+      // Browser notification for new incoming messages (when tab is hidden)
+      if (!isMine) {
+        maybeNotify(peerUid, msg);
+      }
     });
+  }
+
+  function maybeNotify(peerUid, msg) {
+    if (!msg || !msg.timestamp) return;
+    const now = Date.now();
+    // Prevent notifications for old messages loaded on initial attach
+    if (now - msg.timestamp > 30 * 1000) return;
+    const peer = allUsers[peerUid] || {};
+    const peerName = getUserName(peer) || 'Someone';
+    showChatNotification(peerName, msg.text || '', peerUid);
   }
 
   function createDayDivider(ts) {
@@ -1891,4 +2053,5 @@
 </script>
 </body>
 </html>
+
 
