@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account • Tengdosh Ustoz</title>
+  <title>Account â€¢ Tengdosh Ustoz</title>
   <link rel="icon" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,7 +78,7 @@
           <div class="account-avatar" id="avatar">
             <span id="avatarInitials">--</span>
           </div>
-          <p class="account-name" id="displayName">Loading…</p>
+          <p class="account-name" id="displayName">Loadingâ€¦</p>
           <p class="account-email" id="email">&nbsp;</p>
           <div class="account-badge" id="subTag">
             <span class="account-badge-dot" id="badgeDot"></span>
@@ -128,7 +128,7 @@
             <div class="account-stat">
               <div class="account-stat-icon">?</div>
               <div>
-                <b id="lastSub">—</b>
+                <b id="lastSub">â€”</b>
                 <small data-i18n="acc_last_sub">Last subscription</small>
               </div>
             </div>
@@ -275,7 +275,7 @@
   
         <div class="edu-footer-bottom">
           <div class="edu-footer-rule" aria-hidden="true"></div>
-          <p class="edu-footer-copy">© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
+          <p class="edu-footer-copy">Â© <span id="footer-year"></span> <span data-i18n="footer_copy">Tengdosh Ustoz &middot; All rights reserved.</span></p>
         </div>
       </div>
     </footer>
@@ -473,7 +473,7 @@
     }
 
     function fmtTime(ts) {
-      if (!ts) return "—";
+      if (!ts) return "â€”";
       return new Date(ts).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -597,7 +597,7 @@
         : (window.TU_i18n ? TU_i18n.t("acc_no_subs") : noSubsDefault);
 
       const last = items.map((x) => x?.subscribedAt || 0).sort((a, b) => b - a)[0];
-      lastSubEl.textContent = last ? fmtTime(last) : "—";
+      lastSubEl.textContent = last ? fmtTime(last) : "â€”";
 
       if (items.length) {
         subTextEl.textContent = "Subscribed";
