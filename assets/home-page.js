@@ -11,6 +11,10 @@
     authPromise: null,
     authBooted: false,
     likeRuntimePromise: null,
+    quoteScenePromise: null,
+    quotesPromise: null,
+    quoteCarouselBooted: false,
+    quoteSceneBooted: false,
     teachersData: null,
     quoteIndex: 0,
     currentQuoteId: null,
@@ -19,6 +23,7 @@
     quoteCountToken: 0,
     autoStart: null,
     animFrame: null,
+    quoteSwapTimer: null,
     toastTimer: null,
   };
 
@@ -125,6 +130,45 @@
 
     scriptCache.set(url, promise);
     return promise;
+  }
+
+  async function ensureQuotes() {
+    if (Array.isArray(window.quotes) && window.quotes.length) return window.quotes;
+    if (state.quotesPromise) return state.quotesPromise;
+
+    state.quotesPromise = loadScriptOnce("/assets/home-quotes.js?v=1")
+      .then(() => {
+        if (!Array.isArray(window.quotes) || !window.quotes.length) {
+          throw new Error("Quotes are unavailable");
+        }
+        return window.quotes;
+      })
+      .catch((error) => {
+        state.quotesPromise = null;
+        throw error;
+      });
+
+    return state.quotesPromise;
+  }
+
+  async function ensureQuoteSceneRuntime() {
+    if (state.quoteScenePromise) return state.quoteScenePromise;
+
+    state.quoteScenePromise = (async () => {
+      if (!window.THREE) {
+        await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
+      }
+      await loadScriptOnce("/assets/home-quote-scene.js?v=1");
+      if (!window.TUQuoteScene || typeof window.TUQuoteScene.init !== "function") {
+        throw new Error("Quote scene runtime is unavailable");
+      }
+      return window.TUQuoteScene;
+    })().catch((error) => {
+      state.quoteScenePromise = null;
+      throw error;
+    });
+
+    return state.quoteScenePromise;
   }
 
   async function ensureConfig() {
@@ -460,7 +504,10 @@
     updateLikeUI();
 
     try {
-      const count = await fetchDbJson("quoteLikes/" + quoteId + "/count");
+      let count = 0;
+      if (window.TUQuoteLikes && typeof window.TUQuoteLikes.getQuoteCount === "function") {
+        count = await window.TUQuoteLikes.getQuoteCount(quoteId);
+      }
       if (token !== state.quoteCountToken) return;
       state.currentCount = Number(count || 0);
       updateLikeUI();
@@ -554,11 +601,7 @@
     });
   }
 
-  function setupQuoteCarousel() {
-    if (!Array.isArray(window.quotes) || !window.quotes.length) return;
-
-    state.quoteIndex = Math.floor(Math.random() * window.quotes.length);
-
+  async function setupQuoteCarousel() {
     const quoteText = document.getElementById("quote-text");
     const quoteAuthor = document.getElementById("quote-author");
     const quoteCounter = document.getElementById("quote-counter");
@@ -570,30 +613,64 @@
     const nextBtn = document.getElementById("next-btn");
     const ringEl = document.getElementById("ring-progress");
 
-    if (!quoteText || !quoteAuthor || !quoteCounter || !likeBtn || !copyBtn || !shareBtn || !autoBtn || !prevBtn || !nextBtn) {
+    if (!quoteText || !quoteAuthor || !quoteCounter || !likeBtn || !copyBtn || !shareBtn || !prevBtn || !nextBtn) {
       return;
     }
 
+    try {
+      await ensureQuotes();
+    } catch (_) {
+      return;
+    }
+
+    if (state.quoteCarouselBooted || !Array.isArray(window.quotes) || !window.quotes.length) return;
+    state.quoteCarouselBooted = true;
+    state.quoteIndex = Math.floor(Math.random() * window.quotes.length);
+
     const circumference = 2 * Math.PI * 20;
     const autoDuration = 8000;
+    const card = document.querySelector(".quote-card");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let touchStartX = 0;
+    let resumeAutoOnVisible = false;
 
     if (ringEl) {
       ringEl.style.strokeDasharray = String(circumference);
       ringEl.style.strokeDashoffset = String(circumference);
     }
 
-    function stopAuto() {
+    function setAutoState(isRunning) {
+      if (!autoBtn) return;
+      autoBtn.classList.toggle("auto-on", isRunning);
+      autoBtn.setAttribute("aria-pressed", String(isRunning));
+    }
+
+    function clearSwapTimer() {
+      if (state.quoteSwapTimer) {
+        window.clearTimeout(state.quoteSwapTimer);
+        state.quoteSwapTimer = null;
+      }
+    }
+
+    function stopAuto(options = {}) {
+      const preserveRing = !!options.preserveRing;
       if (state.animFrame) cancelAnimationFrame(state.animFrame);
       state.animFrame = null;
       state.autoStart = null;
-      if (ringEl) ringEl.style.strokeDashoffset = String(circumference);
-      autoBtn.classList.remove("auto-on");
+      if (ringEl && !preserveRing) ringEl.style.strokeDashoffset = String(circumference);
+      setAutoState(false);
     }
 
     function startAuto() {
-      autoBtn.classList.add("auto-on");
+      if (state.animFrame) cancelAnimationFrame(state.animFrame);
+      state.animFrame = null;
+      if (window.quotes.length < 2) {
+        setAutoState(false);
+        return;
+      }
+      setAutoState(true);
       state.autoStart = performance.now();
+      if (ringEl) ringEl.style.strokeDashoffset = String(circumference);
 
       const tick = (now) => {
         if (state.autoStart === null) return;
@@ -613,7 +690,13 @@
       state.animFrame = requestAnimationFrame(tick);
     }
 
-    function showQuote(index) {
+    function restartAuto() {
+      stopAuto();
+      startAuto();
+    }
+
+    function showQuote(index, options = {}) {
+      const immediate = !!options.immediate || prefersReducedMotion;
       state.quoteIndex = (index + window.quotes.length) % window.quotes.length;
       state.currentLiked = false;
       const raw = window.quotes[state.quoteIndex];
@@ -622,16 +705,33 @@
       refreshQuoteCount(state.currentQuoteId);
       updateLikeUI();
 
+      clearSwapTimer();
+      if (card) card.classList.add("is-switching");
       quoteText.classList.add("fading");
       quoteAuthor.classList.add("fading");
+      quoteCounter.classList.add("fading");
 
-      window.setTimeout(() => {
+      const commitQuote = () => {
         quoteText.textContent = '"' + parsed.text + '"';
         quoteAuthor.textContent = parsed.author ? parsed.author : "";
         quoteCounter.textContent = String(state.quoteIndex + 1) + " / " + String(window.quotes.length);
-        quoteText.classList.remove("fading");
-        quoteAuthor.classList.remove("fading");
-      }, 220);
+        requestAnimationFrame(() => {
+          quoteText.classList.remove("fading");
+          quoteAuthor.classList.remove("fading");
+          quoteCounter.classList.remove("fading");
+          if (card) card.classList.remove("is-switching");
+        });
+      };
+
+      if (immediate) {
+        commitQuote();
+        return;
+      }
+
+      state.quoteSwapTimer = window.setTimeout(() => {
+        state.quoteSwapTimer = null;
+        commitQuote();
+      }, 180);
     }
 
     likeBtn.addEventListener("click", async () => {
@@ -687,32 +787,33 @@
     });
 
     prevBtn.addEventListener("click", () => {
-      stopAuto();
       showQuote(state.quoteIndex - 1);
+      restartAuto();
     });
 
     nextBtn.addEventListener("click", () => {
-      stopAuto();
       showQuote(state.quoteIndex + 1);
+      restartAuto();
     });
 
-    autoBtn.addEventListener("click", () => {
-      if (autoBtn.classList.contains("auto-on")) stopAuto();
-      else startAuto();
-    });
+    if (autoBtn) {
+      autoBtn.addEventListener("click", () => {
+        if (state.autoStart === null) startAuto();
+        else stopAuto();
+      });
+    }
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
-        stopAuto();
         showQuote(state.quoteIndex - 1);
+        restartAuto();
       }
       if (event.key === "ArrowRight") {
-        stopAuto();
         showQuote(state.quoteIndex + 1);
+        restartAuto();
       }
     });
 
-    const card = document.querySelector(".quote-card");
     if (card) {
       card.addEventListener("touchstart", (event) => {
         touchStartX = event.changedTouches[0].screenX;
@@ -721,17 +822,45 @@
       card.addEventListener("touchend", (event) => {
         const diff = event.changedTouches[0].screenX - touchStartX;
         if (Math.abs(diff) <= 40) return;
-        stopAuto();
         showQuote(diff < 0 ? state.quoteIndex + 1 : state.quoteIndex - 1);
+        restartAuto();
       });
     }
 
-    document.addEventListener("tu-lang-changed", () => {
-      stopAuto();
-      showQuote(state.quoteIndex);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        resumeAutoOnVisible = state.autoStart !== null;
+        stopAuto({ preserveRing: true });
+        return;
+      }
+      if (resumeAutoOnVisible) {
+        resumeAutoOnVisible = false;
+        startAuto();
+      }
     });
 
-    showQuote(state.quoteIndex);
+    document.addEventListener("tu-lang-changed", () => {
+      const wasRunning = state.autoStart !== null;
+      stopAuto();
+      showQuote(state.quoteIndex, { immediate: true });
+      if (wasRunning || !autoBtn) startAuto();
+    });
+
+    showQuote(state.quoteIndex, { immediate: true });
+    startAuto();
+  }
+
+  async function bootQuoteScene() {
+    const stage = document.getElementById("quote-scene-stage");
+    if (!stage || state.quoteSceneBooted) return;
+    state.quoteSceneBooted = true;
+
+    try {
+      const api = await ensureQuoteSceneRuntime();
+      api.init(stage);
+    } catch (_) {
+      stage.classList.remove("is-ready");
+    }
   }
 
   function setupScheduleToggle() {
@@ -754,7 +883,7 @@
     const links = document.getElementById("navbar-links");
     if (!nav || !links) return;
 
-    const isMobile = () => window.matchMedia("(max-width: 1000px)").matches;
+    const isMobile = () => window.matchMedia("(max-width: 1080px)").matches;
 
     const setOpen = (open) => {
       links.classList.toggle("open", open);
@@ -765,14 +894,11 @@
       document.body.classList.toggle("nav-open", open && isMobile());
     };
 
-    const scrollEl = document.getElementById("page-scroll");
-    const scrollTarget = scrollEl || window;
     const onScroll = () => {
-      const top = scrollEl ? scrollEl.scrollTop : window.scrollY;
-      nav.classList.toggle("navbar--scrolled", top > 40);
+      nav.classList.toggle("navbar--scrolled", window.scrollY > 40);
     };
 
-    scrollTarget.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
     if (ham) {
@@ -815,7 +941,18 @@
   function startParticles() {
     const canvas = document.getElementById("particles-canvas");
     if (!canvas) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.innerWidth < 900) {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const effectiveType = String(connection && connection.effectiveType ? connection.effectiveType : "").toLowerCase();
+    const slowConnection = !!(
+      connection && (
+        connection.saveData ||
+        effectiveType.includes("slow-2g") ||
+        effectiveType.includes("2g") ||
+        effectiveType.includes("3g")
+      )
+    );
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.innerWidth < 900 || slowConnection) {
       canvas.style.display = "none";
       return;
     }
@@ -851,8 +988,8 @@
 
     const currentColor = () => (
       document.documentElement.getAttribute("data-theme") === "dark"
-        ? "165, 180, 252"
-        : "124, 140, 255"
+        ? "201, 162, 39"
+        : "139, 105, 20"
     );
 
     const draw = () => {
@@ -920,10 +1057,17 @@
     setAvatarLoggedOut();
     renderIcons();
     refreshReveal();
-    setupQuoteCarousel();
 
     observeOnce(document.querySelector(".site-stats"), bootSiteData, "300px");
     observeOnce(document.getElementById("upcoming-classes-container"), bootSiteData, "300px");
+    observeOnce(document.querySelector(".quote-section"), () => {
+      scheduleIdle(() => {
+        void setupQuoteCarousel();
+      }, 1200);
+      scheduleIdle(() => {
+        void bootQuoteScene();
+      }, 1800);
+    }, "240px");
 
     if (document.readyState === "complete") {
       scheduleIdle(() => bootSiteData(), 2000);

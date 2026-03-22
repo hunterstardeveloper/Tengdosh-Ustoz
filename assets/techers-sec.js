@@ -29,7 +29,9 @@
   }
 
   async function persistTheme(value){
-    
+    try {
+      localStorage.setItem('theme', value);
+    } catch (e) {}
     try {
       if (window.TU && TU.db && TU.auth && TU.auth.currentUser) {
         await TU.db.ref(`users/${TU.auth.currentUser.uid}/prefs/theme`).set(value);
@@ -40,7 +42,11 @@
   }
 
   function getGuestTheme(){
-    try { return sessionStorage.getItem('tu_theme'); } catch(e) { return null; }
+    try {
+      return sessionStorage.getItem('tu_theme') || localStorage.getItem('theme');
+    } catch(e) {
+      try { return localStorage.getItem('theme'); } catch(err) { return null; }
+    }
   }
 
   
@@ -60,8 +66,18 @@
       if (!(window.TU && TU.db && TU.auth && TU.auth.currentUser)) return;
       const snap = await TU.db.ref(`users/${TU.auth.currentUser.uid}/prefs/theme`).once('value');
       const v = snap.val();
-      if (v === 'dark') setTheme(true, false);
-      if (v === 'light') setTheme(false, false);
+      if (v === 'dark') {
+        try {
+          localStorage.setItem('theme', 'dark');
+        } catch (e) {}
+        setTheme(true, false);
+      }
+      if (v === 'light') {
+        try {
+          localStorage.setItem('theme', 'light');
+        } catch (e) {}
+        setTheme(false, false);
+      }
     } catch (e) {}
   }
   document.addEventListener('tu-auth-changed', () => syncFromFirebase());

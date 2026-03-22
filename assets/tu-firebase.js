@@ -1,4 +1,5 @@
 (function () {
+
   function hasFirebaseConfig() {
     return !!window.TU_FIREBASE_CONFIG;
   }
@@ -285,35 +286,93 @@
     return '';
   }
 
+  function injectFixedControlAlignmentStyles() {
+    if (document.getElementById("tu-fixed-control-styles")) return;
+    const style = document.createElement("style");
+    style.id = "tu-fixed-control-styles";
+    style.textContent = `
+      .tu-fixed-control{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        padding:0 !important;
+        line-height:0 !important;
+        text-align:center !important;
+        appearance:none !important;
+        -webkit-appearance:none !important;
+      }
+      .tu-fixed-control > svg,
+      .tu-fixed-control > img{
+        display:block !important;
+        margin:0 !important;
+        flex:0 0 auto !important;
+        pointer-events:none !important;
+      }
+      .tu-fixed-theme-control > svg,
+      .tu-fixed-theme-control > img{
+        width:22px !important;
+        height:22px !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function normalizeFixedControlAlignment() {
+    injectFixedControlAlignmentStyles();
+
+    const themeToggle = document.getElementById("theme-toggle");
+    if (themeToggle) {
+      const cs = window.getComputedStyle(themeToggle);
+      if (cs.position === "fixed") {
+        themeToggle.classList.add("tu-fixed-control", "tu-fixed-theme-control");
+      }
+    }
+
+    document.querySelectorAll("a.back, .back-btn").forEach((control) => {
+      const cs = window.getComputedStyle(control);
+      if (cs.position === "fixed" || cs.position === "absolute") {
+        control.classList.add("tu-fixed-control");
+      }
+    });
+  }
+
   function injectMenuStyles() {
     if (document.getElementById('tu-menu-styles-v2')) return;
     const style = document.createElement('style');
     style.id = 'tu-menu-styles-v2';
     style.textContent = `
-      :root{ --tu-accent: rgba(124,140,255,1); }
+      :root{
+        --tu-menu-accent: var(--tu-accent, #c9a227);
+        --tu-menu-line: rgba(201,162,39,0.22);
+        --tu-menu-line-strong: rgba(201,162,39,0.35);
+        --tu-menu-btn-top: 18px;
+        --tu-menu-btn-right: 18px;
+        --tu-menu-panel-top: 78px;
+        --tu-menu-panel-right: 18px;
+        --tu-menu-panel-width: 340px;
+      }
       body.tu-menu-open{ overflow:hidden !important; }
-      /* Floating icon (same vibe as the video: circular ring button) */
       .tu-menu-btn{
-        position:fixed; top:18px; right:18px; z-index:2000;
+        position:fixed; top:var(--tu-menu-btn-top); right:var(--tu-menu-btn-right); z-index:2000;
         width:46px; height:46px; border-radius:999px;
         display:flex; align-items:center; justify-content:center;
-        border:1px solid rgba(255,255,255,.16);
-        background: rgba(255,255,255,.04);
+        border:1px solid var(--tu-menu-line);
+        background: linear-gradient(135deg, rgba(35,31,26,.92), rgba(20,18,16,.96));
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         box-shadow: 0 18px 44px rgba(0,0,0,.34);
         cursor:pointer;
-        color: inherit;
-        transition: transform .18s ease, background .18s ease, border-color .18s ease;
+        color: var(--tu-menu-accent);
+        transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
       }
-      .tu-menu-btn:hover{ transform: translateY(-1px) scale(1.02); background: rgba(255,255,255,.06); border-color: rgba(124,140,255,.35); }
+      .tu-menu-btn:hover{ transform: translateY(-1px) scale(1.02); background: linear-gradient(135deg, rgba(43,37,31,.94), rgba(24,21,18,.98)); border-color: var(--tu-menu-line-strong); box-shadow: 0 22px 46px rgba(0,0,0,.38); }
       .tu-menu-btn:active{ transform: translateY(0) scale(.98); }
 
       .tu-menu-overlay{
         position:fixed; inset:0; z-index:3000;
-        background: rgba(0,0,0,.22);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
+        background: rgba(0,0,0,.32);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         opacity:0;
         pointer-events:none;
         transition: opacity .18s ease;
@@ -322,13 +381,13 @@
 
       .tu-menu-panel{
         position:fixed;
-        top: 78px;
-        right: 18px;
-        width: 340px;
-        max-width: calc(100vw - 36px);
-        border-radius: 26px;
-        border: 1px solid rgba(255,255,255,.14);
-        background: rgba(18, 20, 32, .72);
+        top: var(--tu-menu-panel-top);
+        right: var(--tu-menu-panel-right);
+        width: min(var(--tu-menu-panel-width), calc(100vw - 24px));
+        max-width: calc(100vw - 24px);
+        border-radius: 28px;
+        border: 1px solid var(--tu-menu-line);
+        background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%), linear-gradient(135deg, rgba(34,29,23,.96), rgba(17,15,13,.98));
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
         box-shadow: 0 30px 80px rgba(0,0,0,.55);
@@ -338,24 +397,23 @@
         opacity: 0;
       }
 
-      /* Light theme (when page uses no [data-theme="dark"]) */
       html:not([data-theme="dark"]) .tu-menu-panel{
-        background: rgba(255,255,255,.78);
-        border-color: rgba(17, 24, 39, .12);
-        box-shadow: 0 30px 80px rgba(0,0,0,.18);
+        background: linear-gradient(180deg, rgba(255,255,255,.76), rgba(249,245,238,.92));
+        border-color: rgba(139,105,20,.18);
+        box-shadow: 0 30px 80px rgba(44,36,22,.16);
       }
       html:not([data-theme="dark"]) .tu-menu-btn{
-        border-color: rgba(17,24,39,.10);
-        background: rgba(255,255,255,.62);
-        box-shadow: 0 18px 44px rgba(0,0,0,.16);
+        color: var(--tu-menu-accent);
+        border-color: rgba(139,105,20,.22);
+        background: linear-gradient(135deg, rgba(255,251,245,.92), rgba(244,236,223,.96));
+        box-shadow: 0 18px 44px rgba(44,36,22,.12);
       }
       html:not([data-theme="dark"]) .tu-tile,
       html:not([data-theme="dark"]) .tu-tab,
       html:not([data-theme="dark"]) .tu-menu-close{
-        border-color: rgba(17,24,39,.10);
-        background: rgba(17,24,39,.04);
+        border-color: rgba(139,105,20,.16);
+        background: rgba(139,105,20,.05);
       }
-      /* Springy open/close (closer to the video) */
       .tu-menu-overlay.open .tu-menu-panel{ animation: tuPopIn .38s cubic-bezier(.18,.95,.2,1) forwards; }
       .tu-menu-overlay.closing .tu-menu-panel{ animation: tuPopOut .20s ease forwards; }
 
@@ -375,13 +433,14 @@
       .tu-menu-close{
         position:absolute; top:0; right:0;
         width:36px; height:36px; border-radius:12px;
-        border:1px solid rgba(255,255,255,.12);
-        background: rgba(255,255,255,.06);
+        border:1px solid var(--tu-menu-line);
+        background: linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));
+        color: inherit;
         cursor:pointer;
         display:flex; align-items:center; justify-content:center;
-        transition: transform .16s ease, background .16s ease;
+        transition: transform .16s ease, background .16s ease, border-color .16s ease;
       }
-      .tu-menu-close:hover{ background: rgba(255,255,255,.09); transform: scale(1.02); }
+      .tu-menu-close:hover{ background: rgba(201,162,39,.1); border-color: var(--tu-menu-line-strong); transform: scale(1.02); }
       .tu-menu-close:active{ transform: scale(.98); }
 
       .tu-tabs{ margin-top:12px; display:flex; gap:10px; }
@@ -389,22 +448,23 @@
         flex:1;
         border-radius: 14px;
         padding: 10px 12px;
-        border:1px solid rgba(255,255,255,.12);
-        background: rgba(255,255,255,.06);
+        border:1px solid var(--tu-menu-line);
+        background: rgba(201,162,39,.06);
+        color: inherit;
         font-weight: 800;
         cursor:pointer;
-        transition: background .18s ease, border-color .18s ease, transform .18s ease;
+        transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease;
       }
-      .tu-tab.active{ background: rgba(124,140,255,.28); border-color: rgba(124,140,255,.55); }
+      .tu-tab.active{ background: linear-gradient(135deg, rgba(201,162,39,.94), rgba(159,127,23,.96)); border-color: var(--tu-menu-line-strong); color:#16120d; }
 
-      .tu-menu-label{ margin-top:12px; font-size: 11px; letter-spacing: .14em; opacity:.55; padding-left: 2px; }
+      .tu-menu-label{ margin-top:12px; font-size: 11px; letter-spacing: .14em; opacity:.58; padding-left: 2px; text-transform: uppercase; }
 
       .tu-grid{ margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
       .tu-tile{
         border-radius: 16px;
         padding: 14px 12px;
-        border:1px solid rgba(255,255,255,.12);
-        background: rgba(255,255,255,.06);
+        border:1px solid var(--tu-menu-line);
+        background: linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));
         text-decoration:none;
         color: inherit;
         font-weight: 800;
@@ -416,20 +476,21 @@
         min-height: 84px;
         transform: translateY(10px) scale(.98);
         opacity: 0;
+        transition: background .18s ease, border-color .18s ease, transform .18s ease;
       }
       .tu-menu-overlay.open .tu-tile{ animation: tuTileIn .30s cubic-bezier(.2,.95,.2,1) forwards; animation-delay: var(--d, 0ms); }
       @keyframes tuTileIn{ to { transform: translateY(0) scale(1); opacity: 1; } }
 
-      .tu-tile:hover{ background: rgba(255,255,255,.09); }
-      .tu-ico{ width:34px; height:34px; border-radius: 12px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); }
+      .tu-tile:hover{ background: rgba(201,162,39,.1); border-color: var(--tu-menu-line-strong); }
+      .tu-ico{ width:34px; height:34px; border-radius: 12px; display:flex; align-items:center; justify-content:center; border:1px solid var(--tu-menu-line); background: rgba(201,162,39,.08); color: var(--tu-menu-accent); }
       .tu-tile span:last-child{ text-decoration: underline; text-underline-offset: 3px; }
-      .tu-danger{ color: #ffb4b4; }
+      .tu-danger{ color: #d89484; }
 
       @media (max-width: 520px){
-        .tu-menu-panel{ right: 12px; width: 320px; }
-        .tu-menu-btn{ right: 12px; }
+        .tu-menu-panel{ right: var(--tu-menu-panel-right); width: min(var(--tu-menu-panel-width), calc(100vw - 24px)); }
+        .tu-menu-btn{ right: var(--tu-menu-btn-right); }
       }
-    `;
+`;
     document.head.appendChild(style);
   }
 
@@ -536,6 +597,55 @@
     document.body.appendChild(btn);
     document.body.appendChild(overlay);
 
+    function updateFloatingMenuPosition() {
+      const rootStyle = document.documentElement.style;
+      let btnTop = 18;
+      let btnRight = 18;
+      let panelTop = 78;
+      let panelRight = 18;
+      let panelWidth = 340;
+
+      const themeToggle = document.getElementById("theme-toggle");
+      if (themeToggle) {
+        const rect = themeToggle.getBoundingClientRect();
+        const cs = window.getComputedStyle(themeToggle);
+        const topValue = parseFloat(cs.top || "");
+        const isVisible =
+          rect.width > 0 &&
+          rect.height > 0 &&
+          cs.display !== "none" &&
+          cs.visibility !== "hidden";
+        const isTopRightControl =
+          cs.position === "fixed" &&
+          Number.isFinite(topValue) &&
+          topValue < Math.max(180, window.innerHeight * 0.35);
+
+        if (isVisible && isTopRightControl) {
+          const gap = 12;
+          btnRight = Math.max(12, Math.round(window.innerWidth - rect.right));
+          panelRight = btnRight;
+          btnTop = Math.max(12, Math.round(rect.bottom + gap));
+          panelTop = Math.round(btnTop + 60);
+        }
+      }
+
+      if (window.innerWidth <= 520) {
+        panelWidth = 320;
+        btnRight = Math.max(12, btnRight);
+        panelRight = Math.max(12, panelRight);
+      }
+
+      rootStyle.setProperty("--tu-menu-btn-top", `${btnTop}px`);
+      rootStyle.setProperty("--tu-menu-btn-right", `${btnRight}px`);
+      rootStyle.setProperty("--tu-menu-panel-top", `${panelTop}px`);
+      rootStyle.setProperty("--tu-menu-panel-right", `${panelRight}px`);
+      rootStyle.setProperty("--tu-menu-panel-width", `${panelWidth}px`);
+    }
+
+    updateFloatingMenuPosition();
+    window.addEventListener("resize", updateFloatingMenuPosition, { passive: true });
+    window.addEventListener("load", updateFloatingMenuPosition, { once: true });
+
     
     document.addEventListener('tu-auth-changed', (ev) => {
       const user = ev.detail && ev.detail.user;
@@ -634,14 +744,14 @@
       "right:20px",
       "bottom:92px",
       "z-index:9999",
-      "padding:12px 14px",
+      "padding:12px 16px",
       "border-radius:999px",
-      "border:1px solid rgba(255,255,255,0.18)",
-      "background:rgba(99,102,241,0.92)",
-      "color:#fff",
-      "font-weight:700",
+      "border:1px solid rgba(201,162,39,0.22)",
+      "background:linear-gradient(135deg, rgba(201,162,39,0.96), rgba(159,127,23,0.96))",
+      "color:#16120d",
+      "font-weight:800",
       "cursor:pointer",
-      "box-shadow:0 12px 30px rgba(0,0,0,0.35)",
+      "box-shadow:0 16px 34px rgba(0,0,0,0.35)",
       "display:none"
     ].join(";");
 
@@ -706,20 +816,27 @@
           z-index:9999;
           padding:12px 16px;
           border-radius:999px;
-          border:1px solid rgba(124,140,255,0.35);
-          background: rgba(124,140,255,0.92);
-          color:#fff;
-          font-weight:700;
+          border:1px solid rgba(201,162,39,0.24);
+          background: linear-gradient(135deg, rgba(201,162,39,0.96), rgba(159,127,23,0.96));
+          color:#16120d;
+          font-weight:800;
           font-size:13px;
           text-decoration:none;
-          box-shadow:0 12px 30px rgba(0,0,0,0.35);
+          box-shadow:0 16px 34px rgba(0,0,0,0.35);
           display:inline-flex;
           align-items:center;
+          justify-content:center;
           gap:8px;
+          max-width: calc(100vw - 24px);
+          white-space: normal;
+          overflow-wrap: anywhere;
+          text-align: center;
+          transition: transform .16s ease, box-shadow .18s ease, filter .18s ease;
         }
         .tu-mentor-chat-btn:hover{
           transform: translateY(-1px);
-          box-shadow:0 14px 34px rgba(0,0,0,0.4);
+          filter: brightness(1.02);
+          box-shadow:0 18px 38px rgba(0,0,0,0.4);
         }
       `;
       document.head.appendChild(style);
@@ -732,22 +849,41 @@
     btn.className = "tu-mentor-chat-btn";
     btn.href = href;
     
-    const themeToggle = document.getElementById("theme-toggle");
-    if (themeToggle) {
+    function updateMentorChatPosition() {
+      btn.style.right = "20px";
+      btn.style.bottom = "24px";
+      btn.style.top = "auto";
+
+      const themeToggle = document.getElementById("theme-toggle");
+      if (!themeToggle) return;
+
       try {
+        const rect = themeToggle.getBoundingClientRect();
         const cs = window.getComputedStyle(themeToggle);
-        const bottom = parseFloat(cs.bottom || "0");
+        const topValue = parseFloat(cs.top || "");
+        const bottomValue = parseFloat(cs.bottom || "");
         const height = parseFloat(cs.height || themeToggle.offsetHeight || "0");
-        if (!Number.isNaN(bottom) && !Number.isNaN(height)) {
-          const offset = Math.max(24, bottom + height + 12);
+        const isVisible =
+          rect.width > 0 &&
+          rect.height > 0 &&
+          cs.display !== "none" &&
+          cs.visibility !== "hidden";
+
+        if (!isVisible || cs.position !== "fixed") return;
+
+        const isBottomAnchored =
+          Number.isFinite(bottomValue) &&
+          bottomValue >= 0 &&
+          bottomValue < Math.max(220, window.innerHeight * 0.5) &&
+          (!Number.isFinite(topValue) || topValue > Math.max(180, window.innerHeight * 0.4));
+
+        if (isBottomAnchored && Number.isFinite(height)) {
+          const offset = Math.max(24, Math.round(bottomValue + height + 12));
           btn.style.bottom = `${offset}px`;
-        } else {
-          btn.style.bottom = "90px";
         }
-      } catch (e) {
-        btn.style.bottom = "90px";
-      }
+      } catch (e) {}
     }
+
     btn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -759,6 +895,9 @@
     });
 
     document.body.appendChild(btn);
+    updateMentorChatPosition();
+    window.addEventListener("resize", updateMentorChatPosition, { passive: true });
+    window.addEventListener("load", updateMentorChatPosition, { once: true });
   }
 
   
@@ -875,16 +1014,22 @@
     if (!anchors || !anchors.length) return;
     let stop = null;
 
-    function refresh() {
-      if (stop) {
-        stop();
-        stop = null;
+    function stopWatching() {
+      if (typeof stop === "function") {
+        try { stop(); } catch (e) {}
       }
+      stop = null;
+    }
+
+    function refresh() {
+      stopWatching();
       if (!auth.currentUser) {
         updateChatBellBadges(0);
         return;
       }
-      stop = watchUnreadMessages(db, auth.currentUser.uid, updateChatBellBadges);
+
+      const uid = auth.currentUser.uid;
+      stop = watchUnreadMessages(db, uid, updateChatBellBadges);
     }
 
     document.addEventListener("tu-auth-changed", refresh);
@@ -901,6 +1046,7 @@ window.TU = {
       
       window.TU.auth = auth;
       window.TU.db = db;
+      try { normalizeFixedControlAlignment(); } catch (e) {}
 
       
       try { setupAdminFab(db, auth); } catch (e) {}

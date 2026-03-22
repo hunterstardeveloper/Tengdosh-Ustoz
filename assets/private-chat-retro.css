@@ -1,0 +1,215 @@
+@import url("/assets/retro-foundation.css");
+
+:root {
+  --bg-deep: radial-gradient(circle at 18% 0%, rgba(201, 162, 39, 0.18), transparent 30%), linear-gradient(180deg, #09090a, #060607 55%, #080809) !important;
+  --bg-panel: rgba(18, 16, 14, 0.92) !important;
+  --bg-surface: rgba(34, 28, 22, 0.64) !important;
+  --bg-hover: rgba(201, 162, 39, 0.08) !important;
+  --bg-active: rgba(201, 162, 39, 0.12) !important;
+  --border: rgba(201, 162, 39, 0.12) !important;
+  --border-light: rgba(201, 162, 39, 0.24) !important;
+  --gold: #c9a227 !important;
+  --gold-dim: rgba(201, 162, 39, 0.16) !important;
+  --gold-glow: rgba(201, 162, 39, 0.22) !important;
+  --teal: #d8c6a0 !important;
+  --teal-dim: rgba(216, 198, 160, 0.12) !important;
+  --text-primary: #efe5d2 !important;
+  --text-secondary: #c7b89a !important;
+  --text-muted: #8e846f !important;
+  --online: #7eaf72 !important;
+  --danger: #d07a69 !important;
+  --unread-badge: #c9a227 !important;
+  --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.44) !important;
+  --shadow-lg: 0 28px 80px rgba(0, 0, 0, 0.54) !important;
+}
+
+body {
+  font-family: var(--tu-font-sans) !important;
+}
+
+body::before {
+  opacity: 0.03 !important;
+}
+
+.auth-card,
+#sidebar,
+#chat-header,
+#input-area,
+.security-card,
+.admin-modal {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 20%),
+    linear-gradient(135deg, rgba(34, 29, 23, 0.94), rgba(18, 16, 14, 0.96)) !important;
+  border-color: var(--border-light) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.auth-logo,
+.app-brand,
+#chat-empty h3 {
+  font-family: var(--tu-font-serif) !important;
+  color: var(--gold) !important;
+  letter-spacing: -0.03em !important;
+}
+
+.auth-subtitle,
+.users-empty,
+#chat-empty p,
+.current-user-status,
+.chat-header-status,
+.search-input::placeholder,
+.user-last-msg,
+.user-time {
+  color: var(--text-muted) !important;
+}
+
+.btn-primary,
+.notify-btn,
+.filter-btn.active,
+.unread-badge,
+.auth-tab.active {
+  background: linear-gradient(135deg, var(--gold), #9f7f17) !important;
+  color: #16120d !important;
+  border-color: rgba(201, 162, 39, 0.35) !important;
+}
+
+.btn-google,
+.btn-outline,
+.auth-tab,
+.search-input,
+.filter-btn,
+.user-item.active,
+.msg-bubble,
+.chat-back,
+.btn-back,
+.notify-btn,
+.input-group input,
+#msg-input,
+#send-btn,
+#cancel-edit,
+.msg-action {
+  border-color: var(--border) !important;
+}
+
+.btn-google,
+.btn-outline,
+.search-input,
+.input-group input,
+#msg-input,
+.chat-back,
+.btn-back,
+.notify-btn,
+.msg-action,
+#send-btn,
+#cancel-edit {
+  background: linear-gradient(135deg, rgba(37, 31, 24, 0.92), rgba(23, 21, 18, 0.96)) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-google:hover,
+.btn-outline:hover,
+.chat-back:hover,
+.btn-back:hover,
+.notify-btn:hover,
+.msg-action:hover,
+.user-item:hover,
+.filter-btn:hover {
+  background: rgba(201, 162, 39, 0.1) !important;
+  border-color: rgba(201, 162, 39, 0.3) !important;
+}
+
+.section-label,
+.filter-btn,
+.current-user-name,
+.chat-header-name {
+  letter-spacing: 0.08em;
+}
+
+.section-label,
+.filter-btn,
+.auth-tab,
+.current-user-status,
+.chat-header-status,
+.user-time {
+  font-family: var(--tu-font-mono) !important;
+  text-transform: uppercase;
+}
+
+.msg-bubble {
+  border-radius: 20px !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+}
+
+.msg-row.mine .msg-bubble {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.95), rgba(159, 127, 23, 0.95)) !important;
+  color: #16120d !important;
+}
+
+.msg-row.their .msg-bubble {
+  background: linear-gradient(135deg, rgba(45, 38, 30, 0.96), rgba(23, 20, 17, 0.94)) !important;
+  color: var(--text-primary) !important;
+}
+
+.day-divider span {
+  font-family: var(--tu-font-mono) !important;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, rgba(37, 31, 24, 0.94), rgba(23, 20, 17, 0.96)) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--gold) !important;
+}
+
+#send-btn {
+  background: linear-gradient(135deg, var(--gold), #9f7f17) !important;
+  color: #16120d !important;
+  box-shadow: 0 14px 28px var(--gold-glow) !important;
+}
+
+#cancel-edit {
+  background: linear-gradient(135deg, rgba(37, 31, 24, 0.94), rgba(23, 20, 17, 0.96)) !important;
+}
+
+@media (max-width: 900px) {
+  #sidebar {
+    box-shadow: var(--shadow-lg) !important;
+  }
+}
+
+/* === TU audit patch: private chat control consistency === */
+:where(#auth-screen, .auth-card, #sidebar, #chat-header, #input-area, #chat-messages, .user-item, .msg-row, .msg-bubble, .chat-back, .btn-back, .notify-btn, .msg-action, .btn-primary, .btn-outline, .btn-google, #msg-input, #send-btn, #cancel-edit, .filter-btn, .search-input, .input-group input) {
+  min-width: 0 !important;
+}
+
+.btn-primary,
+.btn-outline,
+.btn-google,
+#send-btn,
+#cancel-edit,
+.notify-btn,
+.msg-action,
+.filter-btn,
+.auth-tab,
+.chat-back,
+.btn-back {
+  min-height: 44px !important;
+  white-space: normal !important;
+  line-height: 1.18 !important;
+}
+
+.search-input,
+.input-group input,
+#msg-input {
+  border-radius: 16px !important;
+}
+
+.user-item,
+.msg-bubble {
+  overflow-wrap: anywhere !important;
+}
+
+@media (max-width: 900px) {
+  #sidebar,
+  #chat-area,
+  #main-area {
+    min-width: 0 !important;
+  }
+}

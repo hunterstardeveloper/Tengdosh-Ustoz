@@ -198,22 +198,21 @@
   const themeIcon = document.getElementById('theme-icon');
   const moonSVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
   const sunSVG = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-  const savedTheme = sessionStorage.getItem('theme') || 'light';
-  if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.innerHTML = sunSVG;
-  }
-  toggleBtn.addEventListener('click', () => {
-    let theme = document.documentElement.getAttribute('data-theme');
-    if (theme === 'dark') {
-      document.documentElement.removeAttribute('data-theme');
-      themeIcon.innerHTML = moonSVG;
-      sessionStorage.setItem('theme', 'light');
-    } else {
+  const applyTheme = (theme) => {
+    const isDark = theme !== 'light';
+    if (isDark) {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeIcon.innerHTML = sunSVG;
-      sessionStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      themeIcon.innerHTML = moonSVG;
     }
+  };
+  applyTheme(localStorage.getItem('theme') || 'dark');
+  toggleBtn.addEventListener('click', () => {
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(theme);
+    localStorage.setItem('theme', theme);
   });
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -283,10 +282,15 @@
   }
   function loadFeedbacks() {
     const list = document.getElementById('feedback-list');
-    list.innerHTML = ""; 
-    db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`).on('value', (snapshot) => {
-      const data = snapshot.val();
-      list.innerHTML = ""; 
+    list.innerHTML = "";
+    if (!currentCourseKey) {
+      list.innerHTML = "<p style='color:var(--muted); font-size:0.9rem;'>Hozircha fikrlar yo'q.</p>";
+      return;
+    }
+    db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`).off();
+    db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`).on("value", snap => {
+      list.innerHTML = "";
+      const data = snap.val();
       if (!data) {
         list.innerHTML = "<p style='color:var(--muted); font-size:0.9rem;'>Hozircha fikrlar yo'q.</p>";
         return;
@@ -294,15 +298,15 @@
       Object.values(data).reverse().forEach(fb => {
         const specialClass = fb.isAdmin ? 'admin-comment' : '';
         list.innerHTML += `
-        <div class="content-card ${specialClass}">
-          <div class="comment-user-box">
-            <img src="${(/^https?:\/\//.test(fb.avatar||"") ? (fb.avatar||"") : (String(fb.avatar||"").startsWith("/") ? (fb.avatar||"") : ("/"+(fb.avatar||"")))) ||'https://cdn-icons-png.flaticon.com/512/8241/8241956.png'}" class="comment-avatar">
-            <div style="flex-grow:1;">
-              <strong>${(fb.displayName || ((fb.name||"") + " " + (fb.surename||""))).trim()} ${fb.group ? '<small>(' + fb.group + ')</small>' : ''}</strong>
-            </div>
+      <div class="content-card ${specialClass}">
+        <div class="comment-user-box">
+          <img src="${(/^https?:\/\//.test(fb.avatar||"") ? (fb.avatar||"") : (String(fb.avatar||"").startsWith("/") ? (fb.avatar||"") : ("/"+(fb.avatar||"")))) ||'https://cdn-icons-png.flaticon.com/512/8241/8241956.png'}" class="comment-avatar">
+          <div style="flex-grow:1;">
+            <strong>${(fb.displayName || ((fb.name||"") + " " + (fb.surename||""))).trim()} ${fb.group ? '<small>(' + fb.group + ')</small>' : ''}</strong>
           </div>
-          <p style="margin-left: 52px;">${fb.message}</p>
-        </div>`;
+        </div>
+        <p style="margin-left: 52px;">${fb.message}</p>
+      </div>`;
       });
     });
   }
@@ -414,22 +418,22 @@
       window.location.href = `${root}/pages/account/account.html`;
       return;
     }
-    const courseRef = db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`);
-    try {
-      const role = currentUserRole || 'user';
-      const feedbackEntry = {
-        uid: auth.currentUser.uid,
-        displayName: currentUserProfile.displayName,
-        surename: currentUserProfile.surename || '',
-        group: currentUserProfile.group || '',
-        message: message,
-        avatar: currentUserProfile.avatar || 'https://cdn-icons-png.flaticon.com/512/8241/8241956.png',
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-        isAdmin: role === 'admin',
-        isTeacher: role === 'teacher'
-      };
-      await courseRef.push(feedbackEntry);
-      messageField.value = "";
+  const courseRef = db.ref(`feedbacks/${CLUB_ID}/${TEACHER_ID}/${currentCourseKey}`);
+  try {
+    const role = currentUserRole || 'user';
+    const feedbackEntry = {
+      uid: auth.currentUser.uid,
+      displayName: currentUserProfile.displayName,
+      surename: currentUserProfile.surename || '',
+      group: currentUserProfile.group || '',
+      message: message,
+      avatar: currentUserProfile.avatar || 'https://cdn-icons-png.flaticon.com/512/8241/8241956.png',
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      isAdmin: role === 'admin',
+      isTeacher: role === 'teacher'
+    };
+    await courseRef.push(feedbackEntry);
+    messageField.value = "";
     } catch (err) {
       alert("Xatolik yuz berdi: " + (err?.message || err));
     }

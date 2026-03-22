@@ -1,0 +1,329 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@500;600;700;800&display=swap");
+
+:root {
+  --tu-font-serif: "Playfair Display", Georgia, serif;
+  --tu-font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --tu-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --tu-space-1: 0.25rem;
+  --tu-space-2: 0.5rem;
+  --tu-space-3: 0.75rem;
+  --tu-space-4: 1rem;
+  --tu-space-5: 1.5rem;
+  --tu-space-6: 2rem;
+  --tu-space-7: 3rem;
+  --tu-space-8: 4rem;
+
+  --tu-radius-sm: 6px;
+  --tu-radius-md: 14px;
+  --tu-radius-lg: 24px;
+  --tu-radius-xl: 34px;
+  --tu-radius-pill: 999px;
+
+  --tu-transition-fast: 160ms ease;
+  --tu-transition-base: 260ms ease;
+  --tu-transition-slow: 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  --tu-bg: #080809;
+  --tu-bg-soft: #111214;
+  --tu-bg-elevated: rgba(18, 17, 17, 0.78);
+  --tu-bg-panel: rgba(19, 18, 17, 0.9);
+  --tu-paper: rgba(35, 31, 26, 0.64);
+  --tu-paper-strong: rgba(38, 33, 28, 0.84);
+  --tu-text: #efe5d2;
+  --tu-text-soft: #c8baa1;
+  --tu-text-muted: #8f846f;
+  --tu-line: rgba(201, 162, 39, 0.18);
+  --tu-line-strong: rgba(201, 162, 39, 0.36);
+  --tu-accent: #c9a227;
+  --tu-accent-soft: #9f7f17;
+  --tu-accent-ghost: rgba(201, 162, 39, 0.12);
+  --tu-accent-glow: rgba(201, 162, 39, 0.22);
+  --tu-scrollbar-track: rgba(17, 15, 12, 0.28);
+  --tu-scrollbar-thumb: rgba(201, 162, 39, 0.6);
+  --tu-scrollbar-thumb-hover: rgba(212, 178, 82, 0.84);
+  --tu-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+  --tu-backdrop:
+    radial-gradient(circle at 20% 0%, rgba(201, 162, 39, 0.16), transparent 32%),
+    radial-gradient(circle at 100% 15%, rgba(148, 88, 18, 0.12), transparent 28%),
+    linear-gradient(180deg, #0b0b0c, #060607 55%, #080809);
+  --tu-vignette: rgba(0, 0, 0, 0.56);
+}
+
+:root:not([data-theme="dark"]),
+[data-theme="light"] {
+  --tu-bg: #f5ede0;
+  --tu-bg-soft: #eee4d4;
+  --tu-bg-elevated: rgba(252, 247, 239, 0.84);
+  --tu-bg-panel: rgba(250, 244, 235, 0.9);
+  --tu-paper: rgba(255, 250, 244, 0.78);
+  --tu-paper-strong: rgba(255, 251, 245, 0.92);
+  --tu-text: #2b2115;
+  --tu-text-soft: #5c4a31;
+  --tu-text-muted: #7d6d57;
+  --tu-line: rgba(139, 105, 20, 0.18);
+  --tu-line-strong: rgba(139, 105, 20, 0.32);
+  --tu-accent: #8b6914;
+  --tu-accent-soft: #684b08;
+  --tu-accent-ghost: rgba(139, 105, 20, 0.12);
+  --tu-accent-glow: rgba(139, 105, 20, 0.18);
+  --tu-scrollbar-track: rgba(232, 221, 205, 0.42);
+  --tu-scrollbar-thumb: rgba(139, 105, 20, 0.52);
+  --tu-scrollbar-thumb-hover: rgba(104, 75, 8, 0.78);
+  --tu-shadow: 0 26px 70px rgba(60, 40, 16, 0.12);
+  --tu-backdrop:
+    radial-gradient(circle at 15% 0%, rgba(139, 105, 20, 0.12), transparent 30%),
+    radial-gradient(circle at 100% 12%, rgba(204, 165, 90, 0.1), transparent 28%),
+    linear-gradient(180deg, #f8f2e8, #f3eadb 55%, #f1e7d8);
+  --tu-vignette: rgba(121, 92, 50, 0.14);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tu-scrollbar-thumb) var(--tu-scrollbar-track);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--tu-scrollbar-track) 78%, transparent) 18%,
+    color-mix(in srgb, var(--tu-scrollbar-track) 82%, transparent) 82%,
+    transparent
+  );
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 34px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--tu-scrollbar-thumb) 18%, transparent) 0%,
+      var(--tu-scrollbar-thumb) 18%,
+      color-mix(in srgb, var(--tu-scrollbar-thumb) 94%, var(--tu-accent-soft)) 50%,
+      var(--tu-scrollbar-thumb) 82%,
+      color-mix(in srgb, var(--tu-scrollbar-thumb) 18%, transparent) 100%
+    );
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tu-scrollbar-thumb) 38%, transparent),
+    0 0 10px color-mix(in srgb, var(--tu-accent) 16%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--tu-scrollbar-thumb-hover) 18%, transparent) 0%,
+      var(--tu-scrollbar-thumb-hover) 18%,
+      color-mix(in srgb, var(--tu-scrollbar-thumb-hover) 96%, var(--tu-accent-soft)) 50%,
+      var(--tu-scrollbar-thumb-hover) 82%,
+      color-mix(in srgb, var(--tu-scrollbar-thumb-hover) 18%, transparent) 100%
+    );
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+body {
+  margin: 0;
+  color: var(--tu-text);
+  background: var(--tu-backdrop);
+  background-attachment: fixed;
+  font-family: var(--tu-font-sans);
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  opacity: 0.035;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+body::after {
+  z-index: 0;
+  background: radial-gradient(circle at center, transparent 42%, var(--tu-vignette) 100%);
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  color: inherit;
+}
+
+.tu-retro-surface,
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 22%),
+    linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper));
+  border: 1px solid var(--tu-line);
+  box-shadow: var(--tu-shadow);
+  backdrop-filter: blur(16px) saturate(110%);
+  -webkit-backdrop-filter: blur(16px) saturate(110%);
+}
+
+.tu-retro-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--tu-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tu-accent);
+}
+
+.tu-retro-kicker::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--tu-accent), transparent);
+}
+
+.tu-retro-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.9rem 1.5rem;
+  border: 1px solid var(--tu-line-strong);
+  border-radius: var(--tu-radius-pill);
+  background: linear-gradient(135deg, var(--tu-accent), var(--tu-accent-soft));
+  color: #16120d;
+  box-shadow: 0 12px 30px var(--tu-accent-glow);
+  cursor: pointer;
+  font-family: var(--tu-font-sans);
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    transform var(--tu-transition-fast),
+    box-shadow var(--tu-transition-base),
+    background var(--tu-transition-base),
+    border-color var(--tu-transition-base);
+}
+
+.tu-retro-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px var(--tu-accent-glow);
+}
+
+.tu-retro-button.is-secondary {
+  background: linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper));
+  color: var(--tu-text);
+  box-shadow: none;
+}
+
+.tu-retro-button.is-secondary:hover {
+  border-color: var(--tu-line-strong);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.1);
+}
+
+.tu-retro-title {
+  margin: 0;
+  font-family: var(--tu-font-serif);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--tu-text);
+}
+
+.tu-retro-copy {
+  color: var(--tu-text-soft);
+  line-height: 1.75;
+}
+
+.tu-retro-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tu-line-strong), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* === TU audit patch: shared system hardening === */
+:root {
+  --tu-shell-max: 1180px;
+  --tu-shell-max-wide: 1320px;
+  --tu-shell-gutter: clamp(1rem, 2.3vw, 1.5rem);
+  --tu-btn-height: 46px;
+  --tu-btn-pad-x: 1.1rem;
+  --tu-focus-ring: 0 0 0 3px var(--tu-accent-ghost);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+textarea {
+  resize: vertical;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--tu-focus-ring);
+}
+
+@supports selector(:focus-visible) {
+  :focus {
+    outline: none;
+  }
+}

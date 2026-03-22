@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/assets/theme-bridge.js"></script>
   <title>Account • Tengdosh Ustoz</title>
   <link rel="icon" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,14 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="has-page-shell">
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
   </div>
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
-  <div class="page-scroll" id="page-scroll">
     <nav class="navbar" id="main-navbar">
       <a href="/home.html" class="navbar-brand">
         <div class="navbar-brand-logo"><img src="/logo.png" alt="logo"></div>
@@ -81,21 +81,45 @@
             <span class="account-badge-dot" id="badgeDot"></span>
             <span id="subText">Subscribed</span>
           </div>
+          <div class="account-meta-row">
+            <div class="account-meta-pill">
+              <span class="account-meta-label" data-i18n="acc_role_label">Role</span>
+              <strong id="role">Student</strong>
+            </div>
+            <div class="account-meta-pill">
+              <span class="account-meta-label" data-i18n="acc_profile_completion">Profile completion</span>
+              <strong id="completionStat">0%</strong>
+            </div>
+          </div>
         </div>
-        <nav class="account-menu">
-          <button class="account-menu-btn active" data-tab="overview">
+        <section class="account-presence" aria-labelledby="account-ready-title">
+          <div class="account-presence-top">
+            <div>
+              <p class="account-kicker" data-i18n="acc_ready_kicker">Account readiness</p>
+              <h2 id="account-ready-title" data-i18n="acc_ready_title">Complete your learning profile</h2>
+              <p class="account-presence-copy" data-i18n="acc_profile_help">Add the basics so mentors can identify you faster and your dashboard feels complete.</p>
+            </div>
+            <strong class="account-presence-score" id="profileCompletionPercent">0%</strong>
+          </div>
+          <div class="account-progress" aria-hidden="true">
+            <span id="profileCompletionBar"></span>
+          </div>
+          <ul class="account-checklist" id="profileChecklist" role="list"></ul>
+        </section>
+        <nav class="account-menu" role="tablist" aria-orientation="vertical" aria-label="Account sections">
+          <button class="account-menu-btn active" id="account-tab-btn-overview" data-tab="overview" role="tab" aria-selected="true" aria-controls="tab-overview" tabindex="0">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             <span data-i18n="acc_overview">Overview</span>
           </button>
-          <button class="account-menu-btn" data-tab="profile">
+          <button class="account-menu-btn" id="account-tab-btn-profile" data-tab="profile" role="tab" aria-selected="false" aria-controls="tab-profile" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span data-i18n="acc_profile">Profile</span>
           </button>
-          <button class="account-menu-btn" data-tab="settings">
+          <button class="account-menu-btn" id="account-tab-btn-settings" data-tab="settings" role="tab" aria-selected="false" aria-controls="tab-settings" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             <span data-i18n="acc_settings">Settings</span>
           </button>
-          <button class="account-menu-btn" data-tab="liked">
+          <button class="account-menu-btn" id="account-tab-btn-liked" data-tab="liked" role="tab" aria-selected="false" aria-controls="tab-liked" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
@@ -107,80 +131,127 @@
         </button>
       </aside>
       <main class="account-main glass">
-        <div id="tab-overview">
+        <section id="tab-overview" class="account-panel" role="tabpanel" aria-labelledby="account-tab-btn-overview" tabindex="-1">
           <p class="account-tab-title" data-i18n="acc_dashboard">Learning Dashboard</p>
           <p class="account-tab-sub" data-i18n="acc_dashboard_sub">Your subscriptions and activity at a glance.</p>
+          <div class="account-spotlight">
+            <div class="account-spotlight-copy">
+              <p class="account-kicker" data-i18n="acc_focus_kicker">Right now</p>
+              <h3 id="accountGreetingName" data-i18n="acc_focus_hello">Hello</h3>
+              <p id="accountSummaryText" data-i18n="acc_focus_default">Your account is ready to become a stronger learning base.</p>
+            </div>
+            <div class="account-action-grid">
+              <button class="account-pill-btn" type="button" data-target-tab="profile" data-i18n="acc_complete_profile">Complete profile</button>
+              <a class="account-pill-btn" href="/pages/classes/classes.html" data-i18n="acc_find_mentors">Find mentors</a>
+              <button class="account-pill-btn" type="button" data-target-tab="liked" data-i18n="acc_open_likes">Open likes</button>
+            </div>
+          </div>
           <div class="account-stats">
             <div class="account-stat">
-              <div class="account-stat-icon">?</div>
+              <div class="account-stat-icon">S</div>
               <div>
                 <b id="subsCount">0</b>
                 <small data-i18n="acc_teachers_sub">Teachers subscribed</small>
               </div>
             </div>
             <div class="account-stat">
-              <div class="account-stat-icon">?</div>
+              <div class="account-stat-icon">L</div>
               <div>
                 <b id="lastSub">—</b>
                 <small data-i18n="acc_last_sub">Last subscription</small>
               </div>
             </div>
+            <div class="account-stat">
+              <div class="account-stat-icon">Q</div>
+              <div>
+                <b id="likesCount">0</b>
+                <small data-i18n="acc_recent_likes">Liked quotes</small>
+              </div>
+            </div>
+            <div class="account-stat">
+              <div class="account-stat-icon">P</div>
+              <div>
+                <b id="completionValue">0%</b>
+                <small data-i18n="acc_profile_completion">Profile completion</small>
+              </div>
+            </div>
           </div>
           <div class="account-section">
-            <h3 data-i18n="acc_active_subs">Active Subscriptions</h3>
-            <div class="account-msg" id="subsMsg"></div>
-            <div id="subsList"></div>
+            <div class="account-section-head">
+              <div>
+                <h3 data-i18n="acc_active_subs">Active Subscriptions</h3>
+                <p class="account-section-sub" data-i18n="acc_active_subs_sub">Your current mentor connections and recent joins.</p>
+              </div>
+              <a class="account-inline-link" href="/pages/classes/classes.html" data-i18n="acc_find_mentors">Find mentors</a>
+            </div>
+            <div class="account-msg" id="subsMsg" role="status" aria-live="polite"></div>
+            <div id="subsList" class="account-list"></div>
           </div>
-        </div>
-        <div id="tab-profile" style="display:none">
+        </section>
+        <section id="tab-profile" class="account-panel" role="tabpanel" aria-labelledby="account-tab-btn-profile" tabindex="-1" hidden>
           <p class="account-tab-title" data-i18n="acc_profile_title">Profile</p>
           <p class="account-tab-sub" data-i18n="acc_profile_sub">Update your display name, phone number, and university group.</p>
           <div class="account-section">
+            <div class="account-section-head">
+              <div>
+                <h3 data-i18n="acc_profile_title">Profile</h3>
+                <p class="account-section-sub" data-i18n="acc_profile_help">Add the basics so mentors can identify you faster and your dashboard feels complete.</p>
+              </div>
+            </div>
             <label class="account-label" for="nameInput" data-i18n="acc_display_name">Display name</label>
-            <input class="account-input" id="nameInput" type="text" placeholder="Your name" />
+            <input class="account-input" id="nameInput" type="text" placeholder="Your name" autocomplete="name" />
             <div class="account-input-row">
               <div>
                 <label class="account-label" for="surnameInput"><span data-i18n="acc_surname">Surname</span> <span style="opacity:.5;font-size:11px" data-i18n="acc_surname_opt">(optional)</span></label>
-                <input class="account-input" id="surnameInput" type="text" placeholder="Your surname" />
+                <input class="account-input" id="surnameInput" type="text" placeholder="Your surname" autocomplete="family-name" />
               </div>
               <div>
                 <label class="account-label" for="phoneInput"><span data-i18n="acc_phone">Phone number</span> <span style="opacity:.65;font-size:11px" data-i18n="acc_phone_req">(required)</span></label>
-                <input class="account-input" id="phoneInput" type="tel" placeholder="+998901234567" />
+                <input class="account-input" id="phoneInput" type="tel" placeholder="+998901234567" autocomplete="tel" aria-describedby="phoneHelp" />
+                <p class="account-input-help" id="phoneHelp" data-i18n="acc_phone_help">Use your reachable number so teachers can recognize your subscription requests.</p>
               </div>
             </div>
             <div style="margin-top:12px">
               <label class="account-label" for="groupInput"><span data-i18n="acc_group">Group</span> <span style="opacity:.65;font-size:11px" data-i18n="acc_group_req">(required)</span></label>
-              <input class="account-input" id="groupInput" type="text" placeholder="e.g. 102" />
+              <input class="account-input" id="groupInput" type="text" placeholder="e.g. 102" autocomplete="organization-title" aria-describedby="groupHelp" />
+              <p class="account-input-help" id="groupHelp" data-i18n="acc_group_help">Your study group helps teachers sort attendance and support faster.</p>
             </div>
-            <div style="margin-top:18px">
+            <div class="account-action-row">
               <button class="account-btn" id="saveProfile" type="button" data-i18n="acc_save">Save changes</button>
+              <button class="account-btn secondary" type="button" data-target-tab="overview" data-i18n="acc_review_overview">Review overview</button>
             </div>
-            <div class="account-msg" id="profileMsg"></div>
+            <div class="account-msg" id="profileMsg" role="status" aria-live="polite"></div>
           </div>
-        </div>
-        <div id="tab-settings" style="display:none">
+        </section>
+        <section id="tab-settings" class="account-panel" role="tabpanel" aria-labelledby="account-tab-btn-settings" tabindex="-1" hidden>
           <p class="account-tab-title" data-i18n="acc_settings_title">Settings</p>
           <p class="account-tab-sub" data-i18n="acc_settings_sub">Manage your account and subscriptions.</p>
           <div class="account-section">
             <h3 data-i18n="acc_danger">Danger Zone</h3>
-            <p style="color:var(--muted);font-size:14px;margin-bottom:16px" data-i18n="acc_danger_desc">
+            <p style="color:var(--tu-text-soft);font-size:14px;margin-bottom:16px" data-i18n="acc_danger_desc">
               These actions are irreversible. Please proceed carefully.
             </p>
             <button class="account-btn danger" id="clearSubs" type="button" data-i18n="acc_unsub_all">
               Unsubscribe from all teachers
             </button>
-            <div class="account-msg" id="settingsMsg"></div>
+            <div class="account-msg" id="settingsMsg" role="status" aria-live="polite"></div>
           </div>
-        </div>
-        <div id="tab-liked" style="display:none">
+        </section>
+        <section id="tab-liked" class="account-panel" role="tabpanel" aria-labelledby="account-tab-btn-liked" tabindex="-1" hidden>
           <p class="account-tab-title" data-i18n="acc_liked_title">Liked Quotes</p>
           <p class="account-tab-sub" data-i18n="acc_liked_sub">Quotes you liked on the Home page. Visible only to you.</p>
           <div class="account-section">
-            <h3 data-i18n="acc_your_likes">Your likes</h3>
-            <div class="account-msg" id="likesMsg"></div>
-            <div id="likesList"></div>
+            <div class="account-section-head">
+              <div>
+                <h3 data-i18n="acc_your_likes">Your likes</h3>
+                <p class="account-section-sub" data-i18n="acc_recent_likes">Liked quotes</p>
+              </div>
+              <a class="account-inline-link" href="/home.html" data-i18n="acc_open_home">Open home</a>
+            </div>
+            <div class="account-msg" id="likesMsg" role="status" aria-live="polite"></div>
+            <div id="likesList" class="account-list"></div>
           </div>
-        </div>
+        </section>
       </main>
     </div>
     <footer class="edu-footer" aria-label="Footer">
@@ -256,7 +327,6 @@
         </div>
       </div>
     </footer>
-  </div>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -280,12 +350,9 @@
       document.body.classList.toggle('nav-open', open && isMobile());
     }
     const onScroll = () => {
-      const scroller = document.getElementById('page-scroll');
-      const scrolled = scroller ? scroller.scrollTop > 40 : window.scrollY > 40;
-      nav.classList.toggle('navbar--scrolled', scrolled);
+      nav.classList.toggle('navbar--scrolled', window.scrollY > 40);
     };
-    const scrollTarget = document.getElementById('page-scroll') || window;
-    scrollTarget.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     if (ham) {
       ham.addEventListener('click', (e) => {
@@ -326,16 +393,22 @@
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
       `;
-      const saved = localStorage.getItem("theme") || "light";
-      if (saved === "dark") {
-        root.setAttribute("data-theme", "dark");
-        if (icon) icon.innerHTML = SUN;
+      function applyTheme(theme) {
+        const isDark = theme !== "light";
+        if (isDark) {
+          root.setAttribute("data-theme", "dark");
+          if (icon) icon.innerHTML = SUN;
+        } else {
+          root.removeAttribute("data-theme");
+          if (icon) icon.innerHTML = MOON;
+        }
       }
+      applyTheme(localStorage.getItem("theme") || "dark");
       btn?.addEventListener("click", () => {
         const isDark = root.getAttribute("data-theme") === "dark";
-        root.setAttribute("data-theme", isDark ? "light" : "dark");
-        if (icon) icon.innerHTML = isDark ? MOON : SUN;
-        localStorage.setItem("theme", isDark ? "light" : "dark");
+        const nextTheme = isDark ? "light" : "dark";
+        applyTheme(nextTheme);
+        localStorage.setItem("theme", nextTheme);
       });
     })();
     (function () {
@@ -367,7 +440,7 @@
       function col() {
         return document.documentElement.getAttribute("data-theme") === "dark"
           ? "165,180,252"
-          : "124,140,255";
+          : "139,105,20";
       }
       (function draw() {
         ctx.clearRect(0, 0, W, H);
@@ -409,6 +482,30 @@
     const subsMsgEl = document.getElementById("subsMsg");
     const subsListEl = document.getElementById("subsList");
     const roleEl = document.getElementById("role");
+    const likesListEl = document.getElementById("likesList");
+    const likesMsgEl = document.getElementById("likesMsg");
+    const likesCountEl = document.getElementById("likesCount");
+    const completionStatEl = document.getElementById("completionStat");
+    const completionValueEl = document.getElementById("completionValue");
+    const profileCompletionPercentEl = document.getElementById("profileCompletionPercent");
+    const profileCompletionBarEl = document.getElementById("profileCompletionBar");
+    const profileChecklistEl = document.getElementById("profileChecklist");
+    const accountGreetingNameEl = document.getElementById("accountGreetingName");
+    const accountSummaryTextEl = document.getElementById("accountSummaryText");
+    let currentUser = null;
+    let currentDoc = {};
+    let currentRole = "student";
+    let currentSubsCount = 0;
+    let currentLikesCount = 0;
+    function t(key, fallback) {
+      try {
+        if (window.TU_i18n?.t) {
+          const value = window.TU_i18n.t(key);
+          if (value) return value;
+        }
+      } catch (e) {}
+      return fallback || key;
+    }
     function initialsFrom(u) {
       if (u?.displayName) {
         const p = u.displayName.trim().split(" ");
@@ -429,18 +526,86 @@
       el.textContent = text;
       el.className = "account-msg" + (text ? " " + (ok ? "ok" : "err") : "");
     }
-    function openProfileTab() {
-      document
-        .querySelectorAll(".account-menu-btn")
-        .forEach((b) => b.classList.remove("active"));
-      const profileBtn = document.querySelector(
-        '.account-menu-btn[data-tab="profile"]'
-      );
-      if (profileBtn) profileBtn.classList.add("active");
-      ["overview", "profile", "settings", "liked"].forEach((x) => {
-        const el = document.getElementById(`tab-${x}`);
-        if (el) el.style.display = x === "profile" ? "" : "none";
+    function humanRole(role) {
+      const safeRole = String(role || "student").toLowerCase();
+      return t(`role_${safeRole}`, safeRole);
+    }
+    function buildChecklist(user, doc) {
+      const safeDoc = doc || {};
+      return [
+        {
+          label: t("acc_complete_name", "Display name added"),
+          done: Boolean(String(safeDoc.displayName || user?.displayName || "").trim()),
+        },
+        {
+          label: t("acc_complete_photo", "Profile photo added"),
+          done: Boolean(user?.photoURL),
+        },
+        {
+          label: t("acc_complete_phone", "Phone number added"),
+          done: Boolean(String(safeDoc.phone || safeDoc["phone number"] || "").replace(/[^0-9+]/g, "").trim()),
+        },
+        {
+          label: t("acc_complete_group", "Group added"),
+          done: Boolean(String(safeDoc.groupInUniversity || safeDoc.group || "").trim()),
+        },
+      ];
+    }
+    function updateAccountReadiness(user, doc) {
+      const checklist = buildChecklist(user, doc);
+      const doneCount = checklist.filter((item) => item.done).length;
+      const percent = Math.round((doneCount / Math.max(1, checklist.length)) * 100);
+      if (completionStatEl) completionStatEl.textContent = `${percent}%`;
+      if (completionValueEl) completionValueEl.textContent = `${percent}%`;
+      if (profileCompletionPercentEl) profileCompletionPercentEl.textContent = `${percent}%`;
+      if (profileCompletionBarEl) profileCompletionBarEl.style.width = `${percent}%`;
+      if (profileChecklistEl) {
+        profileChecklistEl.innerHTML = checklist
+          .map(
+            (item) => `
+              <li class="account-check-item${item.done ? " done" : ""}">
+                <span class="account-check-mark" aria-hidden="true">${item.done ? "OK" : "..."}</span>
+                <span>${escapeHtml(item.label)}</span>
+              </li>
+            `
+          )
+          .join("");
+      }
+      if (roleEl) roleEl.textContent = humanRole(currentRole);
+      const rawName = String(doc?.displayName || user?.displayName || user?.email || t("acc_focus_default_name", "Student")).trim();
+      const shortName = rawName.includes("@") ? rawName.split("@")[0] : rawName;
+      if (accountGreetingNameEl) {
+        accountGreetingNameEl.textContent = `${t("acc_focus_hello", "Hello")}, ${shortName || t("acc_focus_default_name", "Student")}`;
+      }
+      let summary = t("acc_focus_default", "Your account is ready to become a stronger learning base.");
+      if (percent < 100) {
+        summary = t("acc_focus_need_profile", "Complete the missing profile details so mentors can recognize you faster.");
+      } else if (!currentSubsCount) {
+        summary = t("acc_focus_need_subs", "Your profile is ready. Now choose a mentor and start building momentum.");
+      } else {
+        summary = t("acc_focus_active", "You already have an active learning setup. Keep tracking subscriptions and quotes here.");
+      }
+      if (accountSummaryTextEl) accountSummaryTextEl.textContent = summary;
+    }
+    function activateTab(tabName, options) {
+      const opts = options || {};
+      document.querySelectorAll(".account-menu-btn").forEach((btn) => {
+        const active = btn.dataset.tab === tabName;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-selected", String(active));
+        btn.tabIndex = active ? 0 : -1;
       });
+      ["overview", "profile", "settings", "liked"].forEach((name) => {
+        const panel = document.getElementById(`tab-${name}`);
+        if (!panel) return;
+        panel.hidden = name !== tabName;
+      });
+      if (opts.focusPanel) {
+        document.getElementById(`tab-${tabName}`)?.focus({ preventScroll: false });
+      }
+    }
+    function openProfileTab() {
+      activateTab("profile");
     }
     function setNavbarAvatar(u) {
       const navAv = document.getElementById("navbar-avatar");
@@ -484,49 +649,38 @@
       }
     }
     async function renderSubscriptions(u) {
-      subsListEl.innerHTML = "";
-      subsMsgEl.textContent = "";
+      if (subsListEl) subsListEl.innerHTML = "";
+      if (subsMsgEl) subsMsgEl.textContent = "";
       const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
-      const val = snap.val() || {};
-      const items = [];
-      Object.entries(val).forEach(([k, v]) => {
-        if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
-          items.push({
-            ...v,
-            teacher: v.teacher || k,
-            teacherUid: k,
-            __path: `subscriptions/index/${u.uid}/${k}`,
-            __listPath: `subscriptions/${k}/attendants/${u.uid}`,
-          });
-          return;
-        }
-        if (v && typeof v === "object") {
-          Object.entries(v).forEach(([teacherName, sub]) => {
-            if (!sub || typeof sub !== "object") return;
-            const teacherUid = sub.teacherUid || k;
-            items.push({
-              ...sub,
-              teacher: sub.teacher || teacherName,
-              teacherUid,
-              __path: `subscriptions/index/${u.uid}/${k}/${teacherName}`,
-              __listPath: `subscriptions/${teacherUid}/${teacherName}/attendants/${u.uid}`,
-            });
-          });
-        }
+      const items = Object.entries(snap.val() || {}).map(([teacherId, value]) => {
+        const row = value && typeof value === "object" ? value : {};
+        return Object.assign({}, row, {
+          teacherId: teacherId,
+          teacher: row.teacher || teacherId,
+        });
       });
+      currentSubsCount = items.length;
       subsCountEl.textContent = items.length;
-      const noSubsDefault = "No subscriptions yet. Visit a teacher page and press Subscribe.";
-      subsMsgEl.textContent = items.length 
-        ? "" 
-        : (window.TU_i18n ? TU_i18n.t("acc_no_subs") : noSubsDefault);
+      const noSubsDefault = t("acc_no_subs", "No subscriptions yet. Visit a teacher page and press Subscribe.");
+      subsMsgEl.textContent = "";
       const last = items.map((x) => x?.subscribedAt || 0).sort((a, b) => b - a)[0];
       lastSubEl.textContent = last ? fmtTime(last) : "—";
       if (items.length) {
-        subTextEl.textContent = "Subscribed";
+        subTextEl.textContent = t("acc_status_subscribed", "Subscribed");
         badgeDotEl.classList.remove("inactive");
       } else {
-        subTextEl.textContent = "Not subscribed";
+        subTextEl.textContent = t("acc_status_not_subscribed", "Not subscribed");
         badgeDotEl.classList.add("inactive");
+        subsListEl.innerHTML = `
+          <div class="account-empty-card">
+            <div class="account-empty-icon" aria-hidden="true">+</div>
+            <div class="account-empty-copy">
+              <h4>${escapeHtml(t("acc_active_subs", "Active Subscriptions"))}</h4>
+              <p>${escapeHtml(noSubsDefault)}</p>
+            </div>
+            <a class="account-btn" href="/pages/classes/classes.html">${escapeHtml(t("acc_find_mentors", "Find mentors"))}</a>
+          </div>
+        `;
       }
       items
         .sort((a, b) => (b?.subscribedAt || 0) - (a?.subscribedAt || 0))
@@ -538,24 +692,24 @@
           row.className = "sub-item";
           row.innerHTML = `
             <div class="sub-item-left">
-              <span class="sub-item-name">${teacher}</span>
-              <span class="sub-item-meta">${club} &middot; ${when}</span>
-              <span class="sub-item-pill">&#10003; Subscribed</span>
+              <span class="sub-item-name">${escapeHtml(teacher)}</span>
+              <span class="sub-item-meta">${escapeHtml(club)} &middot; ${escapeHtml(when)}</span>
+              <span class="sub-item-pill">&#10003; ${escapeHtml(t("acc_status_subscribed", "Subscribed"))}</span>
             </div>
-            <button class="account-btn danger" type="button">Unsubscribe</button>
+            <button class="account-btn danger" type="button">${escapeHtml(t("acc_unsubscribe", "Unsubscribe"))}</button>
           `;
           row.querySelector("button").addEventListener("click", async () => {
             if (!confirm(`Unsubscribe from ${teacher}?`)) return;
-            if (s?.__path) await db.ref(s.__path).remove();
-            if (s?.__listPath) await db.ref(s.__listPath).remove();
+            const teacherId = s.teacherId || s.teacher || teacher;
+            await db.ref(`subscriptions/index/${u.uid}/${teacherId}`).remove();
+            await db.ref(`subscriptions/${teacherId}/attendants/${u.uid}`).remove();
             await renderSubscriptions(u);
-              try { await renderLikedQuotes(u); } catch(e) {}
+            try { await renderLikedQuotes(u); } catch(e) {}
           });
           subsListEl.appendChild(row);
         });
+      updateAccountReadiness(currentUser, currentDoc);
     }
-    const likesListEl = document.getElementById("likesList");
-    const likesMsgEl = document.getElementById("likesMsg");
     function escapeHtml(s) {
       return String(s || "")
         .replace(/&/g, "&amp;")
@@ -569,11 +723,22 @@
       if (likesListEl) likesListEl.innerHTML = "";
       setMsg(likesMsgEl, "", true);
     }
+    async function removeQuoteLikeRtdb(uid, quoteId) {
+      await db.ref(`userLikes/${uid}/${quoteId}`).remove();
+      await db.ref(`quoteLikes/${quoteId}/count`).transaction((current) => {
+        return Math.max(0, Number(current || 0) - 1);
+      });
+    }
     function renderLikesEmpty() {
       if (!likesListEl) return;
       likesListEl.innerHTML = `
-        <div class="account-msg" style="margin-top:10px">
-          You haven't liked any quotes yet. Go to <a href="/home.html">Home</a> and tap the ? button.
+        <div class="account-empty-card">
+          <div class="account-empty-icon" aria-hidden="true">Q</div>
+          <div class="account-empty-copy">
+            <h4>${escapeHtml(t("acc_no_likes", "No liked quotes yet"))}</h4>
+            <p>${escapeHtml(t("acc_liked_sub", "Quotes you liked on the Home page. Visible only to you."))}</p>
+          </div>
+          <a class="account-btn" href="/home.html">${escapeHtml(t("acc_open_home", "Open home"))}</a>
         </div>`;
     }
     async function renderLikedQuotes(u) {
@@ -581,62 +746,55 @@
       if (!u) return;
       try { likesUnsub && likesUnsub(); } catch(e) {}
       likesUnsub = null;
-      const ref = db.ref(`userLikes/${u.uid}`);
-      const handler = async (snap) => {
-        const likedMap = snap.val() || {};
-        const ids = Object.keys(likedMap);
+      const likesRef = db.ref(`userLikes/${u.uid}`);
+      const handler = likesRef.on("value", async (snap) => {
+        const likeMap = snap.val() || {};
+        const entries = await Promise.all(Object.entries(likeMap).map(async ([quoteId, raw]) => {
+          const likeData = raw && typeof raw === "object" ? raw : {};
+          const metaSnap = await db.ref(`quoteMeta/${quoteId}`).once("value");
+          const meta = metaSnap.val() || {};
+          return {
+            quoteId,
+            createdAt: Number(likeData.createdAt || 0),
+            meta,
+          };
+        }));
+        entries.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+        currentLikesCount = entries.length;
+        if (likesCountEl) likesCountEl.textContent = String(entries.length);
+        updateAccountReadiness(currentUser, currentDoc);
         if (!likesListEl) return;
-        if (ids.length === 0) {
+        if (!entries.length) {
           renderLikesEmpty();
           return;
         }
-        const metas = await Promise.all(
-          ids.map(async (id) => {
-            const metaSnap = await db.ref(`quoteMeta/${id}`).once("value");
-            return { id, meta: metaSnap.val() || null };
-          })
-        );
-        metas.sort((a, b) => {
-          const at = Number(a.meta?.updatedAt || a.meta?.createdAt || 0);
-          const bt = Number(b.meta?.updatedAt || b.meta?.createdAt || 0);
-          return bt - at;
-        });
         likesListEl.innerHTML = "";
-        metas.forEach(({ id, meta }) => {
+        entries.forEach(({ quoteId, meta, createdAt }) => {
           const text = meta?.text || meta?.raw || "(missing quote)";
           const author = meta?.author || "";
           const row = document.createElement("div");
-          row.className = "card glass";
-          row.style.marginBottom = "12px";
+          row.className = "account-like-card";
           row.innerHTML = `
-            <p style="font-weight:700;margin:0 0 8px 0">${escapeHtml('\"' + text + '\"')}</p>
-            <p style="opacity:.75;margin:0 0 14px 0">${escapeHtml(author)}</p>
-            <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-              <small style="opacity:.7">Quote ID: ${escapeHtml(id)}</small>
-              <button class="account-btn danger" type="button">Remove like</button>
+            <div class="account-like-body">
+              <p class="account-like-quote">${escapeHtml('"' + text + '"')}</p>
+              <p class="account-like-author">${escapeHtml(author || t("tbd", "TBD"))}</p>
+            </div>
+            <div class="account-like-meta">
+              <small>${escapeHtml(fmtTime(createdAt))}</small>
+              <button class="account-btn danger" type="button">${escapeHtml(t("acc_remove_like", "Remove like"))}</button>
             </div>
           `;
           row.querySelector("button").addEventListener("click", async () => {
             try {
-              await db.ref(`userLikes/${u.uid}/${id}`).remove();
-              await new Promise((resolve, reject) => {
-                db.ref(`quoteLikes/${id}/count`).transaction(
-                  (c) => {
-                    const next = (Number(c || 0) - 1);
-                    return next < 0 ? 0 : next;
-                  },
-                  (err) => (err ? reject(err) : resolve())
-                );
-              });
+              await removeQuoteLikeRtdb(u.uid, quoteId);
             } catch (e) {
-              setMsg(likesMsgEl, "Could not remove like.", false);
+              setMsg(likesMsgEl, t("acc_remove_like_error", "Could not remove like."), false);
             }
           });
           likesListEl.appendChild(row);
         });
-      };
-      ref.on("value", handler);
-      likesUnsub = () => ref.off("value", handler);
+      });
+      likesUnsub = () => likesRef.off("value", handler);
     }
     document.getElementById("logoutBtn")?.addEventListener("click", async () => {
       await auth.signOut();
@@ -644,19 +802,31 @@
     });
     const TABS = ["overview", "profile", "settings", "liked"];
     if (FORCE_COMPLETE) openProfileTab();
-    document.querySelectorAll(".account-menu-btn").forEach((btn) => {
+    const tabButtons = Array.from(document.querySelectorAll(".account-menu-btn"));
+    tabButtons.forEach((btn, index) => {
       btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".account-menu-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        const t = btn.dataset.tab;
-        TABS.forEach((x) => {
-          const el = document.getElementById(`tab-${x}`);
-          if (el) el.style.display = x === t ? "" : "none";
-        });
+        activateTab(btn.dataset.tab, { focusPanel: true });
+      });
+      btn.addEventListener("keydown", (e) => {
+        let nextIndex = null;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") nextIndex = (index + 1) % tabButtons.length;
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        if (e.key === "Home") nextIndex = 0;
+        if (e.key === "End") nextIndex = tabButtons.length - 1;
+        if (nextIndex === null) return;
+        e.preventDefault();
+        const nextBtn = tabButtons[nextIndex];
+        nextBtn.focus();
+        activateTab(nextBtn.dataset.tab);
       });
     });
+    document.querySelectorAll("[data-target-tab]").forEach((node) => {
+      node.addEventListener("click", () => {
+        const nextTab = node.dataset.targetTab;
+        if (nextTab) activateTab(nextTab, { focusPanel: true });
+      });
+    });
+    activateTab(FORCE_COMPLETE ? "profile" : "overview");
     document.getElementById("saveProfile")?.addEventListener("click", async () => {
       const msgEl = document.getElementById("profileMsg");
       setMsg(msgEl, "", true);
@@ -679,10 +849,17 @@
           groupInUniversity: group || null,
           updatedAt: firebase.database.ServerValue.TIMESTAMP,
         });
-        setMsg(msgEl, "? Saved successfully.", true);
-        displayNameEl.textContent = u.displayName || u.email || "User";
+        currentDoc = Object.assign({}, currentDoc, {
+          displayName: name || null,
+          surename: surename || null,
+          phone: phoneNorm,
+          groupInUniversity: group || null,
+        });
+        setMsg(msgEl, "Saved successfully.", true);
+        displayNameEl.textContent = name || u.displayName || u.email || "User";
         setNavbarAvatar(u);
         setSidebarAvatar(u);
+        updateAccountReadiness(u, currentDoc);
         if (FORCE_COMPLETE) {
           const back = TU.popReturnUrl(`${rootPath}/home.html`);
           window.location.href = back;
@@ -699,24 +876,16 @@
         if (!u) throw new Error("Not logged in");
         if (!confirm("Unsubscribe from ALL teachers? This cannot be undone.")) return;
         const snap = await db.ref(`subscriptions/index/${u.uid}`).once("value");
-        const val = snap.val() || {};
-        const paths = [];
-        Object.entries(val).forEach(([k, v]) => {
-          if (v && typeof v === "object" && (v.subscribedAt || v.teacher || v.club)) {
-            paths.push(`subscriptions/${k}/attendants/${u.uid}`);
-            return;
-          }
-          if (v && typeof v === "object") {
-            Object.entries(v).forEach(([tn, sub]) => {
-              if (!sub || typeof sub !== "object") return;
-              const tid = sub.teacherUid || k;
-              paths.push(`subscriptions/${tid}/${tn}/attendants/${u.uid}`);
-            });
-          }
+        const items = snap.val() || {};
+        const updates = {};
+        Object.keys(items).forEach((teacherId) => {
+          updates[`subscriptions/index/${u.uid}/${teacherId}`] = null;
+          updates[`subscriptions/${teacherId}/attendants/${u.uid}`] = null;
         });
-        await db.ref(`subscriptions/index/${u.uid}`).remove();
-        await Promise.all(paths.map((p) => db.ref(p).remove()));
-        setMsg(msgEl, "? All subscriptions removed.", true);
+        if (Object.keys(updates).length) {
+          await db.ref().update(updates);
+        }
+        setMsg(msgEl, "All subscriptions removed.", true);
         await renderSubscriptions(u);
       } catch (e) {
         setMsg(document.getElementById("settingsMsg"), e?.message || "Failed", false);
@@ -728,6 +897,7 @@
         TU.requireLogin(auth);
         return;
       }
+      currentUser = u;
       displayNameEl.textContent = u.displayName || u.email || "User";
       emailEl.textContent = u.email || "";
       const nameInput = document.getElementById("nameInput");
@@ -737,10 +907,12 @@
       try {
         const snap = await db.ref(`users/${u.uid}`).once("value");
         const doc = snap.val() || {};
+        currentDoc = Object.assign({}, doc);
         document.getElementById("surnameInput").value = doc.surename || "";
         document.getElementById("phoneInput").value = doc.phone || doc["phone number"] || "";
         document.getElementById("groupInput").value =
           doc.groupInUniversity || doc.group || "";
+        updateAccountReadiness(u, currentDoc);
         if (FORCE_COMPLETE) {
           const phoneOk = String(doc.phone || doc["phone number"] || "")
             .replace(/[^0-9+]/g, "")
@@ -758,10 +930,19 @@
       } catch (e) {}
       try {
         const role = await TU.getRole(db, u.uid);
-        if (roleEl) roleEl.textContent = role;
+        currentRole = role || "student";
+        if (roleEl) roleEl.textContent = humanRole(currentRole);
       } catch (e) {}
       await renderSubscriptions(u);
-        await renderLikedQuotes(u);
+      await renderLikedQuotes(u);
+      updateAccountReadiness(u, currentDoc);
+    });
+    document.addEventListener("tu-lang-changed", () => {
+      if (!currentUser) return;
+      if (roleEl) roleEl.textContent = humanRole(currentRole);
+      updateAccountReadiness(currentUser, currentDoc);
+      renderSubscriptions(currentUser).catch(() => {});
+      renderLikedQuotes(currentUser).catch(() => {});
     });
   </script>
   <script>
@@ -801,6 +982,6 @@
     if (fy) fy.textContent = String(new Date().getFullYear());
   });
   </script>
-<script src="/assets/UI.js"></script>
+<script src="/assets/UI.js?v=8"></script>
 </body>
 </html>

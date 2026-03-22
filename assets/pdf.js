@@ -111,6 +111,12 @@
     doc.text(label.toUpperCase(), 30, y + 11);
   }
 
+  async function loadAttendanceRows(db, teacherId) {
+    const snap = await db.ref(`subscriptions/${teacherId}/attendants`).once("value");
+    const data = snap.val();
+    return data ? Object.values(data) : [];
+  }
+
   async function createAttendancePdf(db, teacherId) {
     ensureDeps();
 
@@ -119,10 +125,9 @@
 
     drawHeader(doc, teacherId);
 
-    const snap = await db.ref(`subscriptions/${teacherId}/attendants`).once("value");
-    const data = snap.val();
+    const rows = await loadAttendanceRows(db, teacherId);
 
-    if (!data) {
+    if (!rows.length) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(11);
       doc.setTextColor(...C.muted);
@@ -133,7 +138,7 @@
     }
 
     const groups = {};
-    Object.values(data).forEach((s) => {
+    rows.forEach((s) => {
       const date = s.regDate || "Previous Records";
       if (!groups[date]) groups[date] = [];
       groups[date].push(s);

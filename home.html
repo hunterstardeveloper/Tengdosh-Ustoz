@@ -1,26 +1,27 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tengdosh Ustoz helps students discover mentors, clubs, schedules, and daily study inspiration in one calmer learning platform.">
+  <meta name="theme-color" content="#0a0a0b">
+  <script src="/assets/theme-bridge.js"></script>
   <title>Tengdosh-Ustoz | Home</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" href="/icon.png">
 </head>
-<body>
+<body class="has-page-shell">
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
   </div>
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
-  <div class="page-scroll" id="page-scroll">
     <nav class="navbar" id="main-navbar">
       <a href="/home.html" class="navbar-brand">
-        <div class="navbar-brand-logo"><img src="/logo.png" alt="logo"></div>
+        <div class="navbar-brand-logo"><img src="/logo.png" alt="Tengdosh Ustoz logo" width="48" height="48" decoding="async"></div>
         <span class="navbar-wordmark"><span class="w1">Tengdosh</span><span class="w2">Ustoz</span></span>
       </a>
       <ul class="navbar-links" id="navbar-links" role="list">
@@ -70,13 +71,37 @@
       </div>
     </nav>
   <div class="copy-toast" id="copy-toast" data-i18n="quote_copied">Copied to clipboard</div>
-  <div class="top">
-    <img src="/logo.png" class="icon-top" id="main-logo" alt="Logo" tabindex="0" draggable="false">
-  </div>
-  <section class="hero">
-    <span class="pill"><i data-lucide="sparkles" class="pill-icon"></i> <span data-i18n="hero_pill">Welcome to Tengdosh Ustoz</span></span>
-    <h1 data-i18n="hero_title">A Space for Your<br>Educational Journey</h1>
-    <p data-i18n="hero_desc">Discover a sanctuary for learning where knowledge grows and focus is naturally restored.</p>
+  <main id="main-content">
+  <section class="hero hero-folio">
+    <div class="hero-copy">
+      <span class="pill"><i data-lucide="sparkles" class="pill-icon"></i> <span data-i18n="hero_pill">Welcome to Tengdosh Ustoz</span></span>
+      <h1 data-i18n="hero_title">A Space for Your<br>Educational Journey</h1>
+      <p data-i18n="hero_desc">Discover a sanctuary for learning where knowledge grows and focus is naturally restored.</p>
+      <div class="hero-actions">
+        <a class="tu-retro-button" href="#coding-skills" data-i18n="hero_cta_clubs">Explore Clubs</a>
+        <a class="tu-retro-button is-secondary" href="/pages/classes/classes.html" data-i18n="hero_cta_mentors">Browse Mentors</a>
+      </div>
+    </div>
+    <aside class="hero-ledger glass" aria-label="Platform introduction">
+      <div class="hero-ledger-top">
+        <img src="/logo.png" class="icon-top" id="main-logo" alt="Tengdosh Ustoz emblem" width="96" height="96" tabindex="0" draggable="false" decoding="async">
+        <div>
+          <p class="hero-ledger-label" data-i18n="hero_ledger_label">Study Notes</p>
+          <h2 data-i18n="hero_ledger_title">A calmer way to choose a mentor, join a club, and keep up with classes.</h2>
+        </div>
+      </div>
+      <p class="hero-ledger-copy" data-i18n="hero_ledger_desc">Find the right subject faster, compare mentors without noise, and move from discovery to real study with a clearer reading flow across the whole site.</p>
+      <div class="hero-ledger-grid">
+        <article class="hero-ledger-item">
+          <span data-i18n="hero_ledger_card1_label">Club Finder</span>
+          <strong data-i18n="hero_ledger_card1_desc">Mentors, clubs, quotes, and schedules now sit in one cleaner path instead of feeling scattered.</strong>
+        </article>
+        <article class="hero-ledger-item">
+          <span data-i18n="hero_ledger_card2_label">Daily Rhythm</span>
+          <strong data-i18n="hero_ledger_card2_desc">Class updates, inspiration, and next steps stay visible so it is easier to keep moving.</strong>
+        </article>
+      </div>
+    </aside>
   </section>
   <section class="site-stats" aria-label="Site statistics">
     <div class="stat-card glass">
@@ -88,7 +113,49 @@
       <div class="stat-value" id="teachers-count">0</div>
     </div>
   </section>
-  <h1 class="section-title" data-i18n="opp_title">Tengdosh-Ustoz Opportunities</h1>
+  <section class="study-flow" aria-labelledby="study-flow-title">
+    <div class="study-flow-shell">
+      <div class="study-flow-intro glass">
+        <span class="pill">
+          <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.5"></circle>
+            <path d="M19.4 15A9 9 0 0 1 9 19.4"></path>
+            <path d="M4.6 9A9 9 0 0 1 15 4.6"></path>
+          </svg>
+          <span data-i18n="flow_kicker">Study Flow</span>
+        </span>
+        <h2 class="study-flow-title" id="study-flow-title" data-i18n="flow_title">From first curiosity to steady progress</h2>
+        <p class="study-flow-copy" data-i18n="flow_desc">Tengdosh Ustoz works best when discovery, contact, and follow-up stay in one calm path instead of scattering across tabs.</p>
+        <div class="study-flow-actions">
+          <a class="tu-retro-button" href="/pages/account/account.html" data-i18n="flow_open_account">Open Your Dashboard</a>
+          <a class="tu-retro-button is-secondary" href="/pages/private chat/private_chat.html" data-i18n="flow_open_chat">Join the Chat</a>
+        </div>
+      </div>
+      <div class="study-flow-track">
+        <article class="flow-step glass">
+          <span class="flow-step-num">01</span>
+          <h3 data-i18n="flow_step1_title">Find the right subject</h3>
+          <p data-i18n="flow_step1_desc">Start with coding, soft skills, or special courses without losing the thread.</p>
+        </article>
+        <article class="flow-step glass">
+          <span class="flow-step-num">02</span>
+          <h3 data-i18n="flow_step2_title">Compare mentors faster</h3>
+          <p data-i18n="flow_step2_desc">Browse teachers, rooms, schedules, and uploads without the page feeling noisy.</p>
+        </article>
+        <article class="flow-step glass">
+          <span class="flow-step-num">03</span>
+          <h3 data-i18n="flow_step3_title">Keep your routine visible</h3>
+          <p data-i18n="flow_step3_desc">Daily quotes, live classes, and saved likes help you return with less friction.</p>
+        </article>
+        <article class="flow-step glass">
+          <span class="flow-step-num">04</span>
+          <h3 data-i18n="flow_step4_title">Turn visits into momentum</h3>
+          <p data-i18n="flow_step4_desc">Use your account page as a small dashboard instead of starting from zero each time.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <h2 class="section-title" data-i18n="opp_title">Tengdosh-Ustoz Opportunities</h2>
     <section class="features opportunities-grid">
       <div class="card glass opp-card">
         <div class="opp-icon">
@@ -123,8 +190,8 @@
     <div class="quote-section-label">
       <span class="pill"><i data-lucide="quote" class="pill-icon"></i> <span data-i18n="quote_pill">Daily Inspiration</span></span>
     </div>
-    <div style="display: flex; gap: 24px; align-items: stretch;">
-      <div class="quote-card glass" style="flex: 1; min-width: 0;">
+    <div class="quote-layout">
+      <div class="quote-card glass">
         <div class="quote-accent-bar"></div>
         <p class="quote-text" id="quote-text" data-i18n="quote_loading">Loading inspiration</p>
         <p class="quote-author" id="quote-author"></p>
@@ -152,14 +219,6 @@
             </svg>
             <span data-i18n="quote_share">Share</span>
           </button>
-          <button class="q-btn q-auto-btn" id="auto-btn" aria-label="Auto-advance quotes" title="Auto-advance">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;position:relative;z-index:1">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <svg class="ring-icon" viewBox="0 0 44 44" aria-hidden="true">
-              <circle cx="22" cy="22" r="20" id="ring-progress"></circle>
-            </svg>
-          </button>
           <div class="quote-nav">
             <button class="q-nav-btn" id="prev-btn" aria-label="Previous quote">&#8592;</button>
             <span class="quote-counter" id="quote-counter"> / </span>
@@ -167,10 +226,18 @@
           </div>
         </div>
       </div>
-      <img id="anim2" alt="animation" style="width: 340px; min-width: 260px; max-width: 40%; border-radius: 24px; object-fit: cover; flex-shrink: 0;">
+      <div class="quote-media glass" aria-hidden="true">
+        <div class="quote-scene-stage" id="quote-scene-stage">
+          <div class="quote-scene-canvas" id="quote-scene"></div>
+          <div class="quote-scene-fallback" id="quote-scene-fallback">
+            <img src="/logo.png" alt="" width="84" height="84" loading="lazy" decoding="async">
+            <span>Tengdosh Ustoz</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
-  <h1 class="section-title" data-i18n="schedule_title">Schedule</h1>
+  <h2 class="section-title" data-i18n="schedule_title">Schedule</h2>
   <div class="toggle-container">
     <button id="toggle-schedule-btn" type="button" data-i18n="schedule_hide">Hide Schedule</button>
   </div>
@@ -179,11 +246,75 @@
       <p data-i18n="schedule_checking">Checking for live sessions...</p>
     </div>
   </section>
-  <h1 class="section-title" id="coding-skills" data-i18n="coding_title">Coding Skills</h1>
+  <section class="student-toolkit" aria-labelledby="toolkit-title">
+    <div class="student-toolkit-head">
+      <span class="pill">
+        <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m15.5 8.5-2.2 5.2-5.2 2.2 2.2-5.2 5.2-2.2Z"></path>
+        </svg>
+        <span data-i18n="toolkit_kicker">Student Toolkit</span>
+      </span>
+      <h2 class="section-title" id="toolkit-title" data-i18n="toolkit_title">Fast tools for everyday study</h2>
+    </div>
+    <div class="toolkit-grid">
+      <a class="toolkit-card glass" href="/pages/classes/classes.html">
+        <div class="toolkit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 4h6v16H3z"></path>
+            <path d="M9 4h6v16H9z"></path>
+            <path d="M15 4h6v16h-6z"></path>
+          </svg>
+        </div>
+        <p class="toolkit-label" data-i18n="toolkit_mentors_label">Mentor Index</p>
+        <h3 data-i18n="toolkit_mentors_title">Browse classes with less noise</h3>
+        <p data-i18n="toolkit_mentors_desc">See teachers, rooms, uploads, and activity in one place before choosing where to go next.</p>
+      </a>
+      <a class="toolkit-card glass" href="/pages/private chat/private_chat.html">
+        <div class="toolkit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            <path d="M8 9h8"></path>
+            <path d="M8 13h5"></path>
+          </svg>
+        </div>
+        <p class="toolkit-label" data-i18n="toolkit_chat_label">Private Chat</p>
+        <h3 data-i18n="toolkit_chat_title">Ask without leaving the platform</h3>
+        <p data-i18n="toolkit_chat_desc">Move from finding a mentor to sending a question with fewer extra steps.</p>
+      </a>
+      <a class="toolkit-card glass" href="/pages/contact/contact.html">
+        <div class="toolkit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 3v5"></path>
+            <path d="M12 16v5"></path>
+            <path d="M3 12h5"></path>
+            <path d="M16 12h5"></path>
+          </svg>
+        </div>
+        <p class="toolkit-label" data-i18n="toolkit_support_label">Support</p>
+        <h3 data-i18n="toolkit_support_title">Reach the team when something breaks</h3>
+        <p data-i18n="toolkit_support_desc">Contact support, share context, and avoid getting stuck when you need help.</p>
+      </a>
+      <a class="toolkit-card glass" href="/pages/account/account.html">
+        <div class="toolkit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m12 3 2.2 1.6 2.7-.3 1 2.5 2.4 1.4-.3 2.7L21 13l-1.6 2.2.3 2.7-2.5 1-1.4 2.4-2.7-.3L12 21l-2.2-1.6-2.7.3-1-2.5-2.4-1.4.3-2.7L3 11l1.6-2.2-.3-2.7 2.5-1 1.4-2.4 2.7.3L12 3Z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+        </div>
+        <p class="toolkit-label" data-i18n="toolkit_account_label">Account</p>
+        <h3 data-i18n="toolkit_account_title">Keep your study identity ready</h3>
+        <p data-i18n="toolkit_account_desc">Update your details, track subscriptions, and keep your profile ready for real classes.</p>
+      </a>
+    </div>
+  </section>
+  <h2 class="section-title" id="coding-skills" data-i18n="coding_title">Coding Skills</h2>
   <section class="features">
     <div class="card glass" onclick="location.href='/clubs/full-stack/teachers-sec-FS.html'" style="cursor: pointer;">
       <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/fullstack.png" alt="Full-stack" draggable="false">
+        <img src="/assets/home/fullstack.webp" alt="Full-stack" width="616" height="405" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3 data-i18n="card_fullstack">Full-stack</h3>
       <p data-i18n="card_fullstack_desc">Transform static designs into interactive digital experiences. Master React, modern CSS, and performance optimization.</p>
@@ -191,7 +322,7 @@
     </div>
     <div class="card glass" onclick="location.href='/clubs/py/teachers-sec-py.html'" style="cursor: pointer;">
       <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/py.png" alt="Python" draggable="false">
+        <img src="/assets/home/python.webp" alt="Python" width="500" height="500" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3 data-i18n="card_python">Python</h3>
       <p data-i18n="card_python_desc">Go beyond basic syntax. Learn to architect scalable systems, automate complex workflows, and dive into the foundations of Data Science and AI.</p>
@@ -199,47 +330,47 @@
     </div>
     <div class="card glass" onclick="location.href='/clubs/java/teachers-sec-Json.html'" style="cursor: pointer;">
       <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/java.png" alt="Java" draggable="false">
+        <img src="/assets/home/java.webp" alt="Java" width="320" height="320" loading="lazy" decoding="async" draggable="false">
       </div>
       <h3 data-i18n="card_java">Java</h3>
       <p data-i18n="card_java_desc">Build the backbone of enterprise software. Master Object-Oriented Programming (OOP) and robust backend structures used globally.</p>
       <a href="/clubs/java/teachers-sec-Json.html" data-i18n="card_view">View Club</a>
     </div>
   </section>
-  <h1 class="section-title" data-i18n="special_title">Special</h1>
+  <h2 class="section-title" data-i18n="special_title">Special</h2>
   <section class="special-group">
     <div class="card glass" id="special-card" onclick="location.href='/clubs/prodev/Abdumalik/index.html'" style="cursor: pointer;">
       <div class="card-img-container">
-        <img src="https://ik.imagekit.io/yefypajb8v/Elements/prodev?updatedAt=1771909961755" alt="Full-stack" draggable="false">
+        <img src="/assets/home/prodev.webp" alt="ProDev course" width="900" height="365" loading="lazy" decoding="async" draggable="false">
       </div>
-      <h3>ProDev’s Master Course</h3>
+      <h3>ProDev�s Master Course</h3>
       <div class="card-content">
         <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.</p>
         <div id="more-text" style="display: none;">
           <p>
-            Kurs davomida siz quyidagilarni o‘rganashingiz mumkin: <br>
-            • Architecture: Monolith, Modular Monolith, Microservices <br>
-            • System Design va production-level engineering thinking <br>
-            • Design Patterns, scalability, real backend architecture <br>
-            • Docker, Kubernetes va infrastructure fundamentals <br>
-            • AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
-            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o’rganamiz.
+            Kurs davomida siz quyidagilarni o�rganashingiz mumkin: <br>
+            � Architecture: Monolith, Modular Monolith, Microservices <br>
+            � System Design va production-level engineering thinking <br>
+            � Design Patterns, scalability, real backend architecture <br>
+            � Docker, Kubernetes va infrastructure fundamentals <br>
+            � AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
+            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o�rganamiz.
           </p>
         </div>
-        <button onclick="toggleReadMore(event)" id="read-more-btn" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 0; font-weight: bold;">Read More...</button>
+        <button onclick="toggleReadMore(event)" id="read-more-btn" type="button">Read More...</button>
       </div>
       <br>
       Savollar uchun : <br>
-      <a href="https://t.me/abdumalik_prodev" target="_blank" onclick="event.stopPropagation();" style="border:none; background:none; padding:0; box-shadow:none; color:inherit; text-align: left;">@abdumalik_prodev</a> <br>
+      <a href="https://t.me/abdumalik_prodev" target="_blank" onclick="event.stopPropagation();" class="special-contact-link">@abdumalik_prodev</a> <br>
       <a href="/clubs/prodev/Abdumalik/index.html" data-i18n="card_view" onclick="event.stopPropagation();">View Club</a>
     </div>
   </section>
   <section class="principles">
-    <h1 class="section-title" data-i18n="soft_title">Essential Soft Skills</h1>
+    <h2 class="section-title" data-i18n="soft_title">Essential Soft Skills</h2>
     <div class="principles-grid">
       <div class="principle-card glass" onclick="location.href='/clubs/english/teachers-sec-eng.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
-          <img src="https://ik.imagekit.io/yefypajb8v/Elements/eng.webp" alt="English" draggable="false">
+          <img src="/assets/home/english.webp" alt="English" width="700" height="351" loading="lazy" decoding="async" draggable="false">
         </div>
         <h3 data-i18n="card_english">English</h3>
         <p data-i18n="card_english_desc">Break the language barrier. Focus on professional communication and technical terminology for global opportunities.</p>
@@ -247,7 +378,7 @@
       </div>
       <div class="principle-card glass" onclick="location.href='/clubs/SI/teachers-sec-SI.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
-          <img src="https://ik.imagekit.io/yefypajb8v/Elements/si.webp" alt="Self Improvement" draggable="false">
+          <img src="/assets/home/self-improvement.webp" alt="Self Improvement" width="900" height="506" loading="lazy" decoding="async" draggable="false">
         </div>
         <h3 data-i18n="card_si">Self Improvement</h3>
         <p data-i18n="card_si_desc">Upgrade your mental OS. Develop high-performance habits and the psychological resilience needed in tech.</p>
@@ -255,14 +386,15 @@
       </div>
       <div class="principle-card glass" onclick="location.href='/clubs/mathematics/teachers-sec-mathematic.html'" style="cursor: pointer;">
         <div class="card-img-container" style="height: 160px;">
-          <img src="https://ik.imagekit.io/yefypajb8v/Elements/math.webp" alt="Mathematics" draggable="false">
+          <img src="/assets/home/mathematics.webp" alt="Mathematics" width="480" height="320" loading="lazy" decoding="async" draggable="false">
         </div>
         <h3 data-i18n="card_math">Mathematics</h3>
-        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs—perfect for olympiad-style thinking and STEM success.</p>
+        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs�perfect for olympiad-style thinking and STEM success.</p>
         <a href="/clubs/mathematics/teachers-sec-mathematic.html" data-i18n="card_view">View Club</a>
       </div>
     </div>
   </section>
+  </main>
   <footer class="edu-footer" aria-label="Footer">
     <div class="edu-footer-wrap">
       <div class="edu-footer-grid">
@@ -336,553 +468,8 @@
       </div>
     </div>
   </footer>
-  </div>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-  <script src="/assets/firebase-config.js"></script>
-  <script src="/assets/tu-firebase.js"></script>
-  <script src="/assets/quote-likes.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="/script.js"></script>
-  <script src="/assets.js"></script>
-<script src="/assets/i18n.js"></script>
-  <script type="module">
-    import { animations } from "/assets/base64.js"; 
-    const img = document.getElementById("anim2");
-    img.src = animations["2 animation"]; 
-  </script>
-  <script>
-    function toggleReadMore(event) {
-      event.stopPropagation();
-      const moreText = document.getElementById("more-text");
-      const btnText = document.getElementById("read-more-btn");
-      if (moreText.style.display === "none") {
-        moreText.style.display = "inline";
-        btnText.innerHTML = "Read Less";
-      } else {
-        moreText.style.display = "none";
-        btnText.innerHTML = "Read More...";
-      }
-    }
-    function renderLucideIcons() {
-      if (window.lucide && typeof lucide.createIcons === "function") {
-        lucide.createIcons();
-      }
-    }
-  </script>
-  <script>
-    TU.init();
-    const db = TU.db;
-    const usersCountEl = document.getElementById('users-count');
-    const teachersCountEl = document.getElementById('teachers-count');
-    function animateCount(el, toValue, opts = {}) {
-      if (!el) return;
-      const duration = Number(opts.duration ?? 1100);
-      const formatter = opts.formatter ?? ((n) => n.toLocaleString());
-      const fromRaw = el.dataset.value ?? el.textContent;
-      const from = Number(String(fromRaw).replace(/[^0-9]/g, '')) || 0;
-      const to = Number(toValue) || 0;
-      if (from === to) {
-        el.textContent = formatter(to);
-        el.dataset.value = String(to);
-        return;
-      }
-      const ease = (t) => 1 - Math.pow(1 - t, 3);
-      const start = performance.now();
-      if (el._raf) cancelAnimationFrame(el._raf);
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / duration);
-        const v = Math.round(from + (to - from) * ease(t));
-        el.textContent = formatter(v);
-        if (t < 1) el._raf = requestAnimationFrame(tick);
-        else { el.dataset.value = String(to); el._raf = null; }
-      };
-      el._raf = requestAnimationFrame(tick);
-    }
-    db.ref('users').on('value', (snap) => {
-      const val = snap.val();
-      const count = val ? Object.keys(val).length : 0;
-      animateCount(usersCountEl, count);
-    }, () => animateCount(usersCountEl, 0));
-    const ROOT = window.location.pathname.includes('clubs')
-      ? window.location.pathname.split('clubs')[0]
-      : window.location.pathname.replace(/\/[^\/]*$/, '');
-    const toggleBtn = document.getElementById('toggle-schedule-btn');
-    const classesContainer = document.getElementById('upcoming-classes-container');
-    toggleBtn?.addEventListener('click', () => {
-      const isHidden = !classesContainer.classList.contains('visible');
-      if (isHidden) {
-        classesContainer.classList.add('visible');
-        toggleBtn.textContent = window.TU_i18n ? TU_i18n.t('schedule_hide') : 'Hide Schedule';
-      } else {
-        classesContainer.classList.remove('visible');
-        toggleBtn.textContent = window.TU_i18n ? TU_i18n.t('schedule_show') : 'Show Upcoming Classes';
-      }
-    });
-    db.ref('teachers').on('value', (snapshot) => {
-      const teachersData = snapshot.val();
-      const tCount = teachersData ? Object.keys(teachersData).length : 0;
-      animateCount(teachersCountEl, tCount);
-      const container = document.getElementById('upcoming-classes-container');
-      const now = new Date();
-      if (!teachersData) {
-        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
-        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1;"><p>' + _t('schedule_no_classes') + '</p></div>';
-        refreshReveal();
-        renderLucideIcons();
-        return;
-      }
-      let activeClasses = [];
-      const LIVE_DURATION = 60 * 60 * 1000;
-      for (let teacherName in teachersData) {
-        const data = teachersData[teacherName]?.classData;
-        if (data && data.hasClass && data.date && data.time) {
-          const formattedDate = data.date.includes('.')
-            ? data.date.split('.').reverse().join('-')
-            : data.date;
-          const classStartTime = new Date(`${formattedDate}T${data.time}`);
-          const classEndTime = new Date(classStartTime.getTime() + LIVE_DURATION);
-          if (now < classEndTime) {
-            const isLive = now >= classStartTime && now < classEndTime;
-            activeClasses.push({
-              teacher: teacherName,
-              ...data,
-              timestamp: classStartTime.getTime(),
-              isLive
-            });
-          }
-        }
-      }
-      activeClasses.sort((a, b) => a.timestamp - b.timestamp);
-      if (activeClasses.length === 0) {
-        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
-        container.innerHTML = '<div class="card glass" style="grid-column: 1/-1; text-align: center;"><p>' + _t('schedule_none') + '</p></div>';
-      } else {
-        const _t = window.TU_i18n ? TU_i18n.t : (k) => k;
-        container.innerHTML = activeClasses.map(cls => {
-          const path = cls.club || 'SI';
-          const displayTime = formatTo12Hour(cls.time);
-          const clubNames = { 'py': 'Python', 'java': 'Java', 'full-stack': 'Front-end', 'english': 'English', 'SI': 'Self Improvement','mathematics':'Mathematics' , 'prodev':'ProDev'};
-          const fullClubName = clubNames[path] || 'Educational Club';
-          const statusText = cls.isLive
-            ? `<span class="live-pulse"><i data-lucide="radio" class="inline-icon"></i> ${_t('schedule_live')}</span>`
-            : `${_t('schedule_next')}: ${cls.date}`;
-          return `
-            <div class="card glass" style="text-align: center; padding: 40px 20px;">
-              <div style="margin-bottom: 25px;">
-                <div class="pill" style="margin-bottom: 15px;">${fullClubName}</div>
-                <h2 style="font-size: 24px; margin-bottom: 12px;">${statusText}</h2>
-                <h3 style="font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--primary);">${_t('schedule_teacher')}: ${cls.teacher}</h3>
-                <h3 style="font-size: 22px; margin-bottom: 8px;">${_t('schedule_time')}: ${displayTime}</h3>
-                <p style="font-size: 18px; color: var(--text);">${_t('schedule_room')}: ${cls.room || _t('tbd')}</p>
-              </div>
-              <a href="./clubs/${path}/${cls.teacher}/offline.html"
-                 style="${cls.isLive ? 'border: 2px solid #ff4d4d; color: #ff4d4d; background: rgba(255,77,77,0.1);' : ''}">
-                ${cls.isLive ? _t('schedule_join') : _t('schedule_view')}
-              </a>
-            </div>
-          `;
-        }).join('');
-      }
-      refreshReveal();
-      renderLucideIcons();
-    });
-    const themeBtn = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const mainLogo = document.getElementById('main-logo');
-    const htmlEl = document.documentElement;
-    const moonSVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-    const sunSVG = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-    function updateLogo(isDark) {
-      if (typeof SITE_IMAGES !== 'undefined' && mainLogo) {
-        mainLogo.src = isDark ? SITE_IMAGES.dark : SITE_IMAGES.light;
-      }
-    }
-    if (localStorage.getItem('theme') === 'dark') {
-      htmlEl.setAttribute('data-theme', 'dark');
-      themeIcon.innerHTML = sunSVG;
-      updateLogo(true);
-    } else {
-      updateLogo(false);
-    }
-    themeBtn?.addEventListener('click', () => {
-      const isDark = htmlEl.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        htmlEl.removeAttribute('data-theme');
-        themeIcon.innerHTML = moonSVG;
-        localStorage.setItem('theme', 'light');
-        updateLogo(false);
-      } else {
-        htmlEl.setAttribute('data-theme', 'dark');
-        themeIcon.innerHTML = sunSVG;
-        localStorage.setItem('theme', 'dark');
-        updateLogo(true);
-      }
-    });
-    function formatTo12Hour(timeString) {
-      if (!timeString || !timeString.includes(':')) return timeString;
-      let [hour, minute] = timeString.split(':');
-      let h = parseInt(hour, 10);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      h = h % 12 || 12;
-      return `${h}:${minute} ${ampm}`;
-    }
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = "1";
-          entry.target.style.transform = "translateY(0)";
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    function refreshReveal() {
-      const cards = document.querySelectorAll('.card, .principle-card');
-      cards.forEach(el => {
-        if (el.style.opacity !== "1") {
-          el.style.opacity = "0";
-          el.style.transform = "translateY(30px)";
-        }
-        revealObserver.observe(el);
-        el.onmouseenter = () => el.style.transform = "translateY(-10px)";
-        el.onmouseleave = () => el.style.transform = "translateY(0)";
-      });
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      refreshReveal();
-      renderLucideIcons();
-    });
-  </script>
-  <script>
-  const setAvatarLoggedOut = () => {
-    const avatarEl = document.getElementById('navbar-avatar');
-    if (!avatarEl) return;
-    avatarEl.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-      </svg>`;
-  };
-  const setAvatarLoggedIn = (u, profileDoc) => {
-    const avatarEl = document.getElementById('navbar-avatar');
-    if (!avatarEl) return;
-    const url = (profileDoc && (profileDoc.avatarURL || profileDoc.photoURL)) || u.photoURL || '';
-    const name = (u.displayName || profileDoc?.displayName || u.email || '').trim();
-    const initial = (name ? name[0] : '').toUpperCase();
-    if (url) {
-      const src = String(url).startsWith('http') ? url : `/${String(url).replace(/^\/+/, '')}`;
-      avatarEl.innerHTML = `<img src="${src}" alt="Avatar" referrerpolicy="no-referrer">`;
-    } else {
-      avatarEl.textContent = initial || '';
-    }
-  };
-  document.addEventListener('tu-auth-changed', async (ev) => {
-    const u = ev?.detail?.user;
-    if (!u) return setAvatarLoggedOut();
-    try {
-      const db = firebase.database();
-      const snap = await db.ref(`users/${u.uid}`).once('value');
-      const doc = snap.val() || null;
-      setAvatarLoggedIn(u, doc);
-    } catch (e) {
-      setAvatarLoggedIn(u, null);
-    }
-  });
-  setAvatarLoggedOut();
-  </script>
-  <script>
-    const y = document.getElementById('footer-year');
-    if (y) y.textContent = new Date().getFullYear();
-  </script>
-  <script>
-    (function() {
-      const canvas = document.getElementById('particles-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-      let W, H;
-      function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-      function randomBetween(a, b) { return a + Math.random() * (b - a); }
-      function createParticle() {
-        return {
-          x: randomBetween(0, W),
-          y: randomBetween(0, H),
-          r: randomBetween(1, 3),
-          dx: randomBetween(-0.15, 0.15),
-          dy: randomBetween(-0.25, -0.05),
-          opacity: randomBetween(0.2, 0.7),
-          opacityDir: Math.random() > 0.5 ? 1 : -1
-        };
-      }
-      for (let i = 0; i < 60; i++) particles.push(createParticle());
-      function getColor() {
-        return document.documentElement.getAttribute('data-theme') === 'dark'
-          ? '165, 180, 252' : '124, 140, 255';
-      }
-      function draw() {
-        ctx.clearRect(0, 0, W, H);
-        const color = getColor();
-        particles.forEach(p => {
-          p.x += p.dx;
-          p.y += p.dy;
-          p.opacity += p.opacityDir * 0.003;
-          if (p.opacity > 0.7 || p.opacity < 0.1) p.opacityDir *= -1;
-          if (p.y < -10) { p.y = H + 10; p.x = randomBetween(0, W); }
-          if (p.x < 0 || p.x > W) p.dx *= -1;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
-          ctx.fill();
-        });
-        requestAnimationFrame(draw);
-      }
-      draw();
-    })();
-    (function() {
-      if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) return;
-      try { TU.init(); } catch(e) {}
-      const auth = window.TU?.auth || null;
-      const db   = window.TU?.db   || null;
-      let quoteIndex = Math.floor(Math.random() * quotes.length);
-      let autoStart = null;
-      let animFrame = null;
-      const AUTO_DURATION = 8000;
-      const qText   = document.getElementById('quote-text');
-      const qAuthor = document.getElementById('quote-author');
-      const qCounter= document.getElementById('quote-counter');
-      const likeBtn = document.getElementById('like-btn');
-      const likeCount = document.getElementById('like-count');
-      const copyBtn  = document.getElementById('copy-btn');
-      const shareBtn = document.getElementById('share-btn');
-      const autoBtn  = document.getElementById('auto-btn');
-      const prevBtn  = document.getElementById('prev-btn');
-      const nextBtn  = document.getElementById('next-btn');
-      const ringEl   = document.getElementById('ring-progress');
-      const toast    = document.getElementById('copy-toast');
-      const CIRCUMFERENCE = 2 * Math.PI * 20;
-      if (ringEl) {
-        ringEl.style.strokeDasharray = String(CIRCUMFERENCE);
-        ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
-      }
-      let currentQuoteId = null;
-      let currentLiked = false;
-      let currentCount = 0;
-      let unsubCount = null;
-      let unsubUserLike = null;
-      function parseQuote(raw) {
-        if (window.TUQuoteLikes?.parseQuote) return window.TUQuoteLikes.parseQuote(raw);
-        const lastDash = raw.lastIndexOf(' - ');
-        if (lastDash === -1) return { raw, text: raw, author: '' };
-        return { raw, text: raw.slice(0, lastDash).trim(), author: raw.slice(lastDash + 3).trim() };
-      }
-      function quoteId(raw) {
-        if (window.TUQuoteLikes?.quoteIdFromRaw) return window.TUQuoteLikes.quoteIdFromRaw(raw);
-        return String(raw).length ? String(raw).length.toString(36) : 'q';
-      }
-      function updateLikeUI() {
-        likeBtn?.classList.toggle('active-like', currentLiked);
-        if (likeCount) likeCount.textContent = String(currentCount);
-        const heartPath = likeBtn?.querySelector('path');
-        if (heartPath) heartPath.setAttribute('fill', currentLiked ? 'currentColor' : 'none');
-      }
-      function detachLikeWatchers() {
-        try { unsubCount && unsubCount(); } catch(e) {}
-        try { unsubUserLike && unsubUserLike(); } catch(e) {}
-        unsubCount = null;
-        unsubUserLike = null;
-      }
-      function attachLikeWatchers() {
-        detachLikeWatchers();
-        if (!db || !currentQuoteId) {
-          currentLiked = false;
-          currentCount = 0;
-          updateLikeUI();
-          return;
-        }
-        if (window.TUQuoteLikes?.watchQuoteCount) {
-          unsubCount = window.TUQuoteLikes.watchQuoteCount(db, currentQuoteId, (c) => {
-            currentCount = c;
-            updateLikeUI();
-          });
-        }
-        const u = auth?.currentUser;
-        if (u && window.TUQuoteLikes?.watchUserLike) {
-          unsubUserLike = window.TUQuoteLikes.watchUserLike(db, u.uid, currentQuoteId, (liked) => {
-            currentLiked = liked;
-            updateLikeUI();
-          });
-        } else {
-          currentLiked = false;
-          updateLikeUI();
-        }
-      }
-      function showQuote(idx) {
-        quoteIndex = (idx + quotes.length) % quotes.length;
-        const raw = quotes[quoteIndex];
-        const { text, author } = parseQuote(raw);
-        currentQuoteId = quoteId(raw);
-        attachLikeWatchers();
-        qText?.classList.add('fading');
-        qAuthor?.classList.add('fading');
-        setTimeout(() => {
-          if (qText) qText.textContent = `"${text}"`;
-          if (qAuthor) qAuthor.textContent = author ? ` ${author}` : '';
-          if (qCounter) qCounter.textContent = `${quoteIndex + 1} / ${quotes.length}`;
-          qText?.classList.remove('fading');
-          qAuthor?.classList.remove('fading');
-        }, 350);
-      }
-      function showToast(msg) {
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
-      }
-      likeBtn?.addEventListener('click', async () => {
-        if (!db || !auth || !currentQuoteId || !window.TUQuoteLikes?.toggleLike) {
-          return;
-        }
-        const raw = quotes[quoteIndex];
-        const meta = parseQuote(raw);
-        try {
-          await window.TUQuoteLikes.toggleLike(db, auth, currentQuoteId, meta);
-          likeBtn.classList.remove('like-pop');
-          void likeBtn.offsetWidth;
-          likeBtn.classList.add('like-pop');
-          likeBtn.addEventListener('animationend', () => likeBtn.classList.remove('like-pop'), { once: true });
-        } catch (e) {
-          showToast('Could not update like');
-        }
-      });
-      document.addEventListener('tu-auth-changed', () => attachLikeWatchers());
-      copyBtn?.addEventListener('click', () => {
-        const raw = quotes[quoteIndex];
-        const { text, author } = parseQuote(raw);
-        const full = `"${text}"${author ? "  " + author : ""}`;
-        navigator.clipboard.writeText(full)
-          .then(() => showToast(window.TU_i18n ? "? " + window.TU_i18n.t("quote_copied") : "? Copied to clipboard"))
-          .catch(() => showToast('Could not copy'));
-      });
-      shareBtn?.addEventListener('click', () => {
-        const raw = quotes[quoteIndex];
-        const { text, author } = parseQuote(raw);
-        const full = `"${text}"${author ? "  " + author : ""}`;
-        if (navigator.share) {
-          navigator.share({ title: 'Inspirational Quote', text: full }).catch(() => {});
-        } else {
-          navigator.clipboard.writeText(full)
-            .then(() => showToast(window.TU_i18n ? "? " + window.TU_i18n.t("quote_copied") : "? Copied to clipboard"))
-            .catch(() => showToast('Could not copy'));
-        }
-      });
-      function startAuto() {
-        autoBtn?.classList.add('auto-on');
-        autoStart = performance.now();
-        function tick(now) {
-          const elapsed = now - autoStart;
-          const progress = Math.min(elapsed / AUTO_DURATION, 1);
-          const offset = CIRCUMFERENCE * (1 - progress);
-          if (ringEl) ringEl.style.strokeDashoffset = String(offset);
-          if (progress >= 1) {
-            showQuote(quoteIndex + 1);
-            autoStart = performance.now();
-          }
-          animFrame = requestAnimationFrame(tick);
-        }
-        animFrame = requestAnimationFrame(tick);
-      }
-      function stopAuto() {
-        if (animFrame) cancelAnimationFrame(animFrame);
-        if (ringEl) ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
-        autoBtn?.classList.remove('auto-on');
-        autoStart = null;
-      }
-      prevBtn?.addEventListener('click', () => { stopAuto(); showQuote(quoteIndex - 1); });
-      nextBtn?.addEventListener('click', () => { stopAuto(); showQuote(quoteIndex + 1); });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft')  { stopAuto(); showQuote(quoteIndex - 1); }
-        if (e.key === 'ArrowRight') { stopAuto(); showQuote(quoteIndex + 1); }
-      });
-      autoBtn?.addEventListener('click', () => {
-        if (autoBtn.classList.contains('auto-on')) stopAuto();
-        else startAuto();
-      });
-      const card = document.querySelector('.quote-card');
-      let touchStartX = 0;
-      card?.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-      card?.addEventListener('touchend', e => {
-        const diff = e.changedTouches[0].screenX - touchStartX;
-        if (Math.abs(diff) > 40) {
-          stopAuto();
-          showQuote(diff < 0 ? quoteIndex + 1 : quoteIndex - 1);
-        }
-      });
-      showQuote(quoteIndex);
-    })();
-  </script>  
-  <script>
-  (function () {
-    const nav = document.getElementById('main-navbar');
-    const ham = document.getElementById('navbar-hamburger');
-    const links = document.getElementById('navbar-links');
-    if (!nav || !links) return;
-    const isMobile = () => window.matchMedia('(max-width: 1000px)').matches;
-    function setOpen(open) {
-      links.classList.toggle('open', open);
-      if (ham) {
-        ham.classList.toggle('open', open);
-        ham.setAttribute('aria-expanded', String(open));
-      }
-      document.body.classList.toggle('nav-open', open && isMobile());
-    }
-    const scrollEl = document.getElementById('page-scroll');
-    const onScroll = () => {
-      const top = scrollEl ? scrollEl.scrollTop : window.scrollY;
-      nav.classList.toggle('navbar--scrolled', top > 40);
-    };
-    const _scrollTarget = scrollEl || window;
-    _scrollTarget.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    if (ham) {
-      ham.addEventListener('click', (e) => {
-        e.stopPropagation();
-        setOpen(!links.classList.contains('open'));
-      });
-    }
-    links.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => setOpen(false));
-    });
-    document.addEventListener('click', (e) => {
-      if (!isMobile()) return;
-      if (!links.classList.contains('open')) return;
-      if (nav.contains(e.target)) return;
-      setOpen(false);
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
-    });
-    window.addEventListener('resize', () => {
-      if (!isMobile()) setOpen(false);
-    });
-    links.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          e.preventDefault();
-          setOpen(false);
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  })();
-  </script>
-  <script src="/assets/UI.js"></script>
+  <script src="/assets/i18n.js" defer></script>
+  <script src="/assets/home-page.js?v=11" defer></script>
+  <script src="/assets/UI.js?v=10" defer></script>
 </body>
 </html>

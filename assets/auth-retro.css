@@ -1,0 +1,225 @@
+@import url("/assets/retro-foundation.css");
+
+body {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(201, 162, 39, 0.14), transparent 26%),
+    radial-gradient(circle at 100% 12%, rgba(143, 105, 32, 0.12), transparent 26%),
+    linear-gradient(180deg, var(--tu-bg-soft), var(--tu-bg)) !important;
+  font-family: var(--tu-font-sans) !important;
+  color: var(--tu-text) !important;
+}
+
+.wrap {
+  max-width: 540px !important;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--tu-radius-xl) !important;
+  border: 1px solid var(--tu-line) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 22%),
+    linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  box-shadow: var(--tu-shadow) !important;
+  backdrop-filter: blur(16px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(110%) !important;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(201, 162, 39, 0.14);
+  border-radius: calc(var(--tu-radius-xl) - 12px);
+  pointer-events: none;
+}
+
+.brand {
+  gap: 0.9rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.logo {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.16), rgba(201, 162, 39, 0.05)) !important;
+  color: var(--tu-accent) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  font-family: var(--tu-font-serif) !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.sub {
+  color: var(--tu-text-soft) !important;
+  font-size: 0.95rem !important;
+}
+
+label {
+  font-family: var(--tu-font-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase;
+  color: var(--tu-accent) !important;
+}
+
+input,
+select {
+  border-radius: var(--tu-radius-md) !important;
+  border: 1px solid var(--tu-line) !important;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04), transparent), var(--tu-bg-panel) !important;
+  color: var(--tu-text) !important;
+  box-shadow: none !important;
+}
+
+input::placeholder,
+select::placeholder {
+  color: var(--tu-text-muted) !important;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--tu-line-strong) !important;
+  box-shadow: 0 0 0 3px var(--tu-accent-ghost) !important;
+}
+
+.field {
+  border-radius: var(--tu-radius-md) !important;
+  border: 1px solid var(--tu-line) !important;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04), transparent), var(--tu-bg-panel) !important;
+}
+
+.field:focus-within {
+  border-color: var(--tu-line-strong) !important;
+}
+
+.toggle-pass {
+  color: var(--tu-text-soft) !important;
+}
+
+button,
+.google-btn {
+  border-radius: var(--tu-radius-pill) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+}
+
+button:not(.toggle-pass):not(#theme-toggle) {
+  background: linear-gradient(135deg, var(--tu-accent), var(--tu-accent-soft)) !important;
+  color: #16120d !important;
+  box-shadow: 0 12px 28px var(--tu-accent-glow) !important;
+}
+
+button:not(.toggle-pass):not(#theme-toggle):hover {
+  transform: translateY(-2px) !important;
+}
+
+.google-btn {
+  background: linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  color: var(--tu-text) !important;
+  box-shadow: none !important;
+}
+
+.google-btn:hover {
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+.err,
+.msg.err {
+  color: #d06455 !important;
+}
+
+.ok,
+.msg.ok {
+  color: #6f9460 !important;
+}
+
+.hint,
+.row a,
+.small,
+.pw-label {
+  color: var(--tu-text-soft) !important;
+}
+
+.row a:hover {
+  color: var(--tu-accent) !important;
+}
+
+#theme-toggle {
+  right: 0.25rem !important;
+  top: -4.2rem !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  color: var(--tu-accent) !important;
+  box-shadow: var(--tu-shadow) !important;
+}
+
+.pw-meter .bar {
+  border-radius: var(--tu-radius-pill) !important;
+  border: 1px solid var(--tu-line) !important;
+  background: rgba(201, 162, 39, 0.08) !important;
+}
+
+.pw-meter .bar > i {
+  background: linear-gradient(90deg, var(--tu-accent-soft), var(--tu-accent)) !important;
+}
+
+.alert {
+  background: linear-gradient(135deg, rgba(192, 82, 63, 0.08), rgba(201, 162, 39, 0.06)) !important;
+  border-color: rgba(192, 82, 63, 0.2) !important;
+}
+
+.pill {
+  border-color: var(--tu-line) !important;
+  background: rgba(201, 162, 39, 0.1) !important;
+}
+
+.timeLeft {
+  border-color: var(--tu-line) !important;
+  background: rgba(201, 162, 39, 0.1) !important;
+}
+
+/* === TU audit patch: auth control consistency === */
+.wrap,
+.card,
+.brand,
+.row,
+.field,
+button,
+.google-btn,
+input,
+select {
+  min-width: 0 !important;
+}
+
+.card {
+  padding: clamp(1.35rem, 2vw, 1.75rem) !important;
+}
+
+button,
+.google-btn {
+  min-height: var(--tu-btn-height) !important;
+  white-space: normal !important;
+  line-height: 1.18 !important;
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    max-width: calc(100% - 1rem) !important;
+  }
+
+  .card {
+    padding: 1.15rem !important;
+  }
+}

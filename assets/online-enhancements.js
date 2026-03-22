@@ -164,17 +164,26 @@
 
   function renderEmptyState(courseContainer, ready) {
     if (!courseContainer) return;
+    const t = (key, fallback) => {
+      try {
+        if (window.TU_i18n && typeof window.TU_i18n.t === 'function') {
+          return window.TU_i18n.t(key) || fallback;
+        }
+      } catch (_) {}
+      return fallback;
+    };
+
     if (!ready) {
       courseContainer.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
-          <h3 style="color: var(--muted, #6b7280); font-size: 20px;">Darslar yuklanmoqda...</h3>
+          <h3 style="color: var(--muted, #6b7280); font-size: 20px;">${escapeHtml(t('classes_loading', 'Darslar yuklanmoqda...'))}</h3>
         </div>`;
       return;
     }
 
     courseContainer.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
-        <h3 style="color: var(--muted, #6b7280); font-size: 20px;">Bu yerda darslar mavjud emas</h3>
+        <h3 style="color: var(--muted, #6b7280); font-size: 20px;">${escapeHtml(t('classes_empty', 'No classes'))}</h3>
         <img
           data-empty-anim="1"
           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="

@@ -15,21 +15,21 @@
       --bg-deep:       radial-gradient(circle at top, #0f172a, #030712);
       --bg-panel:      rgba(17,24,39,0.92);
       --bg-surface:    rgba(31,41,55,0.65);
-      --bg-hover:      rgba(124,140,255,0.08);
-      --bg-active:     rgba(124,140,255,0.12);
+      --bg-hover:      rgba(201,162,39,0.08);
+      --bg-active:     rgba(201,162,39,0.12);
       --border:        rgba(255,255,255,0.10);
       --border-light:  rgba(255,255,255,0.16);
-      --gold:          #7c8cff;
-      --gold-dim:      rgba(124,140,255,0.18);
-      --gold-glow:     rgba(124,140,255,0.35);
-      --teal:          #60a5fa;
+      --gold:          #c9a227;
+      --gold-dim:      rgba(201,162,39,0.18);
+      --gold-glow:     rgba(201,162,39,0.35);
+      --teal:          #d8c6a0;
       --teal-dim:      rgba(96,165,250,0.16);
       --text-primary:  #e5e7eb;
       --text-secondary:#9ca3af;
       --text-muted:    #6b7280;
       --online:        #4ade80;
       --danger:        #fca5a5;
-      --unread-badge:  #7c8cff;
+      --unread-badge:  #c9a227;
       --radius-sm:     6px;
       --radius-md:     12px;
       --radius-lg:     18px;
@@ -124,7 +124,7 @@
     }
     .btn-outline:hover {
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
       transform: translateY(-1px);
     }
     .auth-hint {
@@ -296,7 +296,7 @@
     }
     .btn-back:hover {
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
       transform: translateY(-1px);
     }
     .current-user-row {
@@ -395,12 +395,12 @@
     .filter-btn:hover {
       color: var(--text-secondary);
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.4);
+      border-color: rgba(201,162,39,0.4);
     }
     .filter-btn.active {
       color: var(--gold);
       background: var(--gold-dim);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
     }
     .section-label {
       padding: 14px 18px 8px;
@@ -428,7 +428,7 @@
     .user-item:hover { background: var(--bg-active); }
     .user-item.active {
       background: var(--gold-dim);
-      border: 1px solid rgba(124,140,255,0.35);
+      border: 1px solid rgba(201,162,39,0.35);
     }
     .avatar-wrap {
       position: relative;
@@ -557,7 +557,7 @@
     }
     .chat-back:hover {
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
       transform: translateY(-1px);
     }
     .chat-header-avatar {
@@ -606,12 +606,12 @@
     }
     .notify-btn:hover {
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
       transform: translateY(-1px);
     }
     .notify-btn.active {
       background: var(--gold-dim);
-      border-color: rgba(124,140,255,0.5);
+      border-color: rgba(201,162,39,0.5);
       color: var(--gold);
     }
     .notify-btn:disabled {
@@ -737,7 +737,7 @@
     }
     .msg-action:hover {
       background: var(--bg-active);
-      border-color: rgba(124,140,255,0.4);
+      border-color: rgba(201,162,39,0.4);
       color: var(--text-primary);
     }
     .msg-action.delete {
@@ -838,7 +838,7 @@
     #cancel-edit:hover {
       background: var(--bg-active);
       color: var(--text-primary);
-      border-color: rgba(124,140,255,0.4);
+      border-color: rgba(201,162,39,0.4);
     }
     #loading-screen {
       position: fixed; inset: 0; z-index: 200;
@@ -905,8 +905,9 @@
       .chat-back { display: none; }
     }
   </style>
+  <link rel="stylesheet" href="/assets/private-chat-retro.css" />
 </head>
-<body>
+<body data-no-retro-scene="true">
 <div id="loading-screen">
   <div class="spinner"></div>
   <div class="loading-label">Tengdosh Ustoz</div>
@@ -1072,6 +1073,8 @@
   let typingListener   = null;   
   let typingTimeout    = null;   
   let unsubUsers       = null;   
+  let activePeerStatusRef = null;
+  let activePeerStatusListener = null;
   let autoOpenedMentor = false;
   let currentFilter    = 'all';
   let editingMessageKey = null;
@@ -1085,6 +1088,13 @@
   })();
   function getChatId(uid1, uid2) {
     return [uid1, uid2].sort().join('_');
+  }
+  function detachActivePeerStatus() {
+    if (activePeerStatusRef && activePeerStatusListener) {
+      activePeerStatusRef.off('value', activePeerStatusListener);
+    }
+    activePeerStatusRef = null;
+    activePeerStatusListener = null;
   }
   function getInitials(name) {
     if (!name) return '...';
@@ -1535,7 +1545,6 @@
         <div class="user-time" id="last-time-${u.uid}"></div>
         <div id="badge-${u.uid}"></div>
       </div>`;
-    // Load last message preview for this conversation
     loadLastMsgPreview(u.uid);
     bindAvatarImg(div.querySelector('.user-avatar img'));
     return div;
@@ -1554,7 +1563,6 @@
             el.classList.toggle('unread-preview', !isMe && !msg.read);
           }
           if (tel) tel.textContent = formatTime(msg.timestamp);
-          // Unread badge
           if (msg.senderId !== currentUser.uid && !msg.read) {
             countUnread(peerUid);
           }
@@ -1581,7 +1589,6 @@
   ----------------------------------------- */
   function openChat(peerUid) {
     if (activeChat === peerUid) return;
-    // Detach old listeners
     if (msgListener) {
       db.ref(`chats/${activeChatId}/messages`).off('child_added', msgListener);
       msgListener = null;
@@ -1598,6 +1605,7 @@
       db.ref(`chats/${activeChatId}/typing/${peerUid}`).off('value', typingListener);
       typingListener = null;
     }
+    detachActivePeerStatus();
     cancelEdit();
     activeChat  = peerUid;
     activeChatId = getChatId(currentUser.uid, peerUid);
@@ -1618,10 +1626,13 @@
     const avatarEl = document.getElementById('chat-header-avatar');
     renderAvatarEl(avatarEl, peerName, peer.uid, getUserAvatar(peer));
     updatePeerStatus(peer);
-    // Listen for peer status changes
-    db.ref(`users/${peerUid}`).on('value', snap => {
+    activePeerStatusRef = db.ref(`users/${peerUid}`);
+    activePeerStatusListener = activePeerStatusRef.on('value', snap => {
       const data = snap.val();
-      if (data) updatePeerStatus(data);
+      if (data) {
+        allUsers[peerUid] = Object.assign({}, allUsers[peerUid] || {}, data, { uid: peerUid });
+        updatePeerStatus(data);
+      }
     });
     // Show chat area
     document.getElementById('chat-empty').style.display    = 'none';
@@ -1636,7 +1647,6 @@
     markAsRead(peerUid);
     // Attach message listener
     listenMessages(peerUid);
-    // Typing indicator
     listenTyping(peerUid);
     // Focus input
     document.getElementById('msg-input').focus();
@@ -1675,11 +1685,9 @@
       wrap.appendChild(createMsgRow(msg, isMine, senderChanged));
       lastSender = msg.senderId;
       scrollToBottom();
-      // Mark as read if from peer
       if (!isMine && !msg.read) {
         db.ref(`chats/${activeChatId}/messages/${msg._key}`).update({ read: true });
       }
-      // Update sidebar preview
       const el = document.getElementById(`last-msg-${peerUid}`);
       if (el) {
         el.textContent = (isMine ? 'You: ' : '') + msg.text;
@@ -1687,7 +1695,6 @@
       }
       const tel = document.getElementById(`last-time-${peerUid}`);
       if (tel) tel.textContent = formatTime(msg.timestamp);
-      // Browser notification for new incoming messages (when tab is hidden)
       if (!isMine) {
         maybeNotify(peerUid, msg);
       }
@@ -1920,7 +1927,6 @@
     }
     input.value = '';
     autoResize(input);
-    // Clear typing
     clearTyping();
     const msgRef = db.ref(`chats/${activeChatId}/messages`).push();
     await msgRef.set({
@@ -1990,6 +1996,10 @@
     const loading = document.getElementById('loading-screen');
     const authScr = document.getElementById('auth-screen');
     const appEl   = document.getElementById('app');
+    const forcedLayout =
+      appEl.classList.contains('visible') &&
+      authScr.style.display === 'none' &&
+      document.getElementById('chat-header')?.classList.contains('visible');
     if (user) {
       currentUser = user;
       const ok = await TU.requireProfileCompletion(db, auth, { returnUrl: window.location.href });
@@ -2015,6 +2025,24 @@
       authScr.style.display = 'none';
       appEl.classList.add('visible');
     } else {
+      if (forcedLayout) {
+        loading.style.display = 'none';
+        return;
+      }
+      if (msgListener) {
+        db.ref(`chats/${activeChatId}/messages`).off('child_added', msgListener);
+      }
+      if (msgChangedListener) {
+        db.ref(`chats/${activeChatId}/messages`).off('child_changed', msgChangedListener);
+      }
+      if (msgRemovedListener) {
+        db.ref(`chats/${activeChatId}/messages`).off('child_removed', msgRemovedListener);
+      }
+      msgListener = null;
+      msgChangedListener = null;
+      msgRemovedListener = null;
+      typingListener = null;
+      detachActivePeerStatus();
       currentUser     = null;
       currentUserData = null;
       activeChat      = null;

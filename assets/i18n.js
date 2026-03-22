@@ -4,6 +4,11 @@
   const STORAGE_KEY = "tu_lang";
   const DEFAULT_LANG = "en";
   const SUPPORTED = ["en", "uz", "ru"];
+  const LANG_META = {
+    en: { label: "English", short: "EN" },
+    uz: { label: "Uzbek", short: "UZ" },
+    ru: { label: "Russian", short: "RU" }
+  };
 
   const T = {
     en: {
@@ -16,8 +21,44 @@
       hero_pill: "Welcome to Tengdosh Ustoz",
       hero_title: "A Space for Your<br>Educational Journey",
       hero_desc: "Discover a sanctuary for learning where knowledge grows and focus is naturally restored.",
+      hero_cta_clubs: "Explore Clubs",
+      hero_cta_mentors: "Browse Mentors",
+      hero_ledger_label: "Study Notes",
+      hero_ledger_title: "A calmer way to choose a mentor, join a club, and keep up with classes.",
+      hero_ledger_desc: "Find the right subject faster, compare mentors without noise, and move from discovery to real study with a clearer reading flow across the whole site.",
+      hero_ledger_card1_label: "Club Finder",
+      hero_ledger_card1_desc: "Mentors, clubs, quotes, and schedules now sit in one cleaner path instead of feeling scattered.",
+      hero_ledger_card2_label: "Daily Rhythm",
+      hero_ledger_card2_desc: "Class updates, inspiration, and next steps stay visible so it is easier to keep moving.",
       stat_users: "Registered users",
       stat_teachers: "Teachers",
+      flow_kicker: "Study Flow",
+      flow_title: "From first curiosity to steady progress",
+      flow_desc: "Tengdosh Ustoz works best when discovery, contact, and follow-up stay in one calm path instead of scattering across tabs.",
+      flow_open_account: "Open Your Dashboard",
+      flow_open_chat: "Join the Chat",
+      flow_step1_title: "Find the right subject",
+      flow_step1_desc: "Start with coding, soft skills, or special courses without losing the thread.",
+      flow_step2_title: "Compare mentors faster",
+      flow_step2_desc: "Browse teachers, rooms, schedules, and uploads without the page feeling noisy.",
+      flow_step3_title: "Keep your routine visible",
+      flow_step3_desc: "Daily quotes, live classes, and saved likes help you return with less friction.",
+      flow_step4_title: "Turn visits into momentum",
+      flow_step4_desc: "Use your account page as a small dashboard instead of starting from zero each time.",
+      toolkit_kicker: "Student Toolkit",
+      toolkit_title: "Fast tools for everyday study",
+      toolkit_mentors_label: "Mentor Index",
+      toolkit_mentors_title: "Browse classes with less noise",
+      toolkit_mentors_desc: "See teachers, rooms, uploads, and activity in one place before choosing where to go next.",
+      toolkit_chat_label: "Private Chat",
+      toolkit_chat_title: "Ask without leaving the platform",
+      toolkit_chat_desc: "Move from finding a mentor to sending a question with fewer extra steps.",
+      toolkit_support_label: "Support",
+      toolkit_support_title: "Reach the team when something breaks",
+      toolkit_support_desc: "Contact support, share context, and avoid getting stuck when you need help.",
+      toolkit_account_label: "Account",
+      toolkit_account_title: "Keep your study identity ready",
+      toolkit_account_desc: "Update your details, track subscriptions, and keep your profile ready for real classes.",
       quote_pill: "Daily Inspiration",
       quote_loading: "Loading inspiration",
       quote_like: "Like",
@@ -113,6 +154,37 @@
       acc_liked_title: "Liked Quotes",
       acc_liked_sub: "Quotes you liked on the Home page. Visible only to you.",
       acc_your_likes: "Your likes",
+      acc_profile_completion: "Profile completion",
+      acc_recent_likes: "Liked quotes",
+      acc_role_label: "Role",
+      acc_ready_kicker: "Account readiness",
+      acc_ready_title: "Complete your learning profile",
+      acc_complete_name: "Display name added",
+      acc_complete_photo: "Profile photo added",
+      acc_complete_phone: "Phone number added",
+      acc_complete_group: "Group added",
+      acc_focus_kicker: "Right now",
+      acc_focus_hello: "Hello",
+      acc_focus_default: "Your account is ready to become a stronger learning base.",
+      acc_focus_need_profile: "Complete the missing profile details so mentors can recognize you faster.",
+      acc_focus_need_subs: "Your profile is ready. Now choose a mentor and start building momentum.",
+      acc_focus_active: "You already have an active learning setup. Keep tracking subscriptions and quotes here.",
+      acc_focus_default_name: "Student",
+      acc_complete_profile: "Complete profile",
+      acc_find_mentors: "Find mentors",
+      acc_open_likes: "Open likes",
+      acc_active_subs_sub: "Your current mentor connections and recent joins.",
+      acc_no_likes: "No liked quotes yet",
+      acc_open_home: "Open home",
+      acc_unsubscribe: "Unsubscribe",
+      acc_remove_like: "Remove like",
+      acc_remove_like_error: "Could not remove like.",
+      acc_status_subscribed: "Subscribed",
+      acc_status_not_subscribed: "Not subscribed",
+      acc_profile_help: "Add the basics so mentors can identify you faster and your dashboard feels complete.",
+      acc_review_overview: "Review overview",
+      acc_phone_help: "Use your reachable number so teachers can recognize your subscription requests.",
+      acc_group_help: "Your study group helps teachers sort attendance and support faster.",
       tbd: "TBD",
       opp_title: "Tengdosh-Ustoz Opportunities",
       opp_mentor_title: "Mentors",
@@ -189,8 +261,44 @@
       hero_pill: "Tengdosh Ustozga xush kelibsiz",
       hero_title: "Ta\u2018lim sayohatingiz<br>uchun makon",
       hero_desc: "Bilim o\u2018sadigan va e\u2018tibor tabiiy ravishda tiklanadigan o\u2018rganish maskani.",
+      hero_cta_clubs: "Klublarni ko'rish",
+      hero_cta_mentors: "Mentorlarni ko'rish",
+      hero_ledger_label: "O'quv qaydlari",
+      hero_ledger_title: "Mentor tanlash, klubga qo'shilish va darslarni kuzatish uchun yanada sokinroq yo'l.",
+      hero_ledger_desc: "Kerakli yo'nalishni tezroq toping, mentorlarni shovqinsiz solishtiring va tanishuvdan haqiqiy o'qishga silliqroq o'ting.",
+      hero_ledger_card1_label: "Klub yo'li",
+      hero_ledger_card1_desc: "Mentorlar, klublar, iqtiboslar va jadvallar endi sochilib ketmaydi, bir aniq yo'lda turadi.",
+      hero_ledger_card2_label: "Kun ritmi",
+      hero_ledger_card2_desc: "Dars yangiliklari, ilhom va keyingi qadamlar ko'rinib turgani uchun davom etish osonlashadi.",
       stat_users: "Ro\u2018yxatdan o\u2018tgan foydalanuvchilar",
       stat_teachers: "O\u2018qituvchilar",
+      flow_kicker: "O\u2018quv oqimi",
+      flow_title: "Qiziqishdan barqaror rivojlanishgacha",
+      flow_desc: "Tengdosh Ustoz eng yaxshi ishlaydi, qachonki topish, bog\u2018lanish va davom ettirish bir tinch yo\u2018lda qolsa, turli sahifalarga sochilib ketmasa.",
+      flow_open_account: "Panelni ochish",
+      flow_open_chat: "Chatga kirish",
+      flow_step1_title: "To\u2018g\u2018ri yo\u2018nalishni toping",
+      flow_step1_desc: "Dasturlash, soft skills yoki maxsus kurslardan ipni yo\u2018qotmasdan boshlang.",
+      flow_step2_title: "Mentorlarni tezroq solishtiring",
+      flow_step2_desc: "O\u2018qituvchilar, xonalar, jadval va yuklamalarni sahifa shovqinsiz ko\u2018ring.",
+      flow_step3_title: "Ritmingizni ko\u2018rinadigan qiling",
+      flow_step3_desc: "Kunlik iqtiboslar, jonli darslar va saqlangan yoqtirishlar qaytishni yengillashtiradi.",
+      flow_step4_title: "Kirishlarni natijaga aylantiring",
+      flow_step4_desc: "Har safar noldan boshlash o\u2018rniga akkaunt sahifangizni kichik boshqaruv paneli sifatida ishlating.",
+      toolkit_kicker: "Talaba to\u2018plami",
+      toolkit_title: "Har kungi o\u2018qish uchun tez vositalar",
+      toolkit_mentors_label: "Mentorlar indeksi",
+      toolkit_mentors_title: "Darslarni kamroq shovqin bilan ko\u2018ring",
+      toolkit_mentors_desc: "Qayerga o\u2018tishni tanlashdan oldin o\u2018qituvchilar, xonalar, yuklamalar va faollikni bir joyda ko\u2018ring.",
+      toolkit_chat_label: "Shaxsiy chat",
+      toolkit_chat_title: "Platformadan chiqmasdan savol bering",
+      toolkit_chat_desc: "Mentorni topishdan savol yuborishgacha bo\u2018lgan yo\u2018lni qisqartiring.",
+      toolkit_support_label: "Yordam",
+      toolkit_support_title: "Nimadir buzilganda jamoaga yozing",
+      toolkit_support_desc: "Qo\u2018llab-quvvatlashga murojaat qiling, holatni tushuntiring va tiqilib qolmang.",
+      toolkit_account_label: "Hisob",
+      toolkit_account_title: "O\u2018quv profilingizni tayyor tuting",
+      toolkit_account_desc: "Ma\u2018lumotlarni yangilang, obunalarni kuzating va profilingizni haqiqiy darslar uchun tayyor saqlang.",
       quote_pill: "Kunlik ilhom",
       quote_loading: "Ilhom yuklanmoqda",
       quote_like: "Yoqdi",
@@ -286,6 +394,37 @@
       acc_liked_title: "Yoqtirilgan iqtiboslar",
       acc_liked_sub: "Bosh sahifada yoqtirgan iqtiboslaringiz. Faqat siz ko\u2018rasiz.",
       acc_your_likes: "Sizning yoqtirishlaringiz",
+      acc_profile_completion: "Profil to\u2018liqligi",
+      acc_recent_likes: "Yoqtirilgan iqtiboslar",
+      acc_role_label: "Rol",
+      acc_ready_kicker: "Hisob tayyorligi",
+      acc_ready_title: "O\u2018quv profilingizni to\u2018ldiring",
+      acc_complete_name: "Ko\u2018rsatiladigan ism qo\u2018shilgan",
+      acc_complete_photo: "Profil rasmi qo\u2018shilgan",
+      acc_complete_phone: "Telefon raqami qo\u2018shilgan",
+      acc_complete_group: "Guruh qo\u2018shilgan",
+      acc_focus_kicker: "Hozir",
+      acc_focus_hello: "Salom",
+      acc_focus_default: "Hisobingiz kuchliroq o\u2018quv bazasiga aylanishga tayyor.",
+      acc_focus_need_profile: "Mentorlar sizni tezroq tanishi uchun yetishmayotgan profil ma\u2018lumotlarini to\u2018ldiring.",
+      acc_focus_need_subs: "Profil tayyor. Endi mentor tanlab, rivojlanishni boshlang.",
+      acc_focus_active: "Sizda allaqachon faol o\u2018quv muhiti bor. Obunalar va iqtiboslarni shu yerda kuzatib boring.",
+      acc_focus_default_name: "Talaba",
+      acc_complete_profile: "Profilni to\u2018ldirish",
+      acc_find_mentors: "Mentor topish",
+      acc_open_likes: "Yoqtirishlarni ochish",
+      acc_active_subs_sub: "Hozirgi mentor aloqalaringiz va so\u2018nggi qo\u2018shilishlar.",
+      acc_no_likes: "Hali yoqtirilgan iqtiboslar yo\u2018q",
+      acc_open_home: "Bosh sahifani ochish",
+      acc_unsubscribe: "Obunani bekor qilish",
+      acc_remove_like: "Yoqtirishni olib tashlash",
+      acc_remove_like_error: "Yoqtirishni olib tashlab bo\u2018lmadi.",
+      acc_status_subscribed: "Obuna bo\u2018lingan",
+      acc_status_not_subscribed: "Obuna yo\u2018q",
+      acc_profile_help: "Mentorlar sizni tezroq tanishi va panel to\u2018liq ko\u2018rinishi uchun asosiy ma\u2018lumotlarni qo\u2018shing.",
+      acc_review_overview: "Ko\u2018rinishni tekshirish",
+      acc_phone_help: "Mentorlar obunani tezroq tanishi uchun ishlaydigan raqamingizni kiriting.",
+      acc_group_help: "Guruh ma\u2018lumoti mentorlarga davomat va yordamni tezroq tartiblashga yordam beradi.",
       tbd: "Belgilanmagan",
       opp_title: "Tengdosh-Ustoz imkoniyatlari",
       opp_mentor_title: "Mentorlar",
@@ -362,8 +501,44 @@
       hero_pill: "\u0414\u043e\u0431\u0440\u043e \u043f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c \u0432 Tengdosh Ustoz",
       hero_title: "\u041f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u043e \u0434\u043b\u044f<br>\u0432\u0430\u0448\u0435\u0433\u043e \u043e\u0431\u0440\u0430\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0433\u043e \u043f\u0443\u0442\u0438",
       hero_desc: "\u041e\u0442\u043a\u0440\u043e\u0439\u0442\u0435 \u0434\u043b\u044f \u0441\u0435\u0431\u044f \u043e\u0430\u0437\u0438\u0441 \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f, \u0433\u0434\u0435 \u0437\u043d\u0430\u043d\u0438\u044f \u0440\u0430\u0441\u0442\u0443\u0442, \u0430 \u0441\u043e\u0441\u0440\u0435\u0434\u043e\u0442\u043e\u0447\u0435\u043d\u043d\u043e\u0441\u0442\u044c \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e \u0432\u043e\u0441\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f.",
+      hero_cta_clubs: "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043a\u043b\u0443\u0431\u044b",
+      hero_cta_mentors: "\u0421\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u043e\u0432",
+      hero_ledger_label: "\u0423\u0447\u0435\u0431\u043d\u044b\u0435 \u0437\u0430\u043c\u0435\u0442\u043a\u0438",
+      hero_ledger_title: "\u0411\u043e\u043b\u0435\u0435 \u0441\u043f\u043e\u043a\u043e\u0439\u043d\u044b\u0439 \u0441\u043f\u043e\u0441\u043e\u0431 \u0432\u044b\u0431\u0440\u0430\u0442\u044c \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0430, \u0432\u0441\u0442\u0443\u043f\u0438\u0442\u044c \u0432 \u043a\u043b\u0443\u0431 \u0438 \u0441\u043b\u0435\u0434\u0438\u0442\u044c \u0437\u0430 \u0437\u0430\u043d\u044f\u0442\u0438\u044f\u043c\u0438.",
+      hero_ledger_desc: "\u0411\u044b\u0441\u0442\u0440\u0435\u0435 \u043d\u0430\u0445\u043e\u0434\u0438\u0442\u0435 \u043d\u0443\u0436\u043d\u044b\u0439 \u043f\u0440\u0435\u0434\u043c\u0435\u0442, \u0441\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u0439\u0442\u0435 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u043e\u0432 \u0431\u0435\u0437 \u043b\u0438\u0448\u043d\u0435\u0433\u043e \u0448\u0443\u043c\u0430 \u0438 \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u0442\u0435 \u043e\u0442 \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u0430 \u043a \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0439 \u0443\u0447\u0451\u0431\u0435 \u043f\u043e \u0431\u043e\u043b\u0435\u0435 \u044f\u0441\u043d\u043e\u043c\u0443 \u043c\u0430\u0440\u0448\u0440\u0443\u0442\u0443.",
+      hero_ledger_card1_label: "\u041f\u0443\u0442\u044c \u043a \u043a\u043b\u0443\u0431\u0430\u043c",
+      hero_ledger_card1_desc: "\u041d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0438, \u043a\u043b\u0443\u0431\u044b, \u0446\u0438\u0442\u0430\u0442\u044b \u0438 \u0440\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0442\u0435\u043f\u0435\u0440\u044c \u0441\u043e\u0431\u0440\u0430\u043d\u044b \u0432 \u043e\u0434\u043d\u043e\u043c \u0431\u043e\u043b\u0435\u0435 \u0447\u0438\u0441\u0442\u043e\u043c \u043f\u043e\u0442\u043e\u043a\u0435.",
+      hero_ledger_card2_label: "\u0420\u0438\u0442\u043c \u0434\u043d\u044f",
+      hero_ledger_card2_desc: "\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f \u0437\u0430\u043d\u044f\u0442\u0438\u0439, \u0432\u0434\u043e\u0445\u043d\u043e\u0432\u0435\u043d\u0438\u0435 \u0438 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435 \u0448\u0430\u0433\u0438 \u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f \u043d\u0430 \u0432\u0438\u0434\u0443, \u043f\u043e\u044d\u0442\u043e\u043c\u0443 \u0434\u0432\u0438\u0433\u0430\u0442\u044c\u0441\u044f \u0434\u0430\u043b\u044c\u0448\u0435 \u043b\u0435\u0433\u0447\u0435.",
       stat_users: "\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0445 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439",
       stat_teachers: "\u041f\u0440\u0435\u043f\u043e\u0434\u0430\u0432\u0430\u0442\u0435\u043b\u0435\u0439",
+      flow_kicker: "\u0423\u0447\u0435\u0431\u043d\u044b\u0439 \u043f\u043e\u0442\u043e\u043a",
+      flow_title: "\u041e\u0442 \u043f\u0435\u0440\u0432\u043e\u0433\u043e \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u0430 \u043a \u0441\u0442\u0430\u0431\u0438\u043b\u044c\u043d\u043e\u043c\u0443 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0443",
+      flow_desc: "Tengdosh Ustoz \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043b\u0443\u0447\u0448\u0435, \u043a\u043e\u0433\u0434\u0430 \u043f\u043e\u0438\u0441\u043a, \u0441\u0432\u044f\u0437\u044c \u0438 \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0435\u043d\u0438\u0435 \u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f \u0432 \u043e\u0434\u043d\u043e\u043c \u0441\u043f\u043e\u043a\u043e\u0439\u043d\u043e\u043c \u043f\u0443\u0442\u0438, \u0430 \u043d\u0435 \u0440\u0430\u0441\u0441\u044b\u043f\u0430\u044e\u0442\u0441\u044f \u043f\u043e \u0432\u043a\u043b\u0430\u0434\u043a\u0430\u043c.",
+      flow_open_account: "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u0430\u043d\u0435\u043b\u044c",
+      flow_open_chat: "\u0412\u043e\u0439\u0442\u0438 \u0432 \u0447\u0430\u0442",
+      flow_step1_title: "\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u043d\u0443\u0436\u043d\u044b\u0439 \u043f\u0440\u0435\u0434\u043c\u0435\u0442",
+      flow_step1_desc: "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u0441 \u043a\u043e\u0434\u0438\u043d\u0433\u0430, soft skills \u0438\u043b\u0438 \u0441\u043f\u0435\u0446\u043a\u0443\u0440\u0441\u043e\u0432, \u043d\u0435 \u0442\u0435\u0440\u044f\u044f \u043d\u0438\u0442\u044c.",
+      flow_step2_title: "\u0411\u044b\u0441\u0442\u0440\u0435\u0435 \u0441\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u0439\u0442\u0435 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u043e\u0432",
+      flow_step2_desc: "\u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435 \u043f\u0440\u0435\u043f\u043e\u0434\u0430\u0432\u0430\u0442\u0435\u043b\u0435\u0439, \u0430\u0443\u0434\u0438\u0442\u043e\u0440\u0438\u0438, \u0440\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0438 \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b \u0431\u0435\u0437 \u043e\u0449\u0443\u0449\u0435\u043d\u0438\u044f \u0445\u0430\u043e\u0441\u0430.",
+      flow_step3_title: "\u0414\u0435\u0440\u0436\u0438\u0442\u0435 \u0440\u0438\u0442\u043c \u043d\u0430 \u0432\u0438\u0434\u0443",
+      flow_step3_desc: "\u0415\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u044b\u0435 \u0446\u0438\u0442\u0430\u0442\u044b, \u0436\u0438\u0432\u044b\u0435 \u0437\u0430\u043d\u044f\u0442\u0438\u044f \u0438 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435 \u043b\u0430\u0439\u043a\u0438 \u043f\u043e\u043c\u043e\u0433\u0430\u044e\u0442 \u0432\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u0431\u0435\u0437 \u043b\u0438\u0448\u043d\u0435\u0433\u043e \u0442\u0440\u0435\u043d\u0438\u044f.",
+      flow_step4_title: "\u041f\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u0439\u0442\u0435 \u0432\u0438\u0437\u0438\u0442\u044b \u0432 \u0438\u043c\u043f\u0443\u043b\u044c\u0441",
+      flow_step4_desc: "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430 \u043a\u0430\u043a \u043c\u0438\u043d\u0438-\u043f\u0430\u043d\u0435\u043b\u044c, \u0432\u043c\u0435\u0441\u0442\u043e \u0442\u043e\u0433\u043e \u0447\u0442\u043e\u0431\u044b \u043a\u0430\u0436\u0434\u044b\u0439 \u0440\u0430\u0437 \u043d\u0430\u0447\u0438\u043d\u0430\u0442\u044c \u0441 \u043d\u0443\u043b\u044f.",
+      toolkit_kicker: "\u0418\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u0430",
+      toolkit_title: "\u0411\u044b\u0441\u0442\u0440\u044b\u0435 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b \u0434\u043b\u044f \u0435\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u043e\u0439 \u0443\u0447\u0451\u0431\u044b",
+      toolkit_mentors_label: "\u0418\u043d\u0434\u0435\u043a\u0441 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u043e\u0432",
+      toolkit_mentors_title: "\u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435 \u0437\u0430\u043d\u044f\u0442\u0438\u044f \u0431\u0435\u0437 \u043b\u0438\u0448\u043d\u0435\u0433\u043e \u0448\u0443\u043c\u0430",
+      toolkit_mentors_desc: "\u0412\u0438\u0434\u044c\u0442\u0435 \u043f\u0440\u0435\u043f\u043e\u0434\u0430\u0432\u0430\u0442\u0435\u043b\u0435\u0439, \u0430\u0443\u0434\u0438\u0442\u043e\u0440\u0438\u0438, \u043c\u0430\u0442\u0435\u0440\u0438\u0430\u043b\u044b \u0438 \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c \u0432 \u043e\u0434\u043d\u043e\u043c \u043c\u0435\u0441\u0442\u0435 \u0434\u043e \u0442\u043e\u0433\u043e, \u043a\u0443\u0434\u0430 \u0438\u0434\u0442\u0438 \u0434\u0430\u043b\u044c\u0448\u0435.",
+      toolkit_chat_label: "\u041b\u0438\u0447\u043d\u044b\u0439 \u0447\u0430\u0442",
+      toolkit_chat_title: "\u0417\u0430\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0432\u043e\u043f\u0440\u043e\u0441\u044b, \u043d\u0435 \u043f\u043e\u043a\u0438\u0434\u0430\u044f \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0443",
+      toolkit_chat_desc: "\u0421\u043e\u043a\u0440\u0430\u0442\u0438\u0442\u0435 \u043f\u0443\u0442\u044c \u043e\u0442 \u043f\u043e\u0438\u0441\u043a\u0430 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0430 \u0434\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0432\u043e\u043f\u0440\u043e\u0441\u0430.",
+      toolkit_support_label: "\u041f\u043e\u043c\u043e\u0449\u044c",
+      toolkit_support_title: "\u0421\u0432\u044f\u0436\u0438\u0442\u0435\u0441\u044c \u0441 \u043a\u043e\u043c\u0430\u043d\u0434\u043e\u0439, \u0435\u0441\u043b\u0438 \u0447\u0442\u043e-\u0442\u043e \u0441\u043b\u043e\u043c\u0430\u043b\u043e\u0441\u044c",
+      toolkit_support_desc: "\u041e\u0431\u0440\u0430\u0442\u0438\u0442\u0435\u0441\u044c \u0432 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0443, \u043e\u043f\u0438\u0448\u0438\u0442\u0435 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044e \u0438 \u043d\u0435 \u0437\u0430\u0441\u0442\u0440\u0435\u0432\u0430\u0439\u0442\u0435.",
+      toolkit_account_label: "\u0410\u043a\u043a\u0430\u0443\u043d\u0442",
+      toolkit_account_title: "\u0414\u0435\u0440\u0436\u0438\u0442\u0435 \u0441\u0432\u043e\u044e \u0443\u0447\u0435\u0431\u043d\u0443\u044e \u0438\u0434\u0435\u043d\u0442\u0438\u0447\u043d\u043e\u0441\u0442\u044c \u0433\u043e\u0442\u043e\u0432\u043e\u0439",
+      toolkit_account_desc: "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u0439\u0442\u0435 \u0434\u0430\u043d\u043d\u044b\u0435, \u043e\u0442\u0441\u043b\u0435\u0436\u0438\u0432\u0430\u0439\u0442\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0438 \u0434\u0435\u0440\u0436\u0438\u0442\u0435 \u043f\u0440\u043e\u0444\u0438\u043b\u044c \u0433\u043e\u0442\u043e\u0432\u044b\u043c \u043a \u0440\u0435\u0430\u043b\u044c\u043d\u044b\u043c \u0437\u0430\u043d\u044f\u0442\u0438\u044f\u043c.",
       quote_pill: "\u0415\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u043e\u0435 \u0432\u0434\u043e\u0445\u043d\u043e\u0432\u0435\u043d\u0438\u0435",
       quote_loading: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0432\u0434\u043e\u0445\u043d\u043e\u0432\u0435\u043d\u0438\u044f",
       quote_like: "\u041d\u0440\u0430\u0432\u0438\u0442\u0441\u044f",
@@ -459,6 +634,37 @@
       acc_liked_title: "\u041f\u043e\u043d\u0440\u0430\u0432\u0438\u0432\u0448\u0438\u0435\u0441\u044f \u0446\u0438\u0442\u0430\u0442\u044b",
       acc_liked_sub: "\u0426\u0438\u0442\u0430\u0442\u044b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0432\u044b \u043e\u0442\u043c\u0435\u0442\u0438\u043b\u0438 \u043d\u0430 \u0413\u043b\u0430\u0432\u043d\u043e\u0439. \u0412\u0438\u0434\u043d\u044b \u0442\u043e\u043b\u044c\u043a\u043e \u0432\u0430\u043c.",
       acc_your_likes: "\u0412\u0430\u0448\u0438 \u043e\u0442\u043c\u0435\u0442\u043a\u0438",
+      acc_profile_completion: "\u0417\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0444\u0438\u043b\u044f",
+      acc_recent_likes: "\u041f\u043e\u043d\u0440\u0430\u0432\u0438\u0432\u0448\u0438\u0435\u0441\u044f \u0446\u0438\u0442\u0430\u0442\u044b",
+      acc_role_label: "\u0420\u043e\u043b\u044c",
+      acc_ready_kicker: "\u0413\u043e\u0442\u043e\u0432\u043d\u043e\u0441\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430",
+      acc_ready_title: "\u0417\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u0441\u0432\u043e\u0439 \u0443\u0447\u0435\u0431\u043d\u044b\u0439 \u043f\u0440\u043e\u0444\u0438\u043b\u044c",
+      acc_complete_name: "\u0418\u043c\u044f \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e",
+      acc_complete_photo: "\u0424\u043e\u0442\u043e \u043f\u0440\u043e\u0444\u0438\u043b\u044f \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e",
+      acc_complete_phone: "\u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d",
+      acc_complete_group: "\u0413\u0440\u0443\u043f\u043f\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0430",
+      acc_focus_kicker: "\u0421\u0435\u0439\u0447\u0430\u0441",
+      acc_focus_hello: "\u041f\u0440\u0438\u0432\u0435\u0442",
+      acc_focus_default: "\u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u0433\u043e\u0442\u043e\u0432 \u0441\u0442\u0430\u0442\u044c \u0431\u043e\u043b\u0435\u0435 \u0441\u0438\u043b\u044c\u043d\u043e\u0439 \u0443\u0447\u0435\u0431\u043d\u043e\u0439 \u0431\u0430\u0437\u043e\u0439.",
+      acc_focus_need_profile: "\u0417\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 \u043d\u0435\u0434\u043e\u0441\u0442\u0430\u044e\u0449\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0435, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0438 \u0431\u044b\u0441\u0442\u0440\u0435\u0435 \u0432\u0430\u0441 \u0443\u0437\u043d\u0430\u0432\u0430\u043b\u0438.",
+      acc_focus_need_subs: "\u041f\u0440\u043e\u0444\u0438\u043b\u044c \u0433\u043e\u0442\u043e\u0432. \u0422\u0435\u043f\u0435\u0440\u044c \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0430 \u0438 \u043d\u0430\u0447\u043d\u0438\u0442\u0435 \u0434\u0432\u0438\u0433\u0430\u0442\u044c\u0441\u044f \u0432\u043f\u0435\u0440\u0435\u0434.",
+      acc_focus_active: "\u0423 \u0432\u0430\u0441 \u0443\u0436\u0435 \u0435\u0441\u0442\u044c \u0430\u043a\u0442\u0438\u0432\u043d\u0430\u044f \u0443\u0447\u0435\u0431\u043d\u0430\u044f \u0441\u0438\u0441\u0442\u0435\u043c\u0430. \u041e\u0442\u0441\u043b\u0435\u0436\u0438\u0432\u0430\u0439\u0442\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0438 \u0446\u0438\u0442\u0430\u0442\u044b \u0437\u0434\u0435\u0441\u044c.",
+      acc_focus_default_name: "\u0421\u0442\u0443\u0434\u0435\u043d\u0442",
+      acc_complete_profile: "\u0417\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u0444\u0438\u043b\u044c",
+      acc_find_mentors: "\u041d\u0430\u0439\u0442\u0438 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u043e\u0432",
+      acc_open_likes: "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043b\u0430\u0439\u043a\u0438",
+      acc_active_subs_sub: "\u0412\u0430\u0448\u0438 \u0442\u0435\u043a\u0443\u0449\u0438\u0435 \u0441\u0432\u044f\u0437\u0438 \u0441 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0430\u043c\u0438 \u0438 \u043d\u0435\u0434\u0430\u0432\u043d\u0438\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438.",
+      acc_no_likes: "\u041f\u043e\u043a\u0430 \u043d\u0435\u0442 \u043b\u0430\u0439\u043a\u043d\u0443\u0442\u044b\u0445 \u0446\u0438\u0442\u0430\u0442",
+      acc_open_home: "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u0433\u043b\u0430\u0432\u043d\u0443\u044e",
+      acc_unsubscribe: "\u041e\u0442\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f",
+      acc_remove_like: "\u0423\u0431\u0440\u0430\u0442\u044c \u043b\u0430\u0439\u043a",
+      acc_remove_like_error: "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0443\u0431\u0440\u0430\u0442\u044c \u043b\u0430\u0439\u043a.",
+      acc_status_subscribed: "\u041f\u043e\u0434\u043f\u0438\u0441\u0430\u043d",
+      acc_status_not_subscribed: "\u041d\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043d",
+      acc_profile_help: "\u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0431\u0430\u0437\u043e\u0432\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0438 \u0431\u044b\u0441\u0442\u0440\u0435\u0435 \u0432\u0430\u0441 \u0443\u0437\u043d\u0430\u0432\u0430\u043b\u0438, \u0430 \u043f\u0430\u043d\u0435\u043b\u044c \u0432\u044b\u0433\u043b\u044f\u0434\u0435\u043b\u0430 \u043f\u043e\u043b\u043d\u043e\u0439.",
+      acc_review_overview: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u043e\u0431\u0437\u043e\u0440",
+      acc_phone_help: "\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0439 \u043d\u043e\u043c\u0435\u0440, \u0447\u0442\u043e\u0431\u044b \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0438 \u0431\u044b\u0441\u0442\u0440\u0435\u0435 \u0443\u0437\u043d\u0430\u0432\u0430\u043b\u0438 \u0432\u0430\u0448\u0438 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438.",
+      acc_group_help: "\u0413\u0440\u0443\u043f\u043f\u0430 \u043f\u043e\u043c\u043e\u0433\u0430\u0435\u0442 \u043d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0430\u043c \u0431\u044b\u0441\u0442\u0440\u0435\u0435 \u0432\u0435\u0441\u0442\u0438 \u043f\u043e\u0441\u0435\u0449\u0430\u0435\u043c\u043e\u0441\u0442\u044c \u0438 \u043f\u043e\u043c\u043e\u0449\u044c.",
       tbd: "\u041d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u043e",
       opp_title: "\u0412\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 Tengdosh-Ustoz",
       opp_mentor_title: "\u041d\u0430\u0441\u0442\u0430\u0432\u043d\u0438\u043a\u0438",
@@ -538,6 +744,7 @@
     if (!SUPPORTED.includes(lang)) return;
     try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
     applyTranslations(lang);
+    syncSwitchers(lang);
     document.documentElement.setAttribute("lang", lang);
     document.dispatchEvent(new CustomEvent("tu-lang-changed", { detail: { lang } }));
   }
@@ -573,33 +780,68 @@
     });
   }
 
+  function nextLang(lang) {
+    var index = SUPPORTED.indexOf(lang);
+    return SUPPORTED[(index + 1) % SUPPORTED.length];
+  }
+
+  function setCompactButtonState(btn, lang) {
+    if (!btn) return;
+    var meta = LANG_META[lang] || LANG_META[DEFAULT_LANG];
+    var next = LANG_META[nextLang(lang)] || LANG_META[DEFAULT_LANG];
+    btn.setAttribute("data-lang", lang);
+    btn.setAttribute("aria-label", "Current language: " + meta.label + ". Tap to switch to " + next.label + ".");
+    btn.title = meta.label;
+    btn.innerHTML = '<span class="lang-flag lang-flag--' + lang + '" aria-hidden="true"></span>';
+  }
+
+  function syncSwitchers(lang) {
+    var active = lang || getLang();
+    document.querySelectorAll(".lang-switcher").forEach(function (wrap) {
+      wrap.querySelectorAll(".lang-btn").forEach(function (btn) {
+        var isActive = btn.getAttribute("data-lang") === active;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-checked", String(isActive));
+      });
+      setCompactButtonState(wrap.querySelector(".lang-compact-btn"), active);
+    });
+  }
+
   function createSwitcher() {
     var current = getLang();
     var wrap = document.createElement("div");
     wrap.className = "lang-switcher";
-    wrap.setAttribute("role", "radiogroup");
-    wrap.setAttribute("aria-label", "Language");
+
+    var track = document.createElement("div");
+    track.className = "lang-switcher-track";
+    track.setAttribute("role", "radiogroup");
+    track.setAttribute("aria-label", "Language");
 
     SUPPORTED.forEach(function (code) {
-      var label = code === "en" ? "EN" : code === "uz" ? "UZ" : "RU";
+      var meta = LANG_META[code] || LANG_META[DEFAULT_LANG];
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "lang-btn" + (code === current ? " active" : "");
       btn.setAttribute("role", "radio");
       btn.setAttribute("aria-checked", String(code === current));
       btn.setAttribute("data-lang", code);
-      btn.textContent = label;
+      btn.textContent = meta.short;
       btn.addEventListener("click", function () {
         setLang(code);
-        wrap.querySelectorAll(".lang-btn").forEach(function (b) {
-          var isActive = b.getAttribute("data-lang") === code;
-          b.classList.toggle("active", isActive);
-          b.setAttribute("aria-checked", String(isActive));
-        });
       });
-      wrap.appendChild(btn);
+      track.appendChild(btn);
     });
 
+    var compact = document.createElement("button");
+    compact.type = "button";
+    compact.className = "lang-compact-btn";
+    compact.addEventListener("click", function () {
+      setLang(nextLang(getLang()));
+    });
+
+    wrap.appendChild(track);
+    wrap.appendChild(compact);
+    setCompactButtonState(compact, current);
     return wrap;
   }
 
@@ -622,6 +864,7 @@
     document.documentElement.setAttribute("lang", lang);
     injectSwitcher();
     applyTranslations(lang);
+    syncSwitchers(lang);
   }
 
   if (document.readyState === "loading") {

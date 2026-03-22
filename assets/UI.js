@@ -322,7 +322,7 @@
   window.__TENGDOSH_USTOZ_CHECKER_LOADER__ = true;
 
   const CHECKER_SRC = "/script-internet-checker.js";
-  const CHECKER_VERSION = "1";
+  const CHECKER_VERSION = "2";
 
   function injectChecker() {
     const already = [...document.scripts].some((s) => (s.src || "").includes(CHECKER_SRC));
@@ -349,4 +349,80 @@
   } else {
     window.addEventListener("load", schedule, { once: true });
   }
+})();
+
+(() => {
+  "use strict";
+
+  if (window.__TENGDOSH_USTOZ_RETRO_SCENE__) return;
+  window.__TENGDOSH_USTOZ_RETRO_SCENE__ = true;
+
+  const path = decodeURIComponent(location.pathname || "");
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const effectiveType = String(connection && connection.effectiveType ? connection.effectiveType : "").toLowerCase();
+  const slowConnection = !!(
+    connection && (
+      connection.saveData ||
+      effectiveType.includes("slow-2g") ||
+      effectiveType.includes("2g") ||
+      effectiveType.includes("3g")
+    )
+  );
+  const lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0 && navigator.deviceMemory < 4;
+
+  if (path.includes("/pages/private chat/")) return;
+  if (document.body && document.body.dataset && document.body.dataset.noRetroScene === "true") return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.innerWidth < 1100 || slowConnection || lowMemory) return;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const existing = [...document.scripts].find((script) => (script.src || "").includes(src));
+      if (existing) {
+        if (existing.dataset.loaded === "true") resolve();
+        else {
+          existing.addEventListener("load", () => resolve(), { once: true });
+          existing.addEventListener("error", reject, { once: true });
+        }
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src;
+      script.defer = true;
+      script.dataset.loaded = "false";
+      script.addEventListener(
+        "load",
+        () => {
+          script.dataset.loaded = "true";
+          resolve();
+        },
+        { once: true }
+      );
+      script.addEventListener("error", reject, { once: true });
+      (document.head || document.documentElement).appendChild(script);
+    });
+  }
+
+  async function bootRetroScene() {
+    try {
+      if (!window.THREE) {
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
+      }
+      await loadScript("/assets/retro-scene.js?v=10");
+    } catch (error) {
+      console.warn("[RETRO-SCENE] Failed to initialize:", error);
+    }
+  }
+
+  function schedule() {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(() => void bootRetroScene(), { timeout: 6000 });
+    } else {
+      setTimeout(() => void bootRetroScene(), 2500);
+    }
+  }
+
+  if (document.readyState === "complete") schedule();
+  else window.addEventListener("load", schedule, { once: true });
 })();

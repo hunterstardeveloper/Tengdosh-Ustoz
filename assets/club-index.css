@@ -1,0 +1,299 @@
+@import url("/assets/retro-foundation.css");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh !important;
+  font-family: var(--tu-font-sans) !important;
+  color: var(--tu-text) !important;
+  background: var(--tu-backdrop) !important;
+  background-attachment: fixed !important;
+  overflow-x: hidden !important;
+  padding-bottom: 3rem !important;
+}
+
+#theme-toggle {
+  position: fixed !important;
+  top: 1.5rem !important;
+  right: 1.5rem !important;
+  bottom: auto !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  color: var(--tu-accent) !important;
+  box-shadow: var(--tu-shadow) !important;
+  transition:
+    transform var(--tu-transition-fast),
+    border-color var(--tu-transition-base),
+    box-shadow var(--tu-transition-base) !important;
+}
+
+.back {
+  top: 1.5rem !important;
+  left: 1.5rem !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  box-shadow: var(--tu-shadow) !important;
+  transition:
+    transform var(--tu-transition-fast),
+    border-color var(--tu-transition-base),
+    box-shadow var(--tu-transition-base) !important;
+}
+
+.back img {
+  width: 20px !important;
+  height: 20px !important;
+  opacity: 0.8;
+}
+
+[data-theme="dark"] .back img {
+  filter: brightness(0) invert(1);
+}
+
+#theme-toggle:hover,
+.back:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--tu-line-strong) !important;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16) !important;
+}
+
+.top {
+  width: min(1180px, calc(100% - 3rem)) !important;
+  margin: 0 auto !important;
+  padding: 6.6rem 0 1.6rem !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.icon-top {
+  width: min(30vw, 210px) !important;
+  height: min(30vw, 210px) !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: rgba(201, 162, 39, 0.06) !important;
+  box-shadow:
+    0 0 0 12px rgba(201, 162, 39, 0.08),
+    0 24px 58px rgba(0, 0, 0, 0.18) !important;
+}
+
+.section-title {
+  width: min(1180px, calc(100% - 3rem)) !important;
+  max-width: 13ch !important;
+  margin: 0 auto 2.9rem !important;
+  text-align: center !important;
+  font-family: var(--tu-font-serif) !important;
+  font-size: clamp(2.2rem, 4.8vw, 4.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.05em !important;
+  color: var(--tu-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  line-height: 0.96 !important;
+  text-wrap: balance !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.section-title::before {
+  content: "Study Formats";
+  display: block;
+  margin-bottom: 0.85rem;
+  font-family: var(--tu-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tu-accent);
+}
+
+.features {
+  width: min(1320px, calc(100% - 3rem)) !important;
+  margin: 0 auto 4.75rem !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 360px)) !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 1.5rem !important;
+}
+
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
+    linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper)) !important;
+  border: 1px solid var(--tu-line) !important;
+  border-radius: var(--tu-radius-xl) !important;
+  box-shadow: var(--tu-shadow) !important;
+  backdrop-filter: blur(16px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(110%) !important;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem !important;
+  width: 100% !important;
+  max-width: 360px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  gap: 1.1rem;
+  z-index: 1;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(201, 162, 39, 0.14);
+  border-radius: calc(var(--tu-radius-xl) - 10px);
+  pointer-events: none;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--tu-accent), transparent 74%);
+}
+
+.card:hover {
+  transform: translateY(-8px) rotate(0.25deg) !important;
+}
+
+.card-img-container {
+  aspect-ratio: 4 / 3 !important;
+  height: auto !important;
+  min-height: 240px !important;
+  margin-bottom: 0 !important;
+  border-radius: calc(var(--tu-radius-lg) - 2px) !important;
+  background:
+    radial-gradient(circle at top, rgba(201, 162, 39, 0.12), transparent 45%),
+    rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid var(--tu-line) !important;
+}
+
+.card img {
+  position: static !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  object-fit: cover !important;
+  filter: saturate(0.95) contrast(1.02);
+}
+
+.card:hover img {
+  transform: scale(1.04) !important;
+}
+
+.card h3 {
+  margin: 0 !important;
+  font-family: var(--tu-font-serif) !important;
+  font-size: clamp(1.45rem, 3vw, 2rem) !important;
+  font-weight: 700 !important;
+  color: var(--tu-text) !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  text-wrap: balance !important;
+}
+
+.card-footer {
+  margin-top: auto !important;
+  display: flex !important;
+  justify-content: stretch !important;
+}
+
+.card a {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0.95rem 1.1rem !important;
+  border-radius: var(--tu-radius-pill) !important;
+  border: 1px solid var(--tu-line-strong) !important;
+  background: linear-gradient(135deg, var(--tu-accent), var(--tu-accent-soft)) !important;
+  color: #16120d !important;
+  font-family: var(--tu-font-mono) !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+  box-shadow: 0 12px 28px var(--tu-accent-glow) !important;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.card a:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 32px var(--tu-accent-glow) !important;
+}
+
+@media (max-width: 720px) {
+  .top {
+    padding-top: 6.5rem !important;
+  }
+
+  .section-title {
+    width: min(100%, calc(100% - 2rem)) !important;
+  }
+
+  .features {
+    width: min(100%, calc(100% - 2rem)) !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .card {
+    max-width: none !important;
+  }
+
+  .card-img-container {
+    min-height: 220px !important;
+  }
+}
+
+/* === TU audit patch: club index polish === */
+.top,
+.section-title,
+.features,
+.card,
+.card-footer,
+.card a {
+  min-width: 0;
+}
+
+.section-title {
+  text-wrap: balance !important;
+}
+
+.features {
+  gap: 1.25rem !important;
+  align-items: stretch !important;
+}
+
+.card {
+  gap: 0.95rem !important;
+}
+
+.card h3,
+.card a {
+  overflow-wrap: anywhere !important;
+  white-space: normal !important;
+  line-height: 1.12 !important;
+}
+
+.card a {
+  min-height: var(--tu-btn-height) !important;
+  box-shadow: 0 12px 26px var(--tu-accent-glow) !important;
+}
+
+.card a:hover {
+  box-shadow: 0 18px 36px var(--tu-accent-glow) !important;
+}

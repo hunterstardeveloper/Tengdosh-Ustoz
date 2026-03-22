@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-v26";
+const CACHE_VERSION = "tengdosh-ustoz-bigupdate 1version";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
@@ -14,15 +14,40 @@ const STATIC_EXT = /\.(?:js|css|mjs|png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|otf
 const ASSETS = uniq([
   u(""),
   u("index.html"),
+  u("home.html"),
+  u("auth/login.html"),
+  u("auth/register.html"),
+  u("auth/reset.html"),
+  u("auth/banned.html"),
   u("pages/classes/classes.html"),
   u("pages/contact/contact.html"),
   u("pages/account/account.html"),
+  u("pages/private chat/private_chat.html"),
   u("style.css"),
-  u("script.js"),
+  u("pages/classes/classes.css"),
+  u("pages/contact/contact.css"),
+  u("assets/home-page.js"),
+  u("assets/home-quotes.js"),
+  u("assets/i18n.js"),
   u("script-internet-checker.js"),
+  u("assets/UI.js"),
+  u("assets/tu-firebase.js"),
+  u("assets/quote-likes.js"),
+  u("assets/pdf.js"),
+  u("assets/online-lessons-uploader.js"),
+  u("assets/theme-bridge.js"),
+  u("assets/retro-foundation.css"),
+  u("assets/club-index.css"),
+  u("assets/auth-retro.css"),
+  u("assets/private-chat-retro.css"),
+  u("assets/retro-scene.js"),
+  u("assets/techers-sec.css"),
+  u("assets/online-tech.css"),
+  u("assets/offline-tech.css"),
   u("favicon.ico"),
   u("ping.txt"),
   u("icon.png"),
+  u("logo.png"),
 ]);
 
 const MAX_RUNTIME_ENTRIES = 60;
@@ -32,7 +57,6 @@ function isFirebaseApi(url) {
   const h = url.hostname;
   return (
     h.includes("firebaseio.com") ||
-    h.includes("firestore.googleapis.com") ||
     h.includes("identitytoolkit.googleapis.com") ||
     h.includes("securetoken.googleapis.com")
   );
@@ -212,6 +236,15 @@ self.addEventListener("fetch", (event) => {
 
   const pathname = url.pathname || "";
   if (pathname === "/pages/contact/contact.js") {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  if (
+    pathname === "/assets/UI.js" ||
+    pathname === "/assets/retro-scene.js" ||
+    pathname === "/assets/tu-firebase.js"
+  ) {
     event.respondWith(networkFirst(req));
     return;
   }

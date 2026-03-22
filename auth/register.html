@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="/assets/theme-bridge.js"></script>
   <title>Register • Tengdosh Ustoz</title>
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -174,6 +175,7 @@
     }
     #theme-toggle:hover{transform:translateY(-1px)}
   </style>
+  <link rel="stylesheet" href="/assets/auth-retro.css" />
 </head>
 <body>
   <div class="wrap">
@@ -278,7 +280,10 @@
       const cur = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
+      try {
+        localStorage.setItem('theme', next);
+        sessionStorage.setItem('tu_theme', next);
+      } catch(e) {}
     });
     const err = document.getElementById('err');
     const ok = document.getElementById('ok');

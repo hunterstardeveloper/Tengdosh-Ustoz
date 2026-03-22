@@ -73,6 +73,11 @@
     return true;
   }
 
+  function getModulesRef() {
+    if (!ensureTU()) throw new Error('TU is not initialized');
+    return TU.db.ref(`online/${CLUB_ID}/${TEACHER_ID}/modules`);
+  }
+
   
   async function getUserRole(uid) {
     
@@ -197,50 +202,50 @@
     const overlay = document.createElement('div');
     overlay.id = 'tuAddLessonModal';
     overlay.style.cssText = [
-      'position:fixed','inset:0','background:rgba(0,0,0,.55)','display:none','align-items:center','justify-content:center','z-index:9999','padding:18px'
+      'position:fixed','inset:0','background:rgba(6,6,7,.68)','backdrop-filter:blur(10px)','-webkit-backdrop-filter:blur(10px)','display:none','align-items:center','justify-content:center','z-index:9999','padding:18px'
     ].join(';');
 
     const panel = document.createElement('div');
     panel.style.cssText = [
-      'width:min(760px, 100%)','background:#0b1220','border:1px solid rgba(255,255,255,.12)','border-radius:16px','padding:16px','color:#fff'
+      'width:min(820px, 100%)','max-height:min(88vh, 900px)','overflow:auto','background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%), linear-gradient(135deg, rgba(34,29,23,.98), rgba(16,14,12,.99))','border:1px solid rgba(201,162,39,.18)','border-radius:28px','padding:22px','color:#efe5d2','box-shadow:0 30px 80px rgba(0,0,0,.55)'
     ].join(';');
 
     panel.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-        <h3 style="margin:0;">Add lesson</h3>
-        <button type="button" id="tuAddLessonClose" style="cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:10px;padding:6px 10px;">✕</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;">
+        <h3 style="margin:0;font-family:var(--tu-font-serif, Georgia, serif);font-size:1.9rem;line-height:1.05;letter-spacing:-0.03em;">Add lesson</h3>
+        <button type="button" id="tuAddLessonClose" style="cursor:pointer;background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));border:1px solid rgba(201,162,39,.18);color:#efe5d2;border-radius:14px;padding:8px 12px;min-height:42px;">✕</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:14px;margin-top:14px;">
         <div style="grid-column:1 / -1;">
-          <label style="font-size:12px;opacity:.8;">Title</label>
-          <input id="tuAddTitle" type="text" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;" placeholder="Example: 3. Present Simple" />
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Title</label>
+          <input id="tuAddTitle" type="text" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;" placeholder="Example: 3. Present Simple" />
         </div>
         <div style="grid-column:1 / -1;">
-          <label style="font-size:12px;opacity:.8;">Description (optional)</label>
-          <textarea id="tuAddDesc" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;min-height:76px;" placeholder="Short note..."></textarea>
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Description (optional)</label>
+          <textarea id="tuAddDesc" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;min-height:92px;" placeholder="Short note..."></textarea>
         </div>
         <div>
-          <label style="font-size:12px;opacity:.8;">Video links (one per line)</label>
-          <textarea id="tuAddVideos" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;min-height:110px;" placeholder="https://youtu.be/...\nhttps://youtube.com/watch?v=..."></textarea>
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Video links (one per line)</label>
+          <textarea id="tuAddVideos" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;min-height:128px;" placeholder="https://youtu.be/...\nhttps://youtube.com/watch?v=..."></textarea>
         </div>
         <div>
-          <label style="font-size:12px;opacity:.8;">Tasks (one per line)</label>
-          <textarea id="tuAddTasks" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;min-height:110px;" placeholder="1) ...\n2) ..."></textarea>
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Tasks (one per line)</label>
+          <textarea id="tuAddTasks" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;min-height:128px;" placeholder="1) ...\n2) ..."></textarea>
         </div>
         <div>
-          <label style="font-size:12px;opacity:.8;">Docs links (title | url) one per line</label>
-          <textarea id="tuAddDocs" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;min-height:110px;" placeholder="Grammar PDF | https://...\nSlides | /path/file.pdf"></textarea>
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Docs links (title | url) one per line</label>
+          <textarea id="tuAddDocs" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;min-height:128px;" placeholder="Grammar PDF | https://...\nSlides | /path/file.pdf"></textarea>
         </div>
         <div>
-          <label style="font-size:12px;opacity:.8;">Downloads links (title | url) one per line</label>
-          <textarea id="tuAddDownloads" style="width:100%;margin-top:6px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;min-height:110px;" placeholder="Resources | https://...\nZip | /path/file.zip"></textarea>
+          <label style="display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;opacity:1;">Downloads links (title | url) one per line</label>
+          <textarea id="tuAddDownloads" style="width:100%;margin-top:6px;padding:12px 14px;border-radius:16px;border:1px solid rgba(201,162,39,.14);background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;min-height:128px;" placeholder="Resources | https://...\nZip | /path/file.zip"></textarea>
         </div>
       </div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;">
-        <button type="button" id="tuAddLessonCancel" class="start-btn" style="padding:10px 14px;">Cancel</button>
-        <button type="button" id="tuAddLessonSave" class="start-btn" style="padding:10px 14px;">Save</button>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:16px;">
+        <button type="button" id="tuAddLessonCancel" class="start-btn" style="padding:10px 16px;background:linear-gradient(135deg, rgba(39,34,28,.96), rgba(23,20,17,.98));color:#efe5d2;box-shadow:none;">Cancel</button>
+        <button type="button" id="tuAddLessonSave" class="start-btn" style="padding:10px 16px;">Save</button>
       </div>
-      <div id="tuAddLessonStatus" style="margin-top:10px;font-size:12px;opacity:.85;"></div>
+      <div id="tuAddLessonStatus" style="margin-top:10px;font-size:12px;opacity:.85;color:#c7b89a;"></div>
     `;
 
     overlay.appendChild(panel);
@@ -282,9 +287,8 @@
       try {
         setStatus('Saving...');
         const mod = legacyCourseToModule({ qa: title, desc, video, tasks, docs, downloads });
-        const newRef = TU.db.ref(MODULES_PATH).push();
-        await newRef.set(mod);
-        setStatus('Saved ✅');
+        await getModulesRef().push(mod);
+        setStatus('Saved');
         close();
       } catch (e) {
         console.error(e);
@@ -303,7 +307,6 @@
   
   let CLUB_ID = 'unknown';
   let TEACHER_ID = 'unknown';
-  let MODULES_PATH = '';
   let canUpload = false;
   let attached = false;
 
@@ -311,17 +314,10 @@
     if (attached) return;
     attached = true;
 
-    TU.db.ref(MODULES_PATH).on('value', (snap) => {
-      const v = snap.val() || {};
-      const arr = Object.keys(v).map((id) => ({ _id: id, ...v[id] }));
-      
-      arr.sort((a, b) => (a.createdAtMs || 0) - (b.createdAtMs || 0));
+    getModulesRef().on('value', (snapshot) => {
+      const nextCourses = Object.values(snapshot.val() || {}).map(moduleToLegacyCourse);
+      window.__TU_COURSES_READY = true;
 
-      
-      
-      
-      
-      const nextCourses = arr.map(moduleToLegacyCourse);
       if (Array.isArray(window.courseData)) {
         window.courseData.length = 0;
         window.courseData.push(...nextCourses);
@@ -333,11 +329,13 @@
         try { window.renderCourses(); } catch (e) { console.warn(e); }
       }
 
-      
-      window.__TU_COURSES_READY = true;
-
-      
       ensureAddCard(canUpload);
+    }, (error) => {
+      console.warn('[online-lessons-uploader] Failed to attach realtime modules:', error);
+      window.__TU_COURSES_READY = true;
+      if (typeof window.renderCourses === 'function') {
+        try { window.renderCourses(); } catch (e) { console.warn(e); }
+      }
     });
   }
 
@@ -356,7 +354,6 @@
       if (canonicalClub) CLUB_ID = canonicalClub;
     } catch (e) {}
 
-    MODULES_PATH = `online/${CLUB_ID}/${TEACHER_ID}/modules`;
 
     
     TU.auth.onAuthStateChanged(async (user) => {
@@ -480,3 +477,7 @@
     }
   }, true); 
 })();
+
+
+
+

@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="/assets/theme-bridge.js"></script>
   <title>Banned • Tengdosh Ustoz</title>
   <link rel="ico" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -248,6 +249,7 @@ a:hover{text-decoration:underline}
   #theme-toggle{top:10px;}
 }
   </style>
+  <link rel="stylesheet" href="/assets/auth-retro.css" />
 </head>
 <body>
   <div class="orb one"></div>
@@ -309,7 +311,10 @@ a:hover{text-decoration:underline}
       const cur = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      try { sessionStorage.setItem('tu_theme', next); } catch(e) {}
+      try {
+        localStorage.setItem('theme', next);
+        sessionStorage.setItem('tu_theme', next);
+      } catch(e) {}
     });
     function formatDuration(ms) {
       const total = Math.max(0, Math.floor(ms / 1000));
