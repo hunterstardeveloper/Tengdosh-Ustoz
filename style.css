@@ -959,6 +959,15 @@ body.nav-open {
   overflow: hidden;
 }
 
+.quote-scene-stage.is-interactive {
+  cursor: grab;
+  touch-action: none;
+}
+
+.quote-scene-stage.is-dragging {
+  cursor: grabbing;
+}
+
 .quote-scene-stage::before {
   content: "";
   position: absolute;

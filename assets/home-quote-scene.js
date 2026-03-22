@@ -220,6 +220,28 @@
     let rafId = 0;
     let inView = true;
     let docVisible = !document.hidden;
+    let zoom = 0;
+    let targetZoom = 0;
+    let dragRotX = 0;
+    let dragRotY = 0;
+    let targetDragRotX = 0;
+    let targetDragRotY = 0;
+    let hoverX = 0;
+    let hoverY = 0;
+    let targetHoverX = 0;
+    let targetHoverY = 0;
+    let inertialX = 0;
+    let inertialY = 0;
+    let isPointerDown = false;
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let lastMoveTime = 0;
+    let spinBoost = 0;
+
+    stage.classList.add("is-interactive");
+    stage.setAttribute("tabindex", "0");
+    stage.setAttribute("role", "img");
+    stage.setAttribute("aria-label", "Interactive 3D study object. Drag to rotate.");
 
     function applyPalette() {
       const next = getPalette();
@@ -260,42 +282,161 @@
       if (!inView || !docVisible) return;
 
       const t = clock.getElapsedTime();
-      root.rotation.y = t * 0.36;
-      root.rotation.x = -0.14 + Math.sin(t * 0.7) * 0.045;
-      root.position.y = Math.sin(t * 1.1) * 0.08;
 
-      ringGroup.rotation.z = t * 0.22;
-      ringOne.rotation.z = 0.35 + t * 0.52;
-      ringTwo.rotation.z = -t * 0.44;
-      innerCore.rotation.y = -t * 0.8;
-      innerCore.rotation.x = t * 0.4;
+      if (!isPointerDown) {
+        targetDragRotX = Math.max(-0.6, Math.min(0.45, targetDragRotX + inertialX));
+        targetDragRotY += inertialY;
+        inertialX *= 0.94;
+        inertialY *= 0.94;
+      }
+
+      dragRotX += (targetDragRotX - dragRotX) * 0.09;
+      dragRotY += (targetDragRotY - dragRotY) * 0.09;
+      hoverX += (targetHoverX - hoverX) * 0.08;
+      hoverY += (targetHoverY - hoverY) * 0.08;
+      zoom += (targetZoom - zoom) * 0.08;
+      spinBoost += (0 - spinBoost) * 0.06;
+
+      root.rotation.y = t * (0.36 + spinBoost * 0.1) + dragRotY + hoverX * 0.18;
+      root.rotation.x = -0.14 + Math.sin(t * 0.7) * 0.045 + dragRotX - hoverY * 0.1;
+      root.position.y = Math.sin(t * 1.1) * 0.08 + hoverY * 0.04;
+      root.position.x = hoverX * 0.04;
+
+      ringGroup.rotation.z = t * (0.22 + spinBoost * 0.08);
+      ringOne.rotation.z = 0.35 + t * (0.52 + spinBoost * 0.18);
+      ringTwo.rotation.z = -t * (0.44 + spinBoost * 0.15);
+      innerCore.rotation.y = -t * 0.8 + dragRotY * 0.22;
+      innerCore.rotation.x = t * 0.4 + dragRotX * 0.22;
 
       for (let index = 0; index < slabs.length; index += 1) {
         const slab = slabs[index];
         slab.position.y += Math.sin(t * 1.15 + index * 0.7) * 0.0016;
-        slab.rotation.x = Math.sin(t * 0.6 + index * 0.5) * 0.08;
+        slab.rotation.x = Math.sin(t * 0.6 + index * 0.5) * 0.08 + dragRotX * 0.1;
       }
 
-      sparks.rotation.y = -t * 0.14;
-      sparks.rotation.x = Math.sin(t * 0.35) * 0.08;
-      camera.position.z = 6.25 + Math.sin(t * 0.42) * 0.12;
+      sparks.rotation.y = -t * 0.14 - dragRotY * 0.08;
+      sparks.rotation.x = Math.sin(t * 0.35) * 0.08 + hoverY * 0.08;
+      camera.position.x = hoverX * 0.22;
+      camera.position.y = 0.18 - hoverY * 0.16;
+      camera.position.z = 6.25 + Math.sin(t * 0.42) * 0.12 + zoom;
 
       renderFrame();
+      if (prefersReducedMotion) return;
       rafId = window.requestAnimationFrame(animate);
     }
 
     function start() {
-      if (prefersReducedMotion || !inView || !docVisible || rafId) {
+      if (!inView || !docVisible) {
         renderFrame();
         return;
       }
-      rafId = window.requestAnimationFrame(animate);
+      if (prefersReducedMotion) {
+        animate();
+        return;
+      }
+      if (!rafId) rafId = window.requestAnimationFrame(animate);
     }
 
     function stop() {
       if (!rafId) return;
       window.cancelAnimationFrame(rafId);
       rafId = 0;
+    }
+
+    function clampZoom(value) {
+      return Math.max(-0.45, Math.min(0.72, value));
+    }
+
+    function onPointerDown(event) {
+      isPointerDown = true;
+      pointerStartX = event.clientX;
+      pointerStartY = event.clientY;
+      lastMoveTime = performance.now();
+      stage.classList.add("is-dragging");
+      inertialX = 0;
+      inertialY = 0;
+      try { stage.setPointerCapture(event.pointerId); } catch (_) {}
+    }
+
+    function onPointerMove(event) {
+      const rect = stage.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
+      const y = ((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 - 1;
+      targetHoverX = Math.max(-1, Math.min(1, x));
+      targetHoverY = Math.max(-1, Math.min(1, y));
+
+      if (!isPointerDown) {
+        if (prefersReducedMotion) renderFrame();
+        return;
+      }
+
+      const now = performance.now();
+      const dx = event.clientX - pointerStartX;
+      const dy = event.clientY - pointerStartY;
+      pointerStartX = event.clientX;
+      pointerStartY = event.clientY;
+
+      targetDragRotY += dx * 0.008;
+      targetDragRotX = Math.max(-0.6, Math.min(0.45, targetDragRotX + dy * 0.006));
+
+      const dt = Math.max(8, now - lastMoveTime);
+      inertialY = dx / dt * 0.035;
+      inertialX = dy / dt * 0.025;
+      lastMoveTime = now;
+
+      if (prefersReducedMotion) animate();
+    }
+
+    function onPointerUp(event) {
+      isPointerDown = false;
+      stage.classList.remove("is-dragging");
+      try { stage.releasePointerCapture(event.pointerId); } catch (_) {}
+      if (prefersReducedMotion) renderFrame();
+    }
+
+    function onWheel(event) {
+      event.preventDefault();
+      targetZoom = clampZoom(targetZoom + event.deltaY * 0.0012);
+      if (prefersReducedMotion) animate();
+    }
+
+    function triggerPulse() {
+      spinBoost = Math.min(1.6, spinBoost + 1.1);
+      targetZoom = clampZoom(targetZoom - 0.08);
+      if (prefersReducedMotion) animate();
+    }
+
+    function onKeyDown(event) {
+      switch (event.key) {
+        case "ArrowLeft":
+          targetDragRotY -= 0.18;
+          break;
+        case "ArrowRight":
+          targetDragRotY += 0.18;
+          break;
+        case "ArrowUp":
+          targetDragRotX = Math.max(-0.6, targetDragRotX - 0.1);
+          break;
+        case "ArrowDown":
+          targetDragRotX = Math.min(0.45, targetDragRotX + 0.1);
+          break;
+        case "+":
+        case "=":
+          targetZoom = clampZoom(targetZoom - 0.12);
+          break;
+        case "-":
+        case "_":
+          targetZoom = clampZoom(targetZoom + 0.12);
+          break;
+        case " ":
+        case "Enter":
+          triggerPulse();
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      if (prefersReducedMotion) animate();
     }
 
     const resizeObserver = new ResizeObserver(setSize);
@@ -320,6 +461,21 @@
       if (docVisible) start();
       else stop();
     });
+
+    stage.addEventListener("pointerdown", onPointerDown);
+    stage.addEventListener("pointermove", onPointerMove, { passive: true });
+    stage.addEventListener("pointerup", onPointerUp, { passive: true });
+    stage.addEventListener("pointercancel", onPointerUp, { passive: true });
+    stage.addEventListener("pointerleave", () => {
+      if (!isPointerDown) {
+        targetHoverX = 0;
+        targetHoverY = 0;
+        if (prefersReducedMotion) renderFrame();
+      }
+    }, { passive: true });
+    stage.addEventListener("wheel", onWheel, { passive: false });
+    stage.addEventListener("dblclick", triggerPulse);
+    stage.addEventListener("keydown", onKeyDown);
 
     setSize();
     start();

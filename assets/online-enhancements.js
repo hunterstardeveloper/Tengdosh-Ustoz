@@ -1,18 +1,9 @@
 (function () {
   'use strict';
 
-  let animationsCache = null;
-  async function getAnimations() {
-    if (animationsCache) return animationsCache;
-    try {
-      const mod = await import("./base64.js");
-      animationsCache = mod?.animations || {};
-    } catch (_) {
-      animationsCache = {};
-    }
-    return animationsCache;
-  }
-  
+  let threeRuntimePromise = null;
+  let emptySceneRuntimePromise = null;
+
   function fixSymbols(input) {
     if (input == null) return '';
     let s = String(input);
@@ -28,6 +19,47 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        if (existing.dataset.loaded === 'true') {
+          resolve();
+          return;
+        }
+        existing.addEventListener('load', () => resolve(), { once: true });
+        existing.addEventListener('error', () => reject(new Error(`Failed to load ${src}`)), { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = () => {
+        script.dataset.loaded = 'true';
+        resolve();
+      };
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function ensureThreeRuntime() {
+    if (window.THREE) return window.THREE;
+    if (!threeRuntimePromise) {
+      threeRuntimePromise = loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js').then(() => window.THREE);
+    }
+    return threeRuntimePromise;
+  }
+
+  async function ensureEmptySceneRuntime() {
+    if (window.TUOnlineEmptyScene) return window.TUOnlineEmptyScene;
+    if (!emptySceneRuntimePromise) {
+      emptySceneRuntimePromise = loadScriptOnce('/assets/online-empty-scene.js?v=1').then(() => window.TUOnlineEmptyScene);
+    }
+    return emptySceneRuntimePromise;
   }
 
   function toYouTubeEmbed(url) {
@@ -122,6 +154,20 @@
     style.textContent = `
       .tu-reveal{opacity:0;transform:translateY(14px) scale(.985);filter:blur(3px);transition:opacity .6s ease, transform .6s cubic-bezier(.18,.9,.2,1), filter .6s ease;}
       .tu-reveal.tu-in{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
+      .tu-empty-state{grid-column:1 / -1;display:grid;place-items:center;gap:18px;padding:40px 16px 20px;text-align:center;}
+      .tu-empty-copy{max-width:420px;}
+      .tu-empty-copy h3{margin:0 0 8px;font-family:var(--tu-font-serif);font-size:clamp(1.35rem,2.6vw,1.9rem);color:var(--tu-text);}
+      .tu-empty-copy p{margin:0;color:var(--tu-text-soft);line-height:1.7;}
+      .tu-empty-scene-shell{width:min(100%, 340px);aspect-ratio:1 / 1;border-radius:28px;border:1px solid var(--tu-line);background:radial-gradient(circle at 50% 38%, rgba(201,162,39,.16), transparent 35%), linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.1)), var(--tu-bg-panel);box-shadow:var(--tu-shadow);padding:14px;}
+      .tu-empty-scene{position:relative;width:100%;height:100%;border-radius:22px;border:1px solid rgba(201,162,39,.1);background:radial-gradient(circle at 50% 50%, rgba(201,162,39,.08), transparent 52%), rgba(6,6,6,.14);overflow:hidden;}\n      .tu-empty-scene canvas{width:100% !important;height:100% !important;display:block;}
+      .tu-empty-scene.is-ready::after{opacity:0;}
+      .tu-empty-scene::after{content:'Preparing your study space';position:absolute;inset:auto 16px 14px 16px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tu-accent);opacity:.72;transition:opacity .25s ease;}
+      .tu-avatar-caption{margin-bottom:12px;}
+      #moreAvatars{display:none;}
+      #moreAvatars.open{display:contents;}
+      .avatar-item{background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.08));}
+      .avatar-item[data-generated='true']{border-color:rgba(201,162,39,.08);box-shadow:0 10px 20px rgba(0,0,0,.14);}
+      .avatar-item[data-generated='true']:hover{transform:translateY(-2px) scale(1.03);border-color:rgba(201,162,39,.4);}
       @media (prefers-reduced-motion: reduce){
         .tu-reveal{opacity:1;transform:none;filter:none;transition:none;}
       }
@@ -173,40 +219,115 @@
       return fallback;
     };
 
-    if (!ready) {
-      courseContainer.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
-          <h3 style="color: var(--muted, #6b7280); font-size: 20px;">${escapeHtml(t('classes_loading', 'Darslar yuklanmoqda...'))}</h3>
-        </div>`;
-      return;
-    }
+    const title = ready
+      ? t('classes_empty', 'No classes')
+      : t('classes_loading', 'Darslar yuklanmoqda...');
+
+    const body = ready
+      ? t('classes_empty_desc', 'Lessons will appear here once the teacher publishes a module.')
+      : t('classes_loading_desc', 'The classroom is syncing your modules and study resources.');
 
     courseContainer.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; width: 100%;">
-        <h3 style="color: var(--muted, #6b7280); font-size: 20px;">${escapeHtml(t('classes_empty', 'No classes'))}</h3>
-        <img
-          data-empty-anim="1"
-          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-          alt="No courses"
-          loading="lazy"
-          decoding="async"
-          style="max-width: 260px; width: 100%; margin-top: 18px;"
-          draggable="false"
-        >
+      <div class="tu-empty-state">
+        <div class="tu-empty-scene-shell">
+          <div class="tu-empty-scene" data-empty-scene="clock" aria-hidden="true"></div>
+        </div>
+        <div class="tu-empty-copy">
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(body)}</p>
+        </div>
       </div>`;
   }
 
-  function loadEmptyAnimation(courseContainer) {
-    if (!courseContainer) return;
-    const img = courseContainer.querySelector('img[data-empty-anim="1"]');
-    if (!img) return;
-    const key = "1 animation";
-    getAnimations().then((animations) => {
-      const src = animations && animations[key];
-      if (src && img.getAttribute('src') !== src) {
-        img.setAttribute('src', src);
-      }
-    }).catch(() => {});
+  async function initEmptyStateScene(courseContainer, ready) {
+    if (!courseContainer || !ready) return;
+    const mount = courseContainer.querySelector('[data-empty-scene="clock"]');
+    if (!mount || mount.dataset.sceneBooted === 'true') return;
+
+    try {
+      await ensureThreeRuntime();
+      const api = await ensureEmptySceneRuntime();
+      api && typeof api.init === 'function' && api.init(mount);
+    } catch (_) {
+      mount.dataset.sceneBooted = 'failed';
+    }
+  }
+
+  function seededRandom(seed) {
+    let s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    return () => {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+  }
+
+  function makeGeneratedAvatar(seed) {
+    const rand = seededRandom(seed + 17);
+    const hue = Math.floor(rand() * 360);
+    const hue2 = (hue + 45 + Math.floor(rand() * 90)) % 360;
+    const orbit1 = (hue + 160) % 360;
+    const orbit2 = (hue + 225) % 360;
+    const accent = (hue + 290) % 360;
+    const ringScale = (0.62 + rand() * 0.26).toFixed(2);
+    const dotX = (24 + rand() * 48).toFixed(1);
+    const dotY = (20 + rand() * 46).toFixed(1);
+    const dotR = (4.2 + rand() * 4.2).toFixed(1);
+    const orbitRot = Math.floor(rand() * 180);
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+        <defs>
+          <linearGradient id="bg-${seed}" x1="16" y1="12" x2="82" y2="84" gradientUnits="userSpaceOnUse">
+            <stop stop-color="hsl(${hue} 74% 64%)"/>
+            <stop offset="1" stop-color="hsl(${hue2} 76% 40%)"/>
+          </linearGradient>
+          <radialGradient id="glow-${seed}" cx="0" cy="0" r="1" gradientTransform="translate(48 42) rotate(90) scale(38)">
+            <stop stop-color="rgba(255,255,255,.88)"/>
+            <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+        <rect width="96" height="96" rx="48" fill="url(#bg-${seed})"/>
+        <circle cx="48" cy="48" r="46" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+        <circle cx="48" cy="48" r="18" fill="rgba(10,10,10,.16)"/>
+        <circle cx="48" cy="48" r="11.4" fill="url(#glow-${seed})" opacity=".85"/>
+        <g transform="rotate(${orbitRot} 48 48)">
+          <ellipse cx="48" cy="48" rx="31" ry="14" stroke="hsla(${orbit1} 95% 85% / .92)" stroke-width="3.5"/>
+          <ellipse cx="48" cy="48" rx="14" ry="31" stroke="hsla(${orbit2} 90% 84% / .5)" stroke-width="2.5"/>
+        </g>
+        <circle cx="${dotX}" cy="${dotY}" r="${dotR}" fill="hsla(${accent} 96% 88% / .94)"/>
+        <circle cx="72" cy="28" r="3" fill="rgba(255,255,255,.74)"/>
+        <circle cx="24" cy="70" r="2.4" fill="rgba(255,255,255,.55)"/>
+        <path d="M48 24 L52 34 L62 38 L52 42 L48 52 L44 42 L34 38 L44 34 Z" fill="rgba(255,255,255,.18)" transform="scale(${ringScale}) translate(${(1-ringScale)*48} ${(1-ringScale)*48})"/>
+      </svg>`;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  }
+
+  function renderGeneratedAvatarPicker() {
+    const picker = document.getElementById('avatarPicker');
+    if (!picker) return;
+    if (picker.dataset.generated === 'true') return;
+
+    const avatars = Array.from({ length: 24 }, (_, index) => makeGeneratedAvatar(index + 1));
+    const current = typeof window.selectedUserAvatar === 'string' && window.selectedUserAvatar.trim()
+      ? window.selectedUserAvatar.trim()
+      : '';
+    const selectedSrc = avatars.includes(current) ? current : avatars[0];
+
+    const createItem = (src, selected, extra) => {
+      return `<img decoding="async" loading="lazy" src="${src}" class="avatar-item${selected ? ' selected' : ''}${extra ? ' extra-avatar' : ''}" data-generated="true" onclick="pickAvatar(this)">`;
+    };
+
+    const visible = avatars.slice(0, 12).map(src => createItem(src, src === selectedSrc, false)).join('');
+    const extras = avatars.slice(12).map(src => createItem(src, src === selectedSrc, true)).join('');
+
+    picker.innerHTML = `${visible}<div id="moreAvatars">${extras}</div>`;
+    picker.dataset.generated = 'true';
+
+    if (!current && typeof window.selectedUserAvatar !== 'undefined') {
+      window.selectedUserAvatar = selectedSrc;
+    }
   }
 
   function enhancedRenderCourses() {
@@ -216,7 +337,7 @@
     if (!cd || !Array.isArray(cd) || cd.length === 0) {
       const ready = !!window.__TU_COURSES_READY;
       renderEmptyState(courseContainer, ready);
-      if (ready) loadEmptyAnimation(courseContainer);
+      initEmptyStateScene(courseContainer, ready);
       return;
     }
 
@@ -269,8 +390,6 @@
     const tasks = ensureArray(data.tasks).map(fixSymbols);
     const docs = ensureArray(data.docs);
     const downloads = ensureArray(data.downloads);
-
-    const root = (typeof window.ROOT_ASSET === 'string') ? window.ROOT_ASSET : '/';
 
     const qaEl = document.getElementById('qa-container');
     if (qaEl) qaEl.innerHTML = `<div class="content-card"><p>${escapeHtml(qa)}</p></div>`;
@@ -325,6 +444,7 @@
     window.renderCourses = enhancedRenderCourses;
 
     setDefaultLazyLoading();
+    renderGeneratedAvatarPicker();
     enhancedRenderCourses();
     setupRevealObserver();
     bindKeyboardSupport();
