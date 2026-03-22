@@ -1,666 +1,272 @@
-﻿<!doctype html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0a0a0b" />
-  <script src="/assets/theme-bridge.js"></script>
-  <title>Tengdosh Ustoz | Preparing</title>
-  <link rel="icon" href="/icon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="/assets/retro-foundation.css" />
+  <title>Tengdosh Ustoz – Intro</title>
   <style>
-    html,
-    body {
-      min-height: 100%;
-      overflow: hidden;
+    :root{
+      --bg0:#050607;
+      --bg1:#0a0f0d;
+      --green:#1CFF7A;
+      --green2:#00D86A;
+      --lime:#D8FF3A;
+      --yellow:#FFE95A;
+      --text:#E9ECEF;
     }
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      background: var(--tu-backdrop);
-      color: var(--tu-text);
-      transition: background 240ms ease, color 240ms ease;
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg0);
+      overflow:hidden;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
 
-    body::before {
-      opacity: 0.05;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .theme-toggle {
-      position: fixed;
-      top: 1.25rem;
-      right: 1.25rem;
-      z-index: 14;
-      width: 50px;
-      height: 50px;
-      border: 1px solid var(--tu-line);
-      border-radius: 16px;
+    .stage{
+      position:fixed; inset:0;
+      display:grid; place-items:center;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
-        linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper));
-      color: var(--tu-accent);
-      box-shadow: var(--tu-shadow);
-      cursor: pointer;
-      transition:
-        transform var(--tu-transition-fast),
-        border-color var(--tu-transition-base),
-        box-shadow var(--tu-transition-base);
+        radial-gradient(1200px 700px at 50% 45%, rgba(0,0,0,0.0), rgba(0,0,0,0.82) 62%, rgba(0,0,0,0.95)),
+        radial-gradient(900px 520px at 50% 58%, rgba(20,255,130,0.06), rgba(0,0,0,0) 58%),
+        linear-gradient(180deg,var(--bg1),var(--bg0));
     }
 
-    .theme-toggle:hover {
-      transform: translateY(-2px);
-      border-color: var(--tu-line-strong);
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+    .logoWrap{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      transform: translateY(-6px);
+      padding: 0;           
+      width: auto;
     }
 
-    .icon-container {
-      position: relative;
-      width: 24px;
-      height: 24px;
-      margin: 0 auto;
+    .logo{
+      width:min(190px,36vw);
+      opacity:0;
+      transform: translateY(10px) scale(0.985);
+      will-change: transform, opacity, filter;
+      filter:
+        drop-shadow(0 0 12px rgba(0,255,140,0.28))
+        drop-shadow(0 0 26px rgba(0,255,140,0.14));
     }
 
-    .icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 24px;
-      height: 24px;
-      transform-origin: center;
-      color: var(--tu-accent);
-      transition:
-        opacity var(--tu-transition-base),
-        transform var(--tu-transition-base);
+    .brand{
+      font-size: clamp(20px, 6vw, 34px);
+      letter-spacing:0.4px;
+      line-height:1.1;
+      opacity:0;
+      transform: translateY(12px);
+      color:var(--text);
+      text-shadow: 0 0 12px rgba(0,0,0,0.9);
+      will-change: transform, opacity, text-shadow;
+      user-select:none;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+    .brandLine{
+      display:inline-flex;
+      gap:10px;
+      align-items:baseline;
+      justify-content:center;
+      white-space:nowrap;
+    }
+    .brand .accent{
+      color: var(--yellow);
+      text-shadow:
+        0 0 10px rgba(255,233,90,0.25),
+        0 0 28px rgba(80,255,160,0.14);
+      font-weight:700;
     }
 
-    .sun-icon {
-      opacity: 1;
-      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    /* Long minimal bar (like your screenshot) */
+    .bar{
+      width:min(520px,78vw);
+      height:8px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.10);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+      overflow:hidden;
+      position:relative;
+      opacity:0;
+      transform: translateY(10px);
+      will-change: opacity, transform;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background: linear-gradient(90deg, #2BFF87, #00D86A, #D8FF3A, #FFE95A);
+      filter: drop-shadow(0 0 10px rgba(0,255,140,0.22));
+      position:relative;
+    }
+    .fill::after{
+      content:"";
+      position:absolute; top:0; bottom:0;
+      width:64px;
+      left:-80px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0.20),
+        rgba(255,255,255,0)
+      );
+      opacity:0.70;
+      animation: sweep 1.2s linear infinite;
+    }
+    @keyframes sweep{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(740px); }
     }
 
-    .moon-icon {
-      opacity: 0;
-      transform: translate(-50%, -50%) rotate(-90deg) scale(0.55);
+    .bar.pulse{ animation: pulse 520ms ease-out 1; }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 0 rgba(0,0,0,0); }
+      40%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.10) inset, 0 0 34px rgba(0,255,140,0.14); }
+      100%{ box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 0 rgba(0,0,0,0); }
     }
 
-    [data-theme="light"] .sun-icon {
-      opacity: 0;
-      transform: translate(-50%, -50%) rotate(90deg) scale(0.55);
+    /* soft vignette (fullscreen) */
+    .vignette{
+      position:fixed; inset:0;
+      background: radial-gradient(70% 55% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.66) 86%, rgba(0,0,0,0.90));
+      pointer-events:none;
     }
 
-    [data-theme="light"] .moon-icon {
-      opacity: 1;
-      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    /* Fade out before redirect */
+    .fadeout{
+      animation: fadeout 380ms ease-in forwards;
     }
-
-    .retro-loader {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: grid;
-      place-items: center;
-      padding: 1.5rem;
-      overflow: hidden;
-      transition:
-        opacity 800ms ease,
-        visibility 800ms ease,
-        transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .retro-loader.is-complete {
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(1.015);
-    }
-
-    .retro-loader::before,
-    .retro-loader::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .retro-loader::before {
-      background:
-        linear-gradient(rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 5px);
-      opacity: 0.08;
-    }
-
-    .retro-loader::after {
-      background: radial-gradient(circle, transparent 38%, var(--tu-vignette) 100%);
-    }
-
-    .retro-loader-bg {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-
-    .retro-loader-ornament {
-      position: absolute;
-      width: min(30vw, 360px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, var(--tu-accent-glow) 0%, var(--tu-accent-ghost) 34%, rgba(201, 162, 39, 0) 72%);
-      box-shadow:
-        0 0 70px var(--tu-accent-ghost),
-        inset 0 0 40px rgba(255, 255, 255, 0.02);
-      filter: blur(6px);
-      animation: loaderDrift 13s ease-in-out infinite;
-    }
-
-    .retro-loader-ornament-left {
-      top: -6%;
-      left: -4%;
-    }
-
-    .retro-loader-ornament-right {
-      right: -7%;
-      bottom: -10%;
-      animation-delay: -5s;
-    }
-
-    .retro-loader-dust {
-      position: absolute;
-      inset: 0;
-      opacity: 0.56;
-      background:
-        radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 100%),
-        radial-gradient(circle at 72% 36%, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 100%),
-        radial-gradient(circle at 42% 76%, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 100%);
-      background-size: 180px 180px, 240px 240px, 210px 210px;
-      animation: loaderDustDrift 22s linear infinite;
-    }
-
-    .retro-loader-panel {
-      position: relative;
-      width: min(100%, 720px);
-      padding: clamp(1.6rem, 4vw, 2.9rem);
-      border: 1px solid var(--tu-line);
-      border-radius: 8px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
-        linear-gradient(135deg, var(--tu-paper-strong), var(--tu-paper));
-      box-shadow:
-        0 0 0 1px rgba(201, 162, 39, 0.06),
-        var(--tu-shadow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      animation: loaderPanelFloat 7s ease-in-out infinite;
-    }
-
-    .retro-loader-panel::before {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border: 1px solid rgba(201, 162, 39, 0.12);
-      border-radius: 2px;
-      pointer-events: none;
-    }
-
-    .retro-loader-panel::after {
-      content: "";
-      position: absolute;
-      top: 22px;
-      left: 24px;
-      right: 24px;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(201, 162, 39, 0.35), transparent);
-      pointer-events: none;
-    }
-
-    .retro-loader-header {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 1.3rem;
-    }
-
-    .retro-loader-seal {
-      width: clamp(70px, 9vw, 92px);
-      height: clamp(70px, 9vw, 92px);
-      border-radius: 22px;
-      border: 1px solid var(--tu-line-strong);
-      background:
-        radial-gradient(circle at top, rgba(201, 162, 39, 0.16), transparent 52%),
-        rgba(201, 162, 39, 0.05);
-      display: grid;
-      place-items: center;
-      box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.08);
-    }
-
-    .retro-loader-seal img {
-      width: 74%;
-      height: 74%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 16px rgba(201, 162, 39, 0.16));
-    }
-
-    .retro-loader-kicker,
-    .retro-loader-status,
-    .retro-loader-progress,
-    .retro-loader-terminal-title {
-      font-family: var(--tu-font-mono);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .retro-loader-kicker {
-      margin: 0 0 0.55rem;
-      font-size: 0.74rem;
-      color: var(--tu-accent);
-    }
-
-    .retro-loader-title {
-      margin: 0;
-      font-family: var(--tu-font-serif);
-      font-size: clamp(2rem, 4vw, 3.35rem);
-      line-height: 0.96;
-      letter-spacing: -0.05em;
-    }
-
-    .retro-loader-copy,
-    .retro-loader-quote {
-      margin: 0;
-      color: var(--tu-text-soft);
-      line-height: 1.7;
-    }
-
-    .retro-loader-copy {
-      margin-bottom: 0.6rem;
-      font-size: 1rem;
-    }
-
-    .retro-loader-quote {
-      margin-bottom: 1.55rem;
-      font-family: var(--tu-font-serif);
-      font-size: 1.02rem;
-      font-style: italic;
-      max-width: 46ch;
-    }
-
-    .retro-loader-meter {
-      position: relative;
-      height: 11px;
-      margin-bottom: 1rem;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 0 0 1px var(--tu-line);
-    }
-
-    .retro-loader-meter-fill {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 0%;
-      border-radius: inherit;
-      background:
-        linear-gradient(90deg, #8b6914 0%, #c9a227 48%, #f3d57e 100%);
-      box-shadow: 0 0 24px rgba(201, 162, 39, 0.28);
-      transition: width 180ms linear;
-    }
-
-    .retro-loader-meter-fill::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: -80px;
-      width: 70px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
-      animation: sweep 1.5s linear infinite;
-      opacity: 0.8;
-    }
-
-    .retro-loader-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.35rem;
-      color: var(--tu-text-muted);
-      font-size: 0.72rem;
-    }
-
-    .retro-loader-status {
-      color: var(--tu-accent);
-    }
-
-    .retro-loader-terminal {
-      border: 1px solid var(--tu-line);
-      border-radius: 6px;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent),
-        var(--tu-bg-panel);
-      overflow: hidden;
-    }
-
-    .retro-loader-terminal-bar {
-      padding: 0.78rem 1rem;
-      border-bottom: 1px solid var(--tu-line);
-      background: var(--tu-accent-ghost);
-    }
-
-    .retro-loader-terminal-title {
-      font-size: 0.7rem;
-      color: var(--tu-accent);
-    }
-
-    .retro-loader-log {
-      margin: 0;
-      padding: 1rem 1rem 1rem 1.3rem;
-      list-style: none;
-      display: grid;
-      gap: 0.72rem;
-    }
-
-    .retro-loader-log-item {
-      position: relative;
-      padding-left: 1rem;
-      color: var(--tu-text-muted);
-      transition: color 220ms ease, transform 220ms ease;
-    }
-
-    .retro-loader-log-item::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.78rem;
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background: rgba(201, 162, 39, 0.18);
-      transform: translateY(-50%);
-    }
-
-    .retro-loader-log-item.is-active {
-      color: var(--tu-text);
-      transform: translateX(4px);
-    }
-
-    .retro-loader-log-item.is-active::before {
-      background: var(--tu-accent);
-      box-shadow: 0 0 0 5px rgba(201, 162, 39, 0.12);
-    }
-
-    .skip-note {
-      margin-top: 1rem;
-      text-align: center;
-      font-family: var(--tu-font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--tu-text-muted);
-    }
-
-    @keyframes loaderDrift {
-      0%,
-      100% {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      50% {
-        transform: translate3d(22px, -18px, 0) scale(1.05);
-      }
-    }
-
-    @keyframes loaderDustDrift {
-      from {
-        transform: translate3d(0, 0, 0);
-      }
-      to {
-        transform: translate3d(-30px, 24px, 0);
-      }
-    }
-
-    @keyframes loaderPanelFloat {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
-    }
-
-    @keyframes sweep {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(860px);
-      }
-    }
-
-    @media (max-width: 780px) {
-      .retro-loader-panel {
-        padding: 1.35rem;
-      }
-
-      .retro-loader-header {
-        grid-template-columns: 1fr;
-      }
-
-      .retro-loader-seal {
-        margin: 0 auto;
-      }
-
-      .retro-loader-copy,
-      .retro-loader-quote {
-        text-align: center;
-      }
+    @keyframes fadeout{
+      to{ opacity:0; transform: translateY(-2px) scale(0.99); filter: blur(0.2px); }
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-    <span class="sr-only">Toggle theme</span>
-    <div class="icon-container" aria-hidden="true">
-      <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="5"></circle>
-        <line x1="12" y1="1" x2="12" y2="3"></line>
-        <line x1="12" y1="21" x2="12" y2="23"></line>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-        <line x1="1" y1="12" x2="3" y2="12"></line>
-        <line x1="21" y1="12" x2="23" y2="12"></line>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  <div class="stage">
+    <div class="logoWrap" id="group">
+      <!-- Logo -->
+      <svg class="logo" id="logo" viewBox="0 0 256 256" aria-label="Logo" role="img">
+        <path fill="url(#gMain)"
+          d="
+            M 86 40
+            L 120 40
+            L 120 150
+            C 120 168 130 178 148 178
+            C 166 178 176 168 176 150
+            L 176 108
+            L 206 108
+            L 206 150
+            C 206 187 180 214 148 214
+            C 116 214 90 187 90 150
+            L 90 70
+            Z
+          "
+        />
+        <polygon points="86,40 120,40 86,74" fill="#10E97A" opacity="0.95"/>
+        <rect x="120" y="65" width="44" height="34" rx="4" fill="url(#gYellow)"/>
+        <defs>
+          <linearGradient id="gMain" x1="86" y1="40" x2="206" y2="214" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#2BFF87"/>
+            <stop offset="1" stop-color="#00D86A"/>
+          </linearGradient>
+          <linearGradient id="gYellow" x1="136" y1="94" x2="190" y2="116" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#D8FF3A"/>
+            <stop offset="1" stop-color="#FFE95A"/>
+          </linearGradient>
+        </defs>
       </svg>
-      <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-    </div>
-  </button>
 
-  <div class="retro-loader" id="retroLoader" role="status" aria-live="polite" aria-label="Loading Tengdosh Ustoz">
-    <div class="retro-loader-bg" aria-hidden="true">
-      <div class="retro-loader-ornament retro-loader-ornament-left"></div>
-      <div class="retro-loader-ornament retro-loader-ornament-right"></div>
-      <div class="retro-loader-dust"></div>
-    </div>
-
-    <div class="retro-loader-panel">
-      <div class="retro-loader-header">
-        <div class="retro-loader-seal">
-          <img src="/logo.png" alt="Tengdosh Ustoz logo" />
+      <!-- Text + Bar -->
+      <div class="brand" id="brand">
+        <div class="brandLine">
+          <span>Tengdosh</span>
+          <span class="accent">Ustoz</span>
         </div>
-        <div>
-          <p class="retro-loader-kicker">Entry Sequence I</p>
-          <h1 class="retro-loader-title">Preparing Tengdosh Ustoz</h1>
+
+        <div class="bar" id="bar" aria-label="Loading bar">
+          <div class="fill" id="fill"></div>
         </div>
       </div>
-
-      <p class="retro-loader-copy" id="loaderLabel">Checking classrooms, loading mentors, and arranging today's study space.</p>
-      <p class="retro-loader-quote">"A learning space should feel clear, warm, and ready the moment you arrive."</p>
-
-      <div class="retro-loader-meter" aria-hidden="true">
-        <div class="retro-loader-meter-fill" id="loaderMeter"></div>
-      </div>
-
-      <div class="retro-loader-meta">
-        <span class="retro-loader-status" id="loaderStatus">FOYER OPEN</span>
-        <span class="retro-loader-progress"><span id="loaderProgress">00</span>%</span>
-      </div>
-
-      <div class="retro-loader-terminal" aria-hidden="true">
-        <div class="retro-loader-terminal-bar">
-          <span class="retro-loader-terminal-title">Study Notes</span>
-        </div>
-        <ul class="retro-loader-log">
-          <li class="retro-loader-log-item is-active">Checking classrooms and opening mentor routes</li>
-          <li class="retro-loader-log-item">Arranging clubs, schedules, and study materials</li>
-          <li class="retro-loader-log-item">Preparing the home page for today's students</li>
-          <li class="retro-loader-log-item">Opening the first page of the platform</li>
-        </ul>
-      </div>
-
-      <p class="skip-note">Tap anywhere to enter early</p>
     </div>
+
+    <div class="vignette"></div>
   </div>
 
   <script>
-    const root = document.documentElement;
-    const themeToggle = document.getElementById("themeToggle");
-    const loader = document.getElementById("retroLoader");
-    const meter = document.getElementById("loaderMeter");
-    const label = document.getElementById("loaderLabel");
-    const status = document.getElementById("loaderStatus");
-    const progress = document.getElementById("loaderProgress");
-    const logItems = Array.from(document.querySelectorAll(".retro-loader-log-item"));
+    const groupEl = document.getElementById("group");
+    const logoEl  = document.getElementById("logo");
+    const brandEl = document.getElementById("brand");
+    const barEl   = document.getElementById("bar");
+    const fillEl  = document.getElementById("fill");
 
-    const phases = [
-      {
-        threshold: 12,
-        status: "FOYER OPEN",
-        label: "Checking classrooms, loading mentors, and arranging today's study space."
-      },
-      {
-        threshold: 38,
-        status: "CATALOG READY",
-        label: "Sorting club pages, mentor cards, and the latest schedule details."
-      },
-      {
-        threshold: 68,
-        status: "SCENE WARM",
-        label: "Bringing the whole experience into place so everything feels calm and ready."
-      },
-      {
-        threshold: 92,
-        status: "DOORS AJAR",
-        label: "Finishing the last checks and opening the home page for you."
-      }
-    ];
+    const clamp01 = (x)=>Math.max(0,Math.min(1,x));
+    const easeOutCubic = (x)=>1-Math.pow(1-x,3);
 
-    let startedAt = performance.now();
+    // Reveal + one-time fill then redirect
+    const REVEAL_MS = 850;
+    const BAR_DELAY_MS = 380;
+    const FILL_MS = 2400;
+    const HOLD_MS = 450;
+    const FADE_MS = 320;
+
+    let start = performance.now();
+    let barStart = null;
     let redirected = false;
-    let currentPhase = -1;
 
-    function getTheme() {
-      if (window.TUTheme && typeof window.TUTheme.getStoredTheme === "function") {
-        return window.TUTheme.getStoredTheme();
-      }
-      return root.getAttribute("data-theme") === "light" ? "light" : "dark";
+    function setReveal(p){
+      const e = easeOutCubic(clamp01(p));
+
+      logoEl.style.opacity = e.toFixed(3);
+      logoEl.style.transform = `translateY(${(1-e)*12}px) scale(${0.985 + e*0.015})`;
+      logoEl.style.filter =
+        `drop-shadow(0 0 ${12 + e*8}px rgba(0,255,140,${0.22 + e*0.18}))
+         drop-shadow(0 0 ${26 + e*28}px rgba(150,255,80,${0.10 + e*0.12}))`;
+
+      brandEl.style.opacity = e.toFixed(3);
+      brandEl.style.transform = `translateY(${(1-e)*14}px)`;
+
+      barEl.style.opacity = e.toFixed(3);
+      barEl.style.transform = `translateY(${(1-e)*10}px)`;
     }
 
-    function applyTheme(theme, persist) {
-      const normalizedTheme = theme === "light" ? "light" : "dark";
-      if (window.TUTheme) {
-        if (persist && typeof window.TUTheme.set === "function") {
-          window.TUTheme.set(normalizedTheme);
-        } else if (typeof window.TUTheme.apply === "function") {
-          window.TUTheme.apply(normalizedTheme);
-        }
-      } else {
-        root.setAttribute("data-theme", normalizedTheme);
-      }
-    }
-
-    applyTheme(getTheme(), false);
-
-    themeToggle?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      applyTheme(getTheme() === "dark" ? "light" : "dark", true);
-    });
-
-    function activatePhase(index) {
-      if (index === currentPhase) return;
-      currentPhase = index;
-      phases.slice(0, index + 1).forEach(() => {});
-      logItems.forEach((item, itemIndex) => {
-        item.classList.toggle("is-active", itemIndex === Math.min(index, logItems.length - 1));
-      });
-      const phase = phases[Math.min(index, phases.length - 1)];
-      if (!phase) return;
-      label.textContent = phase.label;
-      status.textContent = phase.status;
-    }
-
-    function finish() {
+    function redirectToHome(){
       if (redirected) return;
       redirected = true;
-      loader.classList.add("is-complete");
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 720);
+      groupEl.classList.add("fadeout");
+      setTimeout(()=>{ window.location.href = "home.html"; }, FADE_MS);
     }
 
-    function render(now) {
-      const elapsed = now - startedAt;
-      const raw = Math.min(elapsed / 2600, 1);
-      const eased = 1 - Math.pow(1 - raw, 3);
-      const pct = Math.round(eased * 100);
+    function animate(now){
+      const t = now - start;
 
-      meter.style.width = pct + "%";
-      progress.textContent = String(pct).padStart(2, "0");
+      setReveal(t / REVEAL_MS);
 
-      let phaseIndex = 0;
-      for (let i = 0; i < phases.length; i += 1) {
-        if (pct >= phases[i].threshold) phaseIndex = i;
+      if (!barStart && t > BAR_DELAY_MS) barStart = now;
+
+      if (barStart && !redirected){
+        const bt = now - barStart;
+
+        if (bt < FILL_MS){
+          const p = easeOutCubic(bt / FILL_MS);
+          fillEl.style.width = (p * 100).toFixed(2) + "%";
+          barEl.classList.remove("pulse");
+        } else {
+          fillEl.style.width = "100%";
+          if (!barEl.classList.contains("pulse")) barEl.classList.add("pulse");
+
+          if (bt > FILL_MS + HOLD_MS) redirectToHome();
+        }
       }
-      activatePhase(phaseIndex);
 
-      if (raw < 1) {
-        requestAnimationFrame(render);
-      } else {
-        setTimeout(finish, 280);
-      }
+      if (!redirected) requestAnimationFrame(animate);
     }
 
-    requestAnimationFrame(render);
-    addEventListener("click", (event) => {
-      if (event.target.closest && event.target.closest("#themeToggle")) return;
-      finish();
-    });
-    addEventListener("keydown", (event) => {
-      if (document.activeElement === themeToggle) return;
-      if (event.key === "Enter" || event.key === " " || event.key === "Escape") {
-        finish();
-      }
-    });
+    requestAnimationFrame(animate);
+    addEventListener("click", redirectToHome);
   </script>
-  <script src="/assets/preventer.js"></script>
-  <script src="/assets/firebase-config.js"></script>
-  <script src="/assets/tu-firebase.js"></script>
-  <script src="/assets/UI.js?v=8"></script>
 </body>
 </html>

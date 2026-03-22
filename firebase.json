@@ -1,0 +1,8 @@
+{
+  "database": {
+    "rules": "rtd rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

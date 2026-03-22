@@ -7,9 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/icon.png">
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --bg-deep:       radial-gradient(circle at top, #0f172a, #030712);
@@ -410,10 +412,19 @@
       text-transform: uppercase;
       color: var(--text-muted);
     }
-    #users-list {
+    #contacts-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 0 8px 12px;
+      min-height: 0;
+      padding: 8px 0 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sidebar-section.hidden {
+      display: none;
+    }
+    #recent-users-list,
+    #users-list {
+      padding: 0 8px;
     }
     .user-item {
       display: flex;
@@ -591,6 +602,13 @@
       background: var(--online);
       flex-shrink: 0;
     }
+    .chat-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .chat-action-btn,
     .notify-btn {
       width: 34px;
       height: 34px;
@@ -604,10 +622,22 @@
       transition: background var(--transition), border-color var(--transition), transform var(--transition);
       flex-shrink: 0;
     }
+    .chat-action-btn:hover,
     .notify-btn:hover {
       background: var(--bg-active);
       border-color: rgba(201,162,39,0.5);
       transform: translateY(-1px);
+    }
+    .chat-action-btn:disabled,
+    .chat-action-btn.busy {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .chat-action-btn.active {
+      background: var(--gold-dim);
+      border-color: rgba(201,162,39,0.5);
+      color: var(--gold);
     }
     .notify-btn.active {
       background: var(--gold-dim);
@@ -688,6 +718,36 @@
     .msg-bubble.deleted {
       color: var(--text-muted);
       font-style: italic;
+    }
+    .msg-bubble.call-log {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 210px;
+      padding: 12px 15px;
+    }
+    .msg-bubble.call-log.call-log-missed,
+    .msg-bubble.call-log.call-log-rejected,
+    .msg-bubble.call-log.call-log-cancelled {
+      border-color: rgba(248,113,113,0.28);
+      background: rgba(127,29,29,0.14);
+    }
+    .msg-bubble.call-log.call-log-ended {
+      border-color: rgba(74,222,128,0.22);
+    }
+    .call-log-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-primary);
+    }
+    .call-log-meta {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-muted);
+    }
+    .msg-row.mine .msg-bubble.call-log .call-log-meta {
+      color: rgba(229,231,235,0.78);
     }
     .msg-row.mine .msg-bubble {
       background: var(--gold-dim);
@@ -882,6 +942,221 @@
       from { opacity: 0; transform: translateX(20px); }
       to   { opacity: 1; transform: translateX(0); }
     }
+    .call-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+      background: rgba(3, 7, 18, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .call-overlay.visible { display: flex; }
+    .call-panel {
+      width: min(540px, calc(100vw - 24px));
+      max-height: calc(var(--app-height) - 40px);
+      border-radius: 26px;
+      border: 1px solid var(--border-light);
+      background: linear-gradient(145deg, rgba(17,24,39,0.95), rgba(10,14,24,0.92));
+      box-shadow: var(--shadow-lg), 0 0 60px rgba(201,162,39,0.12);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin: auto;
+      overflow: auto;
+    }
+    .call-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .call-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,162,39,0.28);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .call-status {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    .call-peer-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .call-peer-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.14);
+      background: var(--bg-surface);
+    }
+    .call-peer-avatar img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .call-peer-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .call-peer-meta {
+      margin-top: 3px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .call-stage {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at top, rgba(201,162,39,0.16), transparent 42%),
+        linear-gradient(180deg, rgba(15,23,42,0.94), rgba(2,6,23,0.96));
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .call-stage.video-mode {
+      min-height: min(220px, 62vh);
+      height: min(62vh, 640px);
+    }
+    .call-stage.audio-only #call-remote-video,
+    .call-stage.audio-only #call-local-video {
+      display: none;
+    }
+    .call-stage.video-mode #call-remote-video {
+      display: block;
+    }
+    .call-stage.video-mode #call-local-video {
+      display: block;
+    }
+    #call-remote-video,
+    #call-local-video {
+      width: 100%;
+      height: 100%;
+      background: #05070d;
+      display: none;
+    }
+    #call-remote-video {
+      position: absolute;
+      inset: 0;
+      object-fit: contain;
+    }
+    #call-local-video {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 110px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: var(--shadow-md);
+      z-index: 2;
+    }
+    .call-stage-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 20px;
+    }
+    .call-stage-placeholder.hidden { display: none; }
+    .call-stage-placeholder svg {
+      width: 34px;
+      height: 34px;
+      opacity: 0.7;
+    }
+    .call-controls,
+    .call-incoming-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .call-controls.hidden,
+    .call-incoming-actions.hidden {
+      display: none;
+    }
+    .call-control-btn {
+      min-width: 48px;
+      height: 48px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform var(--transition), background var(--transition), border-color var(--transition);
+    }
+    .call-control-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(201,162,39,0.38);
+    }
+    .call-control-btn.end {
+      background: rgba(239,68,68,0.16);
+      border-color: rgba(239,68,68,0.34);
+      color: #fecaca;
+    }
+    .call-control-btn.accept {
+      background: rgba(34,197,94,0.16);
+      border-color: rgba(34,197,94,0.34);
+      color: #bbf7d0;
+    }
+    .call-control-btn.reject {
+      background: rgba(239,68,68,0.16);
+      border-color: rgba(239,68,68,0.34);
+      color: #fecaca;
+    }
+    .call-control-btn.active {
+      background: var(--gold-dim);
+      border-color: rgba(201,162,39,0.4);
+      color: var(--gold);
+    }
     @media (max-width: 700px) {
       #sidebar {
         width: 100vw;
@@ -900,6 +1175,14 @@
       .msg-bubble-col { max-width: 82%; }
       .filter-tabs { grid-template-columns: repeat(2, 1fr); }
       .auth-card { padding: 32px 24px; }
+      .call-panel { padding: 18px; }
+      .call-peer-card { padding: 12px; }
+      #call-local-video {
+        width: 92px;
+        height: 126px;
+        right: 10px;
+        bottom: 10px;
+      }
     }
     @media (min-width: 701px) {
       .chat-back { display: none; }
@@ -961,9 +1244,17 @@
         <button class="filter-btn" type="button" data-filter="admins" aria-pressed="false">Admin</button>
       </div>
     </div>
-    <div class="section-label" id="users-section-label">Users</div>
-    <div id="users-list">
-      <div class="users-empty">Loading users...</div>
+    <div id="contacts-scroll">
+      <div class="sidebar-section hidden" id="recent-users-section">
+        <div class="section-label">Recent chats</div>
+        <div id="recent-users-list"></div>
+      </div>
+      <div class="sidebar-section" id="users-section">
+        <div class="section-label" id="users-section-label">All users</div>
+        <div id="users-list">
+          <div class="users-empty">Loading users...</div>
+        </div>
+      </div>
     </div>
   </aside>
   <main id="chat-panel">
@@ -990,12 +1281,25 @@
           <span id="chat-header-status-text">Offline</span>
         </div>
       </div>
-      <button class="notify-btn" id="notify-btn" type="button" aria-pressed="false" title="Enable notifications">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
-      </button>
+      <div class="chat-header-actions">
+        <button class="chat-action-btn" id="audio-call-btn" type="button" title="Start voice call" aria-label="Start voice call">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.61a2 2 0 0 1-.45 2.11L8.03 9.91a16 16 0 0 0 6.06 6.06l1.47-1.26a2 2 0 0 1 2.11-.45c.83.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </button>
+        <button class="chat-action-btn" id="video-call-btn" type="button" title="Start video call" aria-label="Start video call">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </button>
+        <button class="notify-btn" id="notify-btn" type="button" aria-pressed="false" title="Enable notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+        </button>
+      </div>
     </div>
     <div id="messages-wrap"></div>
     <div id="typing-indicator">
@@ -1023,6 +1327,53 @@
     </div>
   </main>
 </div>
+<div class="call-overlay" id="call-overlay" aria-hidden="true">
+  <div class="call-panel" role="dialog" aria-modal="true" aria-labelledby="call-peer-name">
+    <div class="call-topline">
+      <div class="call-mode-badge" id="call-mode-badge">Voice Call</div>
+      <div class="call-status" id="call-status">Waiting...</div>
+    </div>
+    <div class="call-peer-card">
+      <div class="call-peer-avatar" id="call-peer-avatar"></div>
+      <div>
+        <div class="call-peer-name" id="call-peer-name">-</div>
+        <div class="call-peer-meta" id="call-peer-meta">Preparing call...</div>
+      </div>
+    </div>
+    <div class="call-stage audio-only" id="call-stage">
+      <video id="call-remote-video" autoplay playsinline></video>
+      <video id="call-local-video" autoplay playsinline muted></video>
+      <audio id="call-remote-audio" autoplay playsinline></audio>
+      <div class="call-stage-placeholder" id="call-stage-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.61a2 2 0 0 1-.45 2.11L8.03 9.91a16 16 0 0 0 6.06 6.06l1.47-1.26a2 2 0 0 1 2.11-.45c.83.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        <div id="call-stage-placeholder-text">Connecting call...</div>
+      </div>
+    </div>
+    <div class="call-incoming-actions hidden" id="call-incoming-actions">
+      <button class="call-control-btn reject" id="call-reject-btn" type="button">Decline</button>
+      <button class="call-control-btn accept" id="call-accept-btn" type="button">Accept</button>
+    </div>
+    <div class="call-controls hidden" id="call-controls">
+      <button class="call-control-btn" id="call-mute-btn" type="button" title="Mute or unmute microphone">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="23"></line>
+          <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+      </button>
+      <button class="call-control-btn" id="call-camera-btn" type="button" title="Toggle camera">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+      </button>
+      <button class="call-control-btn end" id="call-end-btn" type="button" title="End call">End Call</button>
+    </div>
+  </div>
+</div>
 <div id="toast-container"></div>
 <script src="/assets/firebase-config.js"></script>
 <script src="/assets/tu-firebase.js"></script>
@@ -1030,6 +1381,7 @@
   TU.init();
   const auth = TU.auth;
   const db   = TU.db;
+  let firestore = TU.firestore || null;
 </script>
 <script>
   const setAppHeight = () => {
@@ -1083,6 +1435,71 @@
   let autoOpenedMentor = false;
   let currentFilter    = 'all';
   let editingMessageKey = null;
+  let chatPreviewState = {};
+  let chatIndexListener = null;
+  let chatPreviewBootstrap = new Set();
+  let knownChatDocStates = {};
+  let chatIndexInitialized = false;
+  let usersRenderQueued = false;
+  const CALL_ICE_SERVERS = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+      { urls: 'stun:stun4.l.google.com:19302' }
+    ],
+    iceTransportPolicy: 'all',
+  };
+  let currentPrivateCall = null;
+  let incomingPrivateCall = null;
+  let privateCallPc = null;
+  let privateCallLocalStream = null;
+  let privateCallRemoteStream = null;
+  let privateCallSignalRef = null;
+  let privateCallSignalListener = null;
+  let privateCallStateRef = null;
+  let privateCallStateListener = null;
+  let activeChatCallRef = null;
+  let activeChatCallListener = null;
+  let pendingCallOffer = null;
+  let pendingIceCandidates = [];
+  let callRingTimer = null;
+  let callMuteEnabled = true;
+  let callCameraEnabled = true;
+  let externalPrivateCallState = null;
+  let callLaunchBooted = false;
+  let observedIncomingCallSessions = new Set();
+  const CALL_TONE_SOURCES = {
+    incoming: '/assets/incoming.mp3',
+    outgoing: '/assets/outcoming.mp3',
+  };
+  let callToneAudios = Object.create(null);
+  let callToneMode = '';
+  const callLaunchParams = (() => {
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      const action = String(params.get('callAction') || '').trim().toLowerCase();
+      const peerUid = String(params.get('callPeer') || '').trim();
+      const callId = String(params.get('callId') || '').trim();
+      const modeValue = String(params.get('callMode') || '').trim().toLowerCase();
+      return {
+        enabled: !!(action && callId),
+        action,
+        peerUid,
+        callId,
+        mode: modeValue === 'video' ? 'video' : 'audio',
+      };
+    } catch (e) {
+      return {
+        enabled: false,
+        action: '',
+        peerUid: '',
+        callId: '',
+        mode: 'audio',
+      };
+    }
+  })();
   const mentorParam = (() => {
     try {
       const v = new URLSearchParams(window.location.search || "").get('mentor');
@@ -1093,6 +1510,480 @@
   })();
   function getChatId(uid1, uid2) {
     return [uid1, uid2].sort().join('_');
+  }
+  function getChatDocRef(chatId) {
+    return firestore.collection('privateChats').doc(chatId);
+  }
+  function getChatMessagesCollection(chatId) {
+    return getChatDocRef(chatId).collection('messages');
+  }
+  function getCallDocRef(callId) {
+    return firestore.collection('privateCalls').doc(callId);
+  }
+  function getCallSignalsCollection(callId) {
+    return getCallDocRef(callId).collection('signals');
+  }
+  async function ensurePeerLoaded(peerUid) {
+    if (!peerUid || allUsers[peerUid]) return;
+    const peerSnap = await db.ref(`users/${peerUid}`).once('value').catch(() => null);
+    if (peerSnap && peerSnap.exists()) {
+      allUsers[peerUid] = { ...(peerSnap.val() || {}), uid: peerUid };
+      queueUsersListRender();
+    }
+  }
+  function queueUsersListRender() {
+    if (usersRenderQueued) return;
+    usersRenderQueued = true;
+    requestAnimationFrame(() => {
+      usersRenderQueued = false;
+      if (!currentUser) return;
+      const q = (document.getElementById('search-input') || {}).value || '';
+      renderUsersList(allUsers, q);
+    });
+  }
+  function sanitizePreviewText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+  }
+  function buildChatPreviewEntry(doc) {
+    const data = doc && typeof doc.data === 'function' ? (doc.data() || {}) : (doc || {});
+    const peerUid = getPeerUidFromChatData(data);
+    if (!peerUid) return null;
+    return {
+      chatId: doc && doc.id ? doc.id : (data.chatId || getChatId(currentUser?.uid || '', peerUid)),
+      peerUid,
+      lastText: sanitizePreviewText(data.lastMessageText || ''),
+      lastSenderId: data.lastMessageSenderId || '',
+      lastTimestamp: Number(data.lastMessageAtMs) || 0,
+      unreadCount: Number((data.unreadCounts || {})[currentUser?.uid || '']) || 0,
+    };
+  }
+  function getChatPreviewNotifyKey(peerUid, timestamp) {
+    const ts = Number(timestamp) || 0;
+    if (!peerUid || ts <= 0) return '';
+    return `${peerUid}:${ts}`;
+  }
+  function primeChatPreviewBootstrap(previews) {
+    chatPreviewBootstrap = new Set();
+    Object.values(previews || {}).forEach((preview) => {
+      const key = getChatPreviewNotifyKey(preview?.peerUid, preview?.lastTimestamp);
+      if (key) chatPreviewBootstrap.add(key);
+    });
+  }
+  function getPreviewForUser(peerUid) {
+    return chatPreviewState && chatPreviewState[peerUid] ? chatPreviewState[peerUid] : null;
+  }
+  function detachKnownChatDocListeners() {
+    knownChatDocStates = {};
+    chatIndexInitialized = false;
+  }
+  function recomputeExternalPrivateCallStateFromKnownChats() {
+    const now = Date.now();
+    let latestExternalState = null;
+    Object.entries(knownChatDocStates || {}).forEach(([peerUid, chatData]) => {
+      const state = chatData && chatData.activeCall ? chatData.activeCall : null;
+      if (!state) return;
+      const status = String(state.status || '').toLowerCase();
+      const callId = String(state.callId || chatData.chatId || getChatId(currentUser?.uid || '', peerUid)).trim();
+      if (!callId) return;
+      const normalized = {
+        ...state,
+        callId,
+        chatId: state.chatId || chatData.chatId || callId,
+        status,
+      };
+      if (!isTerminalCallStatus(status)) {
+        const latestTime = Number(latestExternalState?.updatedAtMs || latestExternalState?.createdAtMs || 0);
+        const nextTime = Number(normalized.updatedAtMs || normalized.createdAtMs || 0);
+        if (!latestExternalState || nextTime >= latestTime) {
+          latestExternalState = normalized;
+        }
+      }
+      if (status !== 'ringing') return;
+      if (String(normalized.toUid || '') !== String(currentUser?.uid || '')) return;
+      const createdAtMs = Number(normalized.createdAtMs || 0);
+      if (createdAtMs > 0 && (now - createdAtMs) > 45000) return;
+      const callerUid = String(normalized.fromUid || '').trim();
+      if (!callerUid) return;
+      const sessionKey = `${callId}:${createdAtMs || Number(normalized.updatedAtMs || 0)}`;
+      if (observedIncomingCallSessions.has(sessionKey)) return;
+      observedIncomingCallSessions.add(sessionKey);
+      activateIncomingPrivateCall(callId, normalized, callerUid).catch(() => {});
+    });
+    externalPrivateCallState = latestExternalState;
+    updateCallButtonsState();
+  }
+  function maybeNotifyChatPreview(peerUid, prevPreview, nextPreview) {
+    if (!nextPreview || !peerUid) return;
+    const prevTimestamp = Number(prevPreview?.lastTimestamp) || 0;
+    const nextTimestamp = Number(nextPreview.lastTimestamp) || 0;
+    if (nextTimestamp <= 0 || nextTimestamp <= prevTimestamp) return;
+    if (!nextPreview.lastSenderId || nextPreview.lastSenderId === currentUser?.uid) return;
+    const notifyKey = getChatPreviewNotifyKey(peerUid, nextTimestamp);
+    const isSameVisibleChat = activeChat === peerUid && document.visibilityState === 'visible' && document.hasFocus();
+    if (!notifyKey || chatPreviewBootstrap.has(notifyKey) || isSameVisibleChat) return;
+    chatPreviewBootstrap.add(notifyKey);
+    ensurePeerLoaded(peerUid).catch(() => null).finally(() => {
+      const peer = allUsers[peerUid] || {};
+      const peerName = getUserName(peer) || 'Someone';
+      const previewText = String(nextPreview.lastText || '').trim();
+      if (document.visibilityState === 'visible' && document.hasFocus()) {
+        const toastText = previewText
+          ? `${peerName}: ${previewText}`
+          : `${peerName} sent a message`;
+        showToast(toastText, 'success');
+      }
+      showChatNotification(peerName, previewText, peerUid);
+    });
+  }
+  function applyKnownChatEntries(entries) {
+    const previousPreviews = chatPreviewState || {};
+    const nextPreviewState = {};
+    const nextKnownStates = {};
+    (entries || []).forEach((entry) => {
+      const data = entry && entry.data ? entry.data : {};
+      const peerUid = String((entry && entry.peerUid) || getPeerUidFromChatData(data) || '').trim();
+      if (!peerUid) return;
+      nextKnownStates[peerUid] = {
+        ...data,
+        chatId: (entry && entry.chatId) || getChatId(currentUser?.uid || '', peerUid),
+      };
+      const nextPreview = buildChatPreviewEntry({
+        id: (entry && entry.chatId) || getChatId(currentUser?.uid || '', peerUid),
+        data: () => data,
+      });
+      if (!nextPreview) return;
+      nextPreviewState[peerUid] = nextPreview;
+      if (!allUsers[peerUid]) {
+        ensurePeerLoaded(peerUid).catch(() => null);
+      }
+    });
+    if (!chatIndexInitialized) {
+      primeChatPreviewBootstrap(nextPreviewState);
+      chatIndexInitialized = true;
+    } else {
+      Object.entries(nextPreviewState).forEach(([peerUid, nextPreview]) => {
+        maybeNotifyChatPreview(peerUid, previousPreviews[peerUid] || null, nextPreview);
+      });
+    }
+    knownChatDocStates = nextKnownStates;
+    chatPreviewState = nextPreviewState;
+    recomputeExternalPrivateCallStateFromKnownChats();
+    queueUsersListRender();
+  }
+  function applyKnownChatsSnapshot(snapshot) {
+    const entries = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data() || {};
+      const peerUid = getPeerUidFromChatData(data);
+      if (!peerUid) return;
+      entries.push({
+        chatId: doc.id,
+        peerUid,
+        data,
+      });
+    });
+    applyKnownChatEntries(entries);
+  }
+  function getPeerUidFromChatData(data) {
+    const participants = Array.isArray(data?.participants) ? data.participants : [];
+    return participants.find((uid) => uid && uid !== currentUser?.uid) || null;
+  }
+  function normalizeMessageDoc(doc) {
+    const data = doc && typeof doc.data === 'function' ? (doc.data() || {}) : (doc || {});
+    return {
+      _key: doc && doc.id ? doc.id : '',
+      senderId: data.senderId || '',
+      recipientId: data.recipientId || '',
+      text: data.text || '',
+      timestamp: Number(data.timestampMs) || 0,
+      editedAt: Number(data.editedAtMs) || 0,
+      read: !!data.isRead,
+      deleted: !!data.deleted,
+      kind: data.kind || 'text',
+      callId: data.callId || '',
+      callStatus: data.callStatus || '',
+      callMode: data.callMode || '',
+      callFromUid: data.callFromUid || '',
+      callToUid: data.callToUid || '',
+      callEndedBy: data.callEndedBy || '',
+      callStartedAtMs: Number(data.callStartedAtMs) || 0,
+      callEndedAtMs: Number(data.callEndedAtMs) || 0,
+      callDurationMs: Number(data.callDurationMs) || 0,
+    };
+  }
+  function isCallHistoryMessage(msg) {
+    return !!(msg && msg.kind === 'call');
+  }
+  function getCallModeLabel(mode) {
+    return mode === 'video' ? 'Video call' : 'Voice call';
+  }
+  function formatCallDuration(ms) {
+    const totalSeconds = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (hours > 0) {
+      return `${hours}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+    }
+    return `${seconds}s`;
+  }
+  function getCallPreviewText(callData) {
+    const callLabel = getCallModeLabel(callData?.callMode || callData?.mode);
+    const callLabelLower = callLabel.toLowerCase();
+    const status = String(callData?.callStatus || callData?.status || '').toLowerCase();
+    const durationMs = Number(callData?.callDurationMs || 0);
+    if (status === 'missed') return `Missed ${callLabelLower}`;
+    if (status === 'cancelled') return `Canceled ${callLabelLower}`;
+    if (status === 'rejected') return `Declined ${callLabelLower}`;
+    if (status === 'ended' && durationMs > 0) return `${callLabel} (${formatCallDuration(durationMs)})`;
+    if (status === 'ended') return `${callLabel} ended`;
+    return callLabel;
+  }
+  function getMessagePreviewText(msg) {
+    if (!msg) return '';
+    if (msg.deleted) return 'Message deleted';
+    if (isCallHistoryMessage(msg)) return getCallPreviewText(msg);
+    return String(msg.text || '');
+  }
+  function resolveCallHistorySenderId(callData) {
+    const fromUid = callData?.callFromUid || callData?.fromUid || '';
+    const toUid = callData?.callToUid || callData?.toUid || '';
+    const endedBy = callData?.callEndedBy || callData?.endedBy || '';
+    const status = String(callData?.callStatus || callData?.status || '').toLowerCase();
+    if (status === 'missed' || status === 'cancelled') return fromUid || endedBy || toUid;
+    if (status === 'rejected') return endedBy || toUid || fromUid;
+    if (endedBy === fromUid || endedBy === toUid) return endedBy;
+    return fromUid || toUid;
+  }
+  function createCallHistoryPayload(callData, fallbackInfo = null) {
+    const base = callData || {};
+    const fallback = fallbackInfo || {};
+    const callId = base.callId || fallback.callId || '';
+    const callMode = base.callMode || base.mode || fallback.callMode || fallback.mode || 'audio';
+    const callStatus = base.callStatus || base.status || fallback.callStatus || fallback.status || 'ended';
+    const callFromUid = base.callFromUid || base.fromUid || fallback.callFromUid || fallback.fromUid || '';
+    const callToUid = base.callToUid || base.toUid || fallback.callToUid || fallback.toUid || '';
+    if (!callId || !callFromUid || !callToUid) return null;
+    const callEndedBy = base.callEndedBy || base.endedBy || fallback.callEndedBy || fallback.endedBy || '';
+    const callEndedAtMs = Number(base.callEndedAtMs || base.endedAtMs || fallback.callEndedAtMs || fallback.endedAtMs || base.updatedAtMs || Date.now());
+    const callStartedAtMs = Number(base.callStartedAtMs || base.startedAtMs || fallback.callStartedAtMs || fallback.startedAtMs || 0);
+    const callDurationMs = Number(
+      base.callDurationMs
+      || fallback.callDurationMs
+      || (callStatus === 'ended' && callStartedAtMs > 0 && callEndedAtMs > callStartedAtMs ? (callEndedAtMs - callStartedAtMs) : 0)
+    );
+    const senderId = resolveCallHistorySenderId({ callStatus, callFromUid, callToUid, callEndedBy });
+    const recipientId = senderId === callFromUid ? callToUid : callFromUid;
+    return {
+      kind: 'call',
+      callId,
+      senderId,
+      recipientId,
+      text: getCallPreviewText({ callMode, callStatus, callDurationMs }),
+      timestampMs: callEndedAtMs,
+      isRead: false,
+      deleted: false,
+      callMode,
+      callStatus,
+      callFromUid,
+      callToUid,
+      callEndedBy,
+      callStartedAtMs,
+      callEndedAtMs,
+      callDurationMs,
+    };
+  }
+  async function persistCallHistoryMessage(callData, fallbackInfo = null) {
+    if (!firestore || !currentUser) return null;
+    const payload = createCallHistoryPayload(callData, fallbackInfo);
+    if (!payload) return null;
+    const peerUid = currentUser.uid === payload.callFromUid ? payload.callToUid : payload.callFromUid;
+    if (!peerUid) return null;
+    const chatId = getChatId(payload.callFromUid, payload.callToUid);
+    await ensureChatDoc(peerUid).catch(() => null);
+    await getChatMessagesCollection(chatId).doc(`call-${payload.callId}`).set(payload, { merge: true });
+    await refreshChatIndexesForPair(peerUid).catch(() => {});
+    return payload;
+  }
+  async function ensureChatDoc(peerUid, patch = {}) {
+    if (!firestore || !currentUser || !peerUid) return null;
+    const chatId = getChatId(currentUser.uid, peerUid);
+    const createdAtMs = Number(patch.createdAtMs || Date.now());
+    const updatedAtMs = Number(patch.updatedAtMs || patch.lastMessageAtMs || createdAtMs);
+    const lastMessageAtMs = Number(patch.lastMessageAtMs || 0);
+    await getChatDocRef(chatId).set({
+      chatId,
+      participants: [currentUser.uid, peerUid].sort(),
+      createdAtMs,
+      updatedAtMs,
+      lastMessageAtMs,
+      lastMessageSenderId: '',
+      lastMessageText: '',
+      unreadCounts: {
+        [currentUser.uid]: 0,
+        [peerUid]: 0,
+      },
+      typing: {
+        [currentUser.uid]: 0,
+        [peerUid]: 0,
+      },
+      ...patch,
+    }, { merge: true });
+    return chatId;
+  }
+  function applyChatPreviewSnapshot(snapshot) {
+    const next = {};
+    snapshot.forEach((doc) => {
+      const preview = buildChatPreviewEntry(doc);
+      if (!preview) return;
+      next[preview.peerUid] = preview;
+      if (!allUsers[preview.peerUid]) {
+        ensurePeerLoaded(preview.peerUid).catch(() => null);
+      }
+    });
+    chatPreviewState = next;
+    queueUsersListRender();
+  }
+  function updateLocalPreview(peerUid, data) {
+    if (!peerUid || !data) return;
+    chatPreviewState = {
+      ...chatPreviewState,
+      [peerUid]: {
+        ...(chatPreviewState[peerUid] || {}),
+        ...data,
+      }
+    };
+    queueUsersListRender();
+  }
+  async function syncChatPreview() {
+    return;
+  }
+  function subscribeChatIndex() {
+    if (!currentUser || !db) return;
+    unsubscribeChatIndex();
+    chatIndexInitialized = false;
+    if (window.TU && typeof window.TU.observeKnownPrivateChats === 'function') {
+      chatIndexListener = window.TU.observeKnownPrivateChats(db, currentUser.uid, (entries) => {
+        applyKnownChatEntries(entries);
+      });
+      return;
+    }
+    if (!firestore) return;
+    chatIndexListener = firestore.collection('privateChats')
+      .where('participants', 'array-contains', currentUser.uid)
+      .onSnapshot((snapshot) => {
+        applyKnownChatsSnapshot(snapshot);
+      }, (error) => {
+        console.error('chat index listener failed', error);
+      });
+  }
+  function unsubscribeChatIndex() {
+    if (typeof chatIndexListener === 'function') {
+      chatIndexListener();
+    }
+    chatIndexListener = null;
+    detachKnownChatDocListeners();
+    chatPreviewState = {};
+    chatPreviewBootstrap = new Set();
+    externalPrivateCallState = null;
+  }
+  async function markChatSummaryRead(peerUid) {
+    if (!firestore || !currentUser || !peerUid) return;
+    const chatId = getChatId(currentUser.uid, peerUid);
+    const prev = getPreviewForUser(peerUid) || {};
+    const next = {
+      ...prev,
+      chatId,
+      unreadCount: 0,
+      peerUid,
+    };
+    updateLocalPreview(peerUid, next);
+    await ensureChatDoc(peerUid).catch(() => null);
+    await getChatDocRef(chatId).update({
+      [`unreadCounts.${currentUser.uid}`]: 0,
+      updatedAtMs: Date.now(),
+    }).catch(() => {});
+  }
+  async function updateChatIndexesAfterSend(peerUid, payload) {
+    if (!firestore || !currentUser || !peerUid || !payload) return;
+    const chatId = getChatId(currentUser.uid, peerUid);
+    const preview = sanitizePreviewText(getMessagePreviewText(payload));
+    const lastTimestamp = Number(payload.timestamp) || Date.now();
+    const senderId = payload.senderId || currentUser.uid;
+    const senderSummary = {
+      chatId,
+      peerUid,
+      lastText: preview,
+      lastSenderId: senderId,
+      lastTimestamp,
+      unreadCount: 0,
+    };
+    updateLocalPreview(peerUid, senderSummary);
+    await ensureChatDoc(peerUid).catch(() => null);
+    await getChatDocRef(chatId).update({
+      updatedAtMs: lastTimestamp,
+      lastMessageText: preview,
+      lastMessageSenderId: senderId,
+      lastMessageAtMs: lastTimestamp,
+      [`unreadCounts.${currentUser.uid}`]: 0,
+      [`unreadCounts.${peerUid}`]: firebase.firestore.FieldValue.increment(1),
+      [`typing.${currentUser.uid}`]: 0,
+    }).catch(() => {});
+  }
+  async function refreshChatIndexesForPair(peerUid) {
+    if (!firestore || !currentUser || !peerUid) return;
+    const chatId = getChatId(currentUser.uid, peerUid);
+    const messagesRef = getChatMessagesCollection(chatId);
+    const [lastSnap, myUnreadSnap, peerUnreadSnap] = await Promise.all([
+      messagesRef.orderBy('timestampMs', 'desc').limit(1).get(),
+      messagesRef.where('recipientId', '==', currentUser.uid).get(),
+      messagesRef.where('recipientId', '==', peerUid).get(),
+    ]);
+    const latestDoc = lastSnap.docs[0] || null;
+    const latestMsg = latestDoc ? normalizeMessageDoc(latestDoc) : null;
+    let myUnread = 0;
+    let peerUnread = 0;
+    myUnreadSnap.forEach((child) => {
+      const msg = normalizeMessageDoc(child);
+      if (!msg.read) myUnread++;
+    });
+    peerUnreadSnap.forEach((child) => {
+      const msg = normalizeMessageDoc(child);
+      if (!msg.read) peerUnread++;
+    });
+    if (!latestMsg) {
+      await getChatDocRef(chatId).delete().catch(() => {});
+      const next = { ...chatPreviewState };
+      delete next[peerUid];
+      chatPreviewState = next;
+      queueUsersListRender();
+      return;
+    }
+    const preview = sanitizePreviewText(getMessagePreviewText(latestMsg));
+    const lastTimestamp = Number(latestMsg.timestamp) || Date.now();
+    const base = {
+      chatId,
+      lastText: preview,
+      lastSenderId: latestMsg.senderId || '',
+      lastTimestamp,
+    };
+    updateLocalPreview(peerUid, {
+      ...base,
+      peerUid,
+      unreadCount: myUnread,
+    });
+    await ensureChatDoc(peerUid).catch(() => null);
+    await getChatDocRef(chatId).update({
+      updatedAtMs: Date.now(),
+      lastMessageText: preview,
+      lastMessageSenderId: latestMsg.senderId || '',
+      lastMessageAtMs: lastTimestamp,
+      [`unreadCounts.${currentUser.uid}`]: myUnread,
+      [`unreadCounts.${peerUid}`]: peerUnread,
+    }).catch(() => {});
   }
   function detachActivePeerStatus() {
     if (activePeerStatusRef && activePeerStatusListener) {
@@ -1189,7 +2080,8 @@
   }
   function updateSectionLabel() {
     const label = document.getElementById('users-section-label');
-    if (label) label.textContent = getFilterLabel(currentFilter);
+    if (!label) return;
+    label.textContent = currentFilter === 'all' ? 'All users' : getFilterLabel(currentFilter);
   }
   function updateFilterUI() {
     const wrap = document.getElementById('role-filters');
@@ -1281,6 +2173,38 @@
     if (!ts) return '';
     return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
+  function isOutgoingCallForViewer(msg, viewerUid) {
+    return !!(msg && viewerUid && msg.callFromUid === viewerUid);
+  }
+  function getCallHistoryTitle(msg, viewerUid) {
+    const callLabel = getCallModeLabel(msg?.callMode);
+    const callLabelLower = callLabel.toLowerCase();
+    const outgoing = isOutgoingCallForViewer(msg, viewerUid);
+    const status = String(msg?.callStatus || '').toLowerCase();
+    if (status === 'missed') return outgoing ? `No answer to ${callLabelLower}` : `Missed ${callLabelLower}`;
+    if (status === 'cancelled') return outgoing ? `Canceled ${callLabelLower}` : `${callLabel} canceled`;
+    if (status === 'rejected') return outgoing ? `${callLabel} declined` : `Declined ${callLabelLower}`;
+    if (status === 'ended' && Number(msg?.callDurationMs || 0) > 0) return callLabel;
+    if (status === 'ended') return `${callLabel} ended`;
+    return callLabel;
+  }
+  function getCallHistoryMeta(msg, viewerUid) {
+    const parts = [isOutgoingCallForViewer(msg, viewerUid) ? 'Outgoing' : 'Incoming'];
+    const status = String(msg?.callStatus || '').toLowerCase();
+    const durationMs = Number(msg?.callDurationMs || 0);
+    if (durationMs > 0) {
+      parts.push(formatCallDuration(durationMs));
+    } else if (status === 'missed') {
+      parts.push(isOutgoingCallForViewer(msg, viewerUid) ? 'Not answered' : 'Not picked up');
+    } else if (status === 'cancelled') {
+      parts.push('Before answer');
+    } else if (status === 'rejected') {
+      parts.push('Declined');
+    } else if (status === 'ended') {
+      parts.push('Ended');
+    }
+    return parts.join(' - ');
+  }
   function formatDayDivider(ts) {
     const d = new Date(ts);
     const now = new Date();
@@ -1310,9 +2234,12 @@
   }
   function loadNotificationPref() {
     try {
-      notificationsEnabled = localStorage.getItem('tu_notifications_enabled') === '1';
+      const saved = localStorage.getItem('tu_notifications_enabled');
+      notificationsEnabled = saved === null
+        ? (isNotificationSupported() && Notification.permission === 'granted')
+        : saved === '1';
     } catch (e) {
-      notificationsEnabled = false;
+      notificationsEnabled = isNotificationSupported() && Notification.permission === 'granted';
     }
   }
   function setNotificationPref(val) {
@@ -1360,6 +2287,802 @@
     updateNotifyButton();
     notifyBtn.addEventListener('click', requestNotifications);
   }
+  const audioCallBtn = document.getElementById('audio-call-btn');
+  const videoCallBtn = document.getElementById('video-call-btn');
+  const callOverlay = document.getElementById('call-overlay');
+  const callModeBadge = document.getElementById('call-mode-badge');
+  const callStatusEl = document.getElementById('call-status');
+  const callPeerAvatar = document.getElementById('call-peer-avatar');
+  const callPeerNameEl = document.getElementById('call-peer-name');
+  const callPeerMetaEl = document.getElementById('call-peer-meta');
+  const callStage = document.getElementById('call-stage');
+  const callStagePlaceholder = document.getElementById('call-stage-placeholder');
+  const callStagePlaceholderText = document.getElementById('call-stage-placeholder-text');
+  const callRemoteVideo = document.getElementById('call-remote-video');
+  const callLocalVideo = document.getElementById('call-local-video');
+  const callRemoteAudio = document.getElementById('call-remote-audio');
+  const callIncomingActions = document.getElementById('call-incoming-actions');
+  const callControls = document.getElementById('call-controls');
+  const callAcceptBtn = document.getElementById('call-accept-btn');
+  const callRejectBtn = document.getElementById('call-reject-btn');
+  const callEndBtn = document.getElementById('call-end-btn');
+  const callMuteBtn = document.getElementById('call-mute-btn');
+  const callCameraBtn = document.getElementById('call-camera-btn');
+  function updateCallButtonsState() {
+    const peer = activeChat ? allUsers[activeChat] : null;
+    const externalCallActive = !!(externalPrivateCallState && !isTerminalCallStatus(externalPrivateCallState.status));
+    const inCall = !!(currentPrivateCall || incomingPrivateCall || externalCallActive);
+    const canCall = !!(currentUser && activeChat && peer && peer.online && !inCall);
+    if (audioCallBtn) audioCallBtn.disabled = !canCall;
+    if (videoCallBtn) videoCallBtn.disabled = !canCall;
+  }
+  function armPrivateCallRingTimeout(callId) {
+    clearTimeout(callRingTimer);
+    callRingTimer = setTimeout(() => {
+      if (currentPrivateCall && currentPrivateCall.callId === callId && currentPrivateCall.status === 'ringing') {
+        endPrivateCall('missed').catch(() => {});
+      }
+    }, 35000);
+  }
+  function setCallOverlayVisible(show) {
+    if (!callOverlay) return;
+    callOverlay.classList.toggle('visible', !!show);
+    callOverlay.setAttribute('aria-hidden', show ? 'false' : 'true');
+  }
+  function setCallStageMode(mode) {
+    if (!callStage) return;
+    const videoMode = mode === 'video';
+    callStage.classList.toggle('video-mode', videoMode);
+    callStage.classList.toggle('audio-only', !videoMode);
+    if (callCameraBtn) {
+      callCameraBtn.style.display = videoMode ? 'inline-flex' : 'none';
+    }
+  }
+  function safePlay(el) {
+    if (!el || typeof el.play !== 'function') return;
+    el.play().catch(() => {});
+  }
+  function ensureCallToneAudio(mode = 'outgoing') {
+    const toneMode = mode === 'incoming' ? 'incoming' : 'outgoing';
+    if (callToneAudios[toneMode]) return callToneAudios[toneMode];
+    const audio = new Audio(CALL_TONE_SOURCES[toneMode]);
+    audio.loop = true;
+    audio.preload = 'auto';
+    callToneAudios[toneMode] = audio;
+    return audio;
+  }
+  function playCallTone(mode = 'outgoing') {
+    const toneMode = mode === 'incoming' ? 'incoming' : 'outgoing';
+    if (callToneMode && callToneMode !== toneMode) {
+      stopCallTone();
+    }
+    const audio = ensureCallToneAudio(toneMode);
+    if (!audio) return;
+    if (callToneMode === toneMode && !audio.paused) return;
+    callToneMode = toneMode;
+    audio.volume = toneMode === 'incoming' ? 1 : 0.82;
+    try {
+      audio.currentTime = 0;
+    } catch (e) {}
+    safePlay(audio);
+  }
+  function stopCallTone() {
+    callToneMode = '';
+    Object.values(callToneAudios).forEach((audio) => {
+      if (!audio) return;
+      audio.pause();
+      try {
+        audio.currentTime = 0;
+      } catch (e) {}
+    });
+  }
+  function isTerminalCallStatus(status) {
+    return ['rejected', 'cancelled', 'missed', 'ended'].includes(String(status || '').toLowerCase());
+  }
+  function buildCallStateFromInfo(callInfo, overrides = {}) {
+    if (!callInfo || !currentUser) return null;
+    const role = callInfo.role || '';
+    const callFromUid = callInfo.callFromUid || callInfo.fromUid || (role === 'caller' ? currentUser.uid : callInfo.peerUid) || '';
+    const callToUid = callInfo.callToUid || callInfo.toUid || (role === 'caller' ? callInfo.peerUid : currentUser.uid) || '';
+    return {
+      callId: callInfo.callId || '',
+      mode: callInfo.mode || 'audio',
+      status: callInfo.status || 'ended',
+      fromUid: callFromUid,
+      toUid: callToUid,
+      startedAtMs: Number(callInfo.startedAtMs || 0),
+      endedBy: callInfo.endedBy || '',
+      ...overrides,
+    };
+  }
+  function clearCallMediaElements() {
+    if (callRemoteVideo) {
+      callRemoteVideo.pause();
+      callRemoteVideo.srcObject = null;
+    }
+    if (callLocalVideo) {
+      callLocalVideo.pause();
+      callLocalVideo.srcObject = null;
+    }
+    if (callRemoteAudio) {
+      callRemoteAudio.pause();
+      callRemoteAudio.srcObject = null;
+    }
+  }
+  function updateCallControlButtons() {
+    if (callMuteBtn) {
+      callMuteBtn.classList.toggle('active', !callMuteEnabled);
+      callMuteBtn.title = callMuteEnabled ? 'Mute microphone' : 'Unmute microphone';
+    }
+    if (callCameraBtn) {
+      callCameraBtn.classList.toggle('active', !callCameraEnabled);
+      callCameraBtn.title = callCameraEnabled ? 'Turn camera off' : 'Turn camera on';
+    }
+  }
+  function updateCallStagePlaceholder(text) {
+    if (callStagePlaceholderText) callStagePlaceholderText.textContent = text || 'Connecting call...';
+  }
+  function refreshCallMediaUi() {
+    const callInfo = currentPrivateCall || incomingPrivateCall;
+    const mode = callInfo?.mode || 'audio';
+    const hasLocalVideo = !!(privateCallLocalStream && privateCallLocalStream.getVideoTracks().length);
+    const hasRemoteVideo = !!(privateCallRemoteStream && privateCallRemoteStream.getVideoTracks().length);
+    setCallStageMode(mode);
+    if (callLocalVideo) {
+      callLocalVideo.style.display = mode === 'video' && hasLocalVideo ? 'block' : 'none';
+    }
+    if (callRemoteVideo) {
+      callRemoteVideo.style.display = mode === 'video' && hasRemoteVideo ? 'block' : 'none';
+    }
+    if (callStagePlaceholder) {
+      const shouldHidePlaceholder = mode === 'video' && hasRemoteVideo;
+      callStagePlaceholder.classList.toggle('hidden', shouldHidePlaceholder);
+    }
+    updateCallControlButtons();
+  }
+  function populateCallPeer(peerUid, mode, statusText, metaText) {
+    const peer = allUsers[peerUid] || {};
+    const peerName = getUserName(peer) || 'User';
+    if (callModeBadge) callModeBadge.textContent = mode === 'video' ? 'Video Call' : 'Voice Call';
+    if (callStatusEl) callStatusEl.textContent = statusText || 'Preparing call...';
+    if (callPeerNameEl) callPeerNameEl.textContent = peerName;
+    if (callPeerMetaEl) callPeerMetaEl.textContent = metaText || '';
+    if (callPeerAvatar) renderAvatarEl(callPeerAvatar, peerName, peerUid, getUserAvatar(peer));
+    updateCallStagePlaceholder(mode === 'video' ? 'Waiting for video...' : 'Voice call in progress');
+    refreshCallMediaUi();
+  }
+  function showIncomingCallUi(callInfo) {
+    if (!callInfo) return;
+    populateCallPeer(callInfo.peerUid, callInfo.mode, 'Incoming call', callInfo.mode === 'video' ? 'Video call request' : 'Voice call request');
+    if (callIncomingActions) callIncomingActions.classList.remove('hidden');
+    if (callControls) callControls.classList.add('hidden');
+    setCallOverlayVisible(true);
+    playCallTone('incoming');
+    updateCallButtonsState();
+  }
+  function showLiveCallUi(callInfo, statusText, metaText) {
+    if (!callInfo) return;
+    populateCallPeer(callInfo.peerUid, callInfo.mode, statusText, metaText);
+    if (callIncomingActions) callIncomingActions.classList.add('hidden');
+    if (callControls) callControls.classList.remove('hidden');
+    setCallOverlayVisible(true);
+    updateCallButtonsState();
+  }
+  async function activateIncomingPrivateCall(callId, state, relatedPeerUid) {
+    if (!callId || !state || !relatedPeerUid) return;
+    await ensurePeerLoaded(relatedPeerUid).catch(() => null);
+    const sameIncomingSession = incomingPrivateCall
+      && incomingPrivateCall.callId === callId
+      && Number(incomingPrivateCall.createdAtMs || 0) === Number(state.createdAtMs || 0);
+    const sameCurrentSession = currentPrivateCall
+      && currentPrivateCall.callId === callId
+      && Number(currentPrivateCall.createdAtMs || 0) === Number(state.createdAtMs || 0);
+    if (!sameIncomingSession && !sameCurrentSession) {
+      incomingPrivateCall = {
+        callId,
+        peerUid: relatedPeerUid,
+        role: 'callee',
+        mode: state.mode || 'audio',
+        status: state.status || 'ringing',
+        accepted: false,
+        fromUid: state.fromUid || relatedPeerUid,
+        toUid: state.toUid || currentUser?.uid || '',
+        createdAtMs: Number(state.createdAtMs || 0),
+        updatedAtMs: Number(state.updatedAtMs || 0),
+      };
+      pendingCallOffer = null;
+      pendingIceCandidates = [];
+      await attachPrivateCallListeners(callId);
+      showIncomingCallUi(incomingPrivateCall);
+    }
+    updateCallButtonsState();
+  }
+  function stopStreamTracks(stream) {
+    if (!stream) return;
+    stream.getTracks().forEach(track => track.stop());
+  }
+  async function ensureLocalCallMedia(mode) {
+    stopStreamTracks(privateCallLocalStream);
+    privateCallLocalStream = null;
+    clearCallMediaElements();
+    const constraints = {
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      },
+      video: mode === 'video' ? {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        facingMode: 'user',
+      } : false,
+    };
+    privateCallLocalStream = await navigator.mediaDevices.getUserMedia(constraints);
+    callMuteEnabled = true;
+    callCameraEnabled = mode !== 'video' ? false : true;
+    if (callLocalVideo && mode === 'video') {
+      callLocalVideo.srcObject = privateCallLocalStream;
+      safePlay(callLocalVideo);
+    }
+    refreshCallMediaUi();
+    return privateCallLocalStream;
+  }
+  async function sendPrivateCallSignal(callId, receiverId, type, data) {
+    if (!callId || !receiverId || !currentUser || !firestore) return;
+    await getCallSignalsCollection(callId).add({
+      sender: currentUser.uid,
+      receiver: receiverId,
+      type,
+      data,
+      timestampMs: Date.now(),
+    });
+  }
+  function detachPrivateCallListeners() {
+    if (typeof privateCallSignalListener === 'function') {
+      privateCallSignalListener();
+    }
+    if (typeof privateCallStateListener === 'function') {
+      privateCallStateListener();
+    }
+    privateCallSignalRef = null;
+    privateCallSignalListener = null;
+    privateCallStateRef = null;
+    privateCallStateListener = null;
+  }
+  function closePrivateCallPc() {
+    if (privateCallPc) {
+      privateCallPc.ontrack = null;
+      privateCallPc.onicecandidate = null;
+      privateCallPc.onconnectionstatechange = null;
+      try { privateCallPc.close(); } catch (e) {}
+    }
+    privateCallPc = null;
+  }
+  async function cleanupPrivateCallUi() {
+    clearTimeout(callRingTimer);
+    callRingTimer = null;
+    stopCallTone();
+    detachPrivateCallListeners();
+    closePrivateCallPc();
+    stopStreamTracks(privateCallLocalStream);
+    privateCallLocalStream = null;
+    privateCallRemoteStream = null;
+    pendingCallOffer = null;
+    pendingIceCandidates = [];
+    clearCallMediaElements();
+    currentPrivateCall = null;
+    incomingPrivateCall = null;
+    callMuteEnabled = true;
+    callCameraEnabled = true;
+    if (callIncomingActions) callIncomingActions.classList.add('hidden');
+    if (callControls) callControls.classList.add('hidden');
+    setCallOverlayVisible(false);
+    refreshCallMediaUi();
+    updateCallButtonsState();
+  }
+  function buildActiveChatCallState(callId, patch = {}) {
+    if (!callId) return null;
+    const activeInfo = currentPrivateCall || incomingPrivateCall || {};
+    const fromUid = patch.fromUid || activeInfo.fromUid || activeInfo.callFromUid || '';
+    const toUid = patch.toUid || activeInfo.toUid || activeInfo.callToUid || '';
+    const participants = Array.isArray(patch.participants) && patch.participants.length
+      ? patch.participants
+      : [fromUid, toUid].filter(Boolean).sort();
+    if (!fromUid || !toUid || participants.length !== 2) return null;
+    const createdAtMs = Number(patch.createdAtMs || activeInfo.createdAtMs || Date.now());
+    const next = {
+      callId,
+      chatId: callId,
+      participants,
+      fromUid,
+      toUid,
+      mode: patch.mode || activeInfo.mode || 'audio',
+      status: patch.status || activeInfo.status || 'ringing',
+      createdAtMs,
+      updatedAtMs: Date.now(),
+    };
+    if (patch.startedAtMs || activeInfo.startedAtMs) {
+      next.startedAtMs = Number(patch.startedAtMs || activeInfo.startedAtMs || 0);
+    }
+    if (patch.endedAtMs) next.endedAtMs = Number(patch.endedAtMs || 0);
+    if (patch.endedBy) next.endedBy = String(patch.endedBy || '');
+    if (patch.callDurationMs) next.callDurationMs = Number(patch.callDurationMs || 0);
+    return next;
+  }
+  async function writeChatCallState(callId, patch) {
+    if (!callId || !firestore) return;
+    const next = buildActiveChatCallState(callId, patch);
+    if (!next) return;
+    await getChatDocRef(callId).set({
+      chatId: callId,
+      participants: next.participants,
+      createdAtMs: Number(next.createdAtMs || Date.now()),
+      updatedAtMs: Number(next.updatedAtMs || Date.now()),
+      lastMessageAtMs: 0,
+      lastMessageSenderId: '',
+      lastMessageText: '',
+      unreadCounts: {
+        [next.fromUid]: 0,
+        [next.toUid]: 0,
+      },
+      typing: {
+        [next.fromUid]: 0,
+        [next.toUid]: 0,
+      },
+      activeCall: next,
+    }, { merge: true });
+  }
+  async function writePrivateCallState(callId, patch) {
+    if (!callId || !firestore) return;
+    await getCallDocRef(callId).set({
+      ...patch,
+      updatedAtMs: Date.now(),
+      callId,
+    }, { merge: true });
+    await writeChatCallState(callId, patch);
+  }
+  async function flushPendingIceCandidates() {
+    if (!privateCallPc || !privateCallPc.remoteDescription) return;
+    const queued = [...pendingIceCandidates];
+    pendingIceCandidates = [];
+    for (const candidateData of queued) {
+      try {
+        await privateCallPc.addIceCandidate(new RTCIceCandidate(candidateData));
+      } catch (e) {}
+    }
+  }
+  function createPrivateCallPeerConnection(callInfo) {
+    const peerUid = callInfo.peerUid;
+    const callId = callInfo.callId;
+    const pc = new RTCPeerConnection(CALL_ICE_SERVERS);
+    if (privateCallLocalStream) {
+      privateCallLocalStream.getTracks().forEach(track => {
+        pc.addTrack(track, privateCallLocalStream);
+      });
+    }
+    pc.ontrack = (event) => {
+      const [stream] = event.streams;
+      if (!stream) return;
+      privateCallRemoteStream = stream;
+      if (callInfo.mode === 'video' && callRemoteVideo) {
+        callRemoteVideo.srcObject = stream;
+        safePlay(callRemoteVideo);
+      } else if (callRemoteAudio) {
+        callRemoteAudio.srcObject = stream;
+        safePlay(callRemoteAudio);
+      }
+      if (callPeerMetaEl) callPeerMetaEl.textContent = 'Connected';
+      if (callStatusEl) callStatusEl.textContent = 'Call active';
+      refreshCallMediaUi();
+    };
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        sendPrivateCallSignal(callId, peerUid, 'ice', event.candidate.toJSON()).catch(() => {});
+      }
+    };
+    pc.onconnectionstatechange = () => {
+      const state = pc.connectionState;
+      if (state === 'connected') {
+        clearTimeout(callRingTimer);
+        if (callStatusEl) callStatusEl.textContent = 'Call active';
+        if (callPeerMetaEl && !privateCallRemoteStream) {
+          callPeerMetaEl.textContent = 'Connected';
+        }
+      }
+      if (state === 'failed' || state === 'closed') {
+        const endedAtMs = Date.now();
+        const startedAtMs = Number(currentPrivateCall?.startedAtMs || incomingPrivateCall?.startedAtMs || callInfo.startedAtMs || 0);
+        const patch = {
+          status: 'ended',
+          endedBy: currentUser?.uid || '',
+          endedAtMs,
+        };
+        if (startedAtMs > 0) {
+          patch.startedAtMs = startedAtMs;
+          patch.callDurationMs = Math.max(0, endedAtMs - startedAtMs);
+        }
+        writePrivateCallState(callId, patch).catch(() => {});
+      }
+    };
+    privateCallPc = pc;
+    return pc;
+  }
+  async function handleIncomingOffer() {
+    if (!currentPrivateCall || currentPrivateCall.role !== 'callee' || !currentPrivateCall.accepted || !pendingCallOffer) return;
+    if (!privateCallPc) createPrivateCallPeerConnection(currentPrivateCall);
+    await privateCallPc.setRemoteDescription(new RTCSessionDescription({
+      type: pendingCallOffer.type,
+      sdp: pendingCallOffer.sdp,
+    }));
+    const answer = await privateCallPc.createAnswer();
+    await privateCallPc.setLocalDescription(answer);
+    await sendPrivateCallSignal(currentPrivateCall.callId, currentPrivateCall.peerUid, 'answer', {
+      type: answer.type,
+      sdp: answer.sdp,
+    });
+    pendingCallOffer = null;
+    await flushPendingIceCandidates();
+    const startedAtMs = Date.now();
+    currentPrivateCall.startedAtMs = startedAtMs;
+    await writePrivateCallState(currentPrivateCall.callId, { status: 'active', startedAtMs });
+    showLiveCallUi(currentPrivateCall, 'Connecting...', currentPrivateCall.mode === 'video' ? 'Starting video call...' : 'Starting voice call...');
+  }
+  async function attachPrivateCallListeners(callId) {
+    detachPrivateCallListeners();
+    privateCallSignalRef = getCallSignalsCollection(callId);
+    privateCallSignalListener = privateCallSignalRef
+      .where('receiver', '==', currentUser.uid)
+      .onSnapshot(async (snapshot) => {
+        const changes = snapshot.docChanges();
+        for (const change of changes) {
+          if (change.type !== 'added') continue;
+          const signal = change.doc.data() || {};
+          try {
+            if (signal.type === 'offer') {
+              pendingCallOffer = signal.data || null;
+              if (currentPrivateCall?.role === 'callee' && currentPrivateCall.accepted) {
+                await handleIncomingOffer();
+              }
+            } else if (signal.type === 'answer') {
+              if (privateCallPc) {
+                await privateCallPc.setRemoteDescription(new RTCSessionDescription({
+                  type: signal.data?.type,
+                  sdp: signal.data?.sdp,
+                }));
+                await flushPendingIceCandidates();
+                stopCallTone();
+                showLiveCallUi(currentPrivateCall, 'Connecting...', currentPrivateCall?.mode === 'video' ? 'Video call accepted' : 'Voice call accepted');
+              }
+            } else if (signal.type === 'ice') {
+              if (privateCallPc && privateCallPc.remoteDescription) {
+                await privateCallPc.addIceCandidate(new RTCIceCandidate(signal.data));
+              } else {
+                pendingIceCandidates.push(signal.data);
+              }
+            }
+          } catch (e) {
+            showToast('Call signaling error', 'error');
+          } finally {
+            change.doc.ref.delete().catch(() => {});
+          }
+        }
+      }, (error) => {
+        console.error('private call signals listener failed', callId, error);
+      });
+    privateCallStateRef = getCallDocRef(callId);
+    privateCallStateListener = privateCallStateRef.onSnapshot(async (snap) => {
+      const state = snap.exists ? (snap.data() || null) : null;
+      const activeInfo = currentPrivateCall || incomingPrivateCall;
+      if (!activeInfo) return;
+      if (!state) {
+        await cleanupPrivateCallUi();
+        return;
+      }
+      if (state.status === 'ringing') {
+        if (activeInfo.role === 'caller') {
+          playCallTone('outgoing');
+          showLiveCallUi(activeInfo, 'Calling...', activeInfo.mode === 'video' ? 'Waiting for video answer...' : 'Waiting for answer...');
+        }
+        return;
+      }
+      if (state.status === 'active' || state.status === 'connecting') {
+        clearTimeout(callRingTimer);
+        stopCallTone();
+        const startedAtMs = Number(state.startedAtMs || 0);
+        if (currentPrivateCall) {
+          currentPrivateCall.status = state.status;
+          if (startedAtMs > 0) currentPrivateCall.startedAtMs = startedAtMs;
+          showLiveCallUi(currentPrivateCall, state.status === 'active' ? 'Call active' : 'Connecting...', activeInfo.mode === 'video' ? 'Video call in progress' : 'Voice call in progress');
+        }
+        if (incomingPrivateCall) {
+          incomingPrivateCall.status = state.status;
+          if (startedAtMs > 0) incomingPrivateCall.startedAtMs = startedAtMs;
+        }
+        return;
+      }
+      if (isTerminalCallStatus(state.status)) {
+        await persistCallHistoryMessage(state, activeInfo).catch(() => {});
+      }
+      if (state.status === 'rejected') {
+        stopCallTone();
+        showToast('Call declined', 'error');
+        await cleanupPrivateCallUi();
+        return;
+      }
+      if (state.status === 'cancelled') {
+        stopCallTone();
+        showToast('Call cancelled', 'error');
+        await cleanupPrivateCallUi();
+        return;
+      }
+      if (state.status === 'missed') {
+        stopCallTone();
+        showToast('No answer', 'error');
+        await cleanupPrivateCallUi();
+        return;
+      }
+      if (state.status === 'ended') {
+        stopCallTone();
+        showToast('Call ended', 'success');
+        await cleanupPrivateCallUi();
+      }
+    }, (error) => {
+      console.error('private call state listener failed', callId, error);
+    });
+  }
+  async function syncIncomingCallFromChatDoc(data, peerUid) {
+    if (!currentUser || !activeChatId || !peerUid) return;
+    const state = data && data.activeCall ? data.activeCall : null;
+    const callId = state?.callId || activeChatId;
+    if (!state || callId !== activeChatId) {
+      updateCallButtonsState();
+      return;
+    }
+    const relatedPeerUid = state.fromUid === currentUser.uid ? state.toUid : state.fromUid;
+    if (!relatedPeerUid || relatedPeerUid !== peerUid) {
+      updateCallButtonsState();
+      return;
+    }
+    await ensurePeerLoaded(relatedPeerUid);
+    if (state.toUid === currentUser.uid && state.status === 'ringing') {
+      await activateIncomingPrivateCall(callId, state, relatedPeerUid);
+      updateCallButtonsState();
+      return;
+    }
+    if (incomingPrivateCall && incomingPrivateCall.callId === callId) {
+      incomingPrivateCall.status = state.status || incomingPrivateCall.status;
+    }
+    if (currentPrivateCall && currentPrivateCall.callId === callId) {
+      currentPrivateCall.status = state.status || currentPrivateCall.status;
+    }
+    updateCallButtonsState();
+  }
+  function watchCurrentUserPrivateCall() {
+    activeChatCallRef = null;
+    activeChatCallListener = null;
+    observedIncomingCallSessions = new Set();
+    if (!currentUser || !firestore) {
+      externalPrivateCallState = null;
+      updateCallButtonsState();
+      return;
+    }
+    recomputeExternalPrivateCallStateFromKnownChats();
+    updateCallButtonsState();
+  }
+  function unwatchCurrentUserPrivateCall() {
+    activeChatCallRef = null;
+    activeChatCallListener = null;
+    externalPrivateCallState = null;
+    observedIncomingCallSessions = new Set();
+  }
+  async function startPrivateCallInline(mode) {
+    if (!currentUser || !activeChat || !firestore) return;
+    if (currentPrivateCall || incomingPrivateCall) {
+      showToast('Finish the current call first', 'error');
+      return;
+    }
+    if (!allUsers[activeChat]) {
+      await ensurePeerLoaded(activeChat).catch(() => null);
+    }
+    const peer = allUsers[activeChat];
+    if (!peer) {
+      showToast('Could not load this user for calling', 'error');
+      return;
+    }
+    if (!peer.online) {
+      showToast('User is offline right now', 'error');
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showToast('Your browser does not support calls', 'error');
+      return;
+    }
+    const callId = activeChatId;
+    const callRef = getCallDocRef(callId);
+    const createdAtMs = Date.now();
+    currentPrivateCall = {
+      callId,
+      peerUid: activeChat,
+      role: 'caller',
+      mode,
+      status: 'ringing',
+      accepted: true,
+      fromUid: currentUser.uid,
+      toUid: activeChat,
+      createdAtMs,
+    };
+    pendingCallOffer = null;
+    pendingIceCandidates = [];
+    try {
+      await ensureLocalCallMedia(mode);
+      createPrivateCallPeerConnection(currentPrivateCall);
+      await callRef.set({
+        callId,
+        chatId: getChatId(currentUser.uid, activeChat),
+        participants: [currentUser.uid, activeChat].sort(),
+        fromUid: currentUser.uid,
+        toUid: activeChat,
+        mode,
+        status: 'ringing',
+        createdAtMs,
+        updatedAtMs: createdAtMs,
+      });
+      await writeChatCallState(callId, {
+        participants: [currentUser.uid, activeChat].sort(),
+        fromUid: currentUser.uid,
+        toUid: activeChat,
+        mode,
+        status: 'ringing',
+        createdAtMs,
+      });
+      await attachPrivateCallListeners(callId);
+      const offer = await privateCallPc.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: mode === 'video',
+      });
+      await privateCallPc.setLocalDescription(offer);
+      await sendPrivateCallSignal(callId, activeChat, 'offer', {
+        type: offer.type,
+        sdp: offer.sdp,
+      });
+      showLiveCallUi(currentPrivateCall, 'Calling...', mode === 'video' ? 'Waiting for video answer...' : 'Waiting for answer...');
+      playCallTone('outgoing');
+      armPrivateCallRingTimeout(callId);
+    } catch (e) {
+      console.error('Failed to start private call', e);
+      showToast(mode === 'video' ? 'Unable to start video call' : 'Unable to start voice call', 'error');
+      await cleanupPrivateCallUi();
+    }
+  }
+  async function startPrivateCall(mode) {
+    await startPrivateCallInline(mode);
+  }
+  async function acceptIncomingCallInline() {
+    if (!incomingPrivateCall) return;
+    currentPrivateCall = {
+      ...incomingPrivateCall,
+      accepted: true,
+      status: 'connecting',
+    };
+    incomingPrivateCall = null;
+    try {
+      stopCallTone();
+      await ensureLocalCallMedia(currentPrivateCall.mode);
+      createPrivateCallPeerConnection(currentPrivateCall);
+      await writePrivateCallState(currentPrivateCall.callId, { status: 'connecting' });
+      showLiveCallUi(currentPrivateCall, 'Connecting...', currentPrivateCall.mode === 'video' ? 'Starting video call...' : 'Starting voice call...');
+      await handleIncomingOffer();
+    } catch (e) {
+      console.error('Failed to accept incoming call', e);
+      showToast('Could not answer the call', 'error');
+      await endPrivateCall('rejected');
+    }
+  }
+  async function acceptIncomingCall() {
+    if (!incomingPrivateCall) return;
+    await acceptIncomingCallInline();
+  }
+  async function bootPrivateCallFromParams() {
+    if (!callLaunchParams.enabled || callLaunchBooted || !currentUser || !firestore) return;
+    callLaunchBooted = true;
+    const callId = callLaunchParams.callId || (callLaunchParams.peerUid ? getChatId(currentUser.uid, callLaunchParams.peerUid) : '');
+    const peerUid = callLaunchParams.peerUid || '';
+    if (peerUid) {
+      await ensurePeerLoaded(peerUid).catch(() => null);
+      if (allUsers[peerUid]) {
+        await openChat(peerUid).catch(() => null);
+      }
+    }
+    if (callLaunchParams.action === 'outgoing') {
+      if (!peerUid) {
+        showToast('Call user is missing', 'error');
+        return;
+      }
+      if (activeChat !== peerUid) {
+        await ensurePeerLoaded(peerUid).catch(() => null);
+        await openChat(peerUid).catch(() => null);
+      }
+      await startPrivateCallInline(callLaunchParams.mode || 'audio');
+      return;
+    }
+    if (!callId) {
+      showToast('Call details are missing', 'error');
+      return;
+    }
+    const snap = await getCallDocRef(callId).get().catch(() => null);
+    let state = snap && snap.exists ? (snap.data() || {}) : null;
+    if (!state) {
+      const chatSnap = await getChatDocRef(callId).get().catch(() => null);
+      state = chatSnap && chatSnap.exists ? (((chatSnap.data() || {}).activeCall) || null) : null;
+    }
+    if (!state || isTerminalCallStatus(state.status)) {
+      showToast('This call is no longer available', 'error');
+      return;
+    }
+    const resolvedPeerUid = state.fromUid === currentUser.uid ? state.toUid : state.fromUid || peerUid;
+    if (!resolvedPeerUid) {
+      showToast('Could not resolve the call participant', 'error');
+      return;
+    }
+    await ensurePeerLoaded(resolvedPeerUid).catch(() => null);
+    if (activeChat !== resolvedPeerUid) {
+      await openChat(resolvedPeerUid).catch(() => null);
+    }
+    if (state.toUid === currentUser.uid && state.status === 'ringing') {
+      await activateIncomingPrivateCall(callId, state, resolvedPeerUid);
+      if (callLaunchParams.action === 'accept') {
+        await acceptIncomingCallInline();
+      }
+      return;
+    }
+  }
+  async function endPrivateCall(reason = 'ended') {
+    const activeInfo = currentPrivateCall || incomingPrivateCall;
+    if (!activeInfo || !currentUser) {
+      await cleanupPrivateCallUi();
+      return;
+    }
+    const status = reason || 'ended';
+    const endedAtMs = Date.now();
+    const startedAtMs = Number(activeInfo.startedAtMs || 0);
+    const patch = {
+      status,
+      endedBy: currentUser.uid,
+      endedAtMs,
+    };
+    if (startedAtMs > 0) {
+      patch.startedAtMs = startedAtMs;
+      patch.callDurationMs = Math.max(0, endedAtMs - startedAtMs);
+    }
+    await writePrivateCallState(activeInfo.callId, patch).catch(() => {});
+    await persistCallHistoryMessage(buildCallStateFromInfo(activeInfo, patch), activeInfo).catch(() => {});
+    await cleanupPrivateCallUi();
+  }
+  function togglePrivateCallMute() {
+    if (!privateCallLocalStream) return;
+    callMuteEnabled = !callMuteEnabled;
+    privateCallLocalStream.getAudioTracks().forEach(track => {
+      track.enabled = callMuteEnabled;
+    });
+    updateCallControlButtons();
+  }
+  function togglePrivateCallCamera() {
+    if (!privateCallLocalStream) return;
+    const videoTracks = privateCallLocalStream.getVideoTracks();
+    if (!videoTracks.length) return;
+    callCameraEnabled = !callCameraEnabled;
+    videoTracks.forEach(track => {
+      track.enabled = callCameraEnabled;
+    });
+    refreshCallMediaUi();
+  }
+  if (audioCallBtn) audioCallBtn.addEventListener('click', () => startPrivateCall('audio'));
+  if (videoCallBtn) videoCallBtn.addEventListener('click', () => startPrivateCall('video'));
+  if (callAcceptBtn) callAcceptBtn.addEventListener('click', acceptIncomingCall);
+  if (callRejectBtn) callRejectBtn.addEventListener('click', () => endPrivateCall('rejected'));
+  if (callEndBtn) callEndBtn.addEventListener('click', () => endPrivateCall(currentPrivateCall?.status === 'ringing' ? 'cancelled' : 'ended'));
+  if (callMuteBtn) callMuteBtn.addEventListener('click', togglePrivateCallMute);
+  if (callCameraBtn) callCameraBtn.addEventListener('click', togglePrivateCallCamera);
   function shouldNotify() {
     if (!notificationsEnabled) return false;
     if (!isNotificationSupported()) return false;
@@ -1371,17 +3094,20 @@
     const now = Date.now();
     if (now - lastNotifyAt < 1500) return;
     lastNotifyAt = now;
-    const title = 'Tengdosh Ustoz';
+    const title = String(peerName || 'New message');
     const cleanText = String(msgText || '').trim();
     const body = cleanText
-      ? `${peerName}: ${cleanText}`.slice(0, 140)
-      : `${peerName} sent a message.`;
+      ? cleanText.slice(0, 140)
+      : `${title} sent a message.`;
+    const targetUrl = peerUid
+      ? `/pages/private%20chat/private_chat.html?mentor=${encodeURIComponent(peerUid)}`
+      : '/pages/private%20chat/private_chat.html';
     const options = {
       body,
       icon: '/icon.png',
       badge: '/icon.png',
       tag: `chat-${peerUid || 'general'}`,
-      data: { url: '/pages/private%20chat/private_chat.html' },
+      data: { url: targetUrl, peerUid: peerUid || '' },
       renotify: true,
     };
     try {
@@ -1444,6 +3170,9 @@
   });
   async function doSignOut() {
     if (!currentUser) return;
+    if (currentPrivateCall || incomingPrivateCall) {
+      await endPrivateCall(currentPrivateCall?.status === 'ringing' ? 'cancelled' : 'ended').catch(() => {});
+    }
     // Mark offline
     await db.ref(`users/${currentUser.uid}/online`).set(false);
     await db.ref(`users/${currentUser.uid}/lastSeen`).set(firebase.database.ServerValue.TIMESTAMP);
@@ -1480,21 +3209,86 @@
   /* -----------------------------------------
      LOAD ALL USERS
   ----------------------------------------- */
-  function loadUsers() {
+  function upsertUserFromSnapshot(snap) {
+    const data = snap.val() || {};
+    const uid = data.uid || snap.key;
+    if (!uid || uid === currentUser?.uid) return;
+    allUsers[uid] = {
+      ...(allUsers[uid] || {}),
+      ...data,
+      uid,
+    };
+    if (activeChat === uid) {
+      updatePeerStatus(allUsers[uid]);
+      updateCallButtonsState();
+    }
+    queueUsersListRender();
+  }
+  function removeUserFromSnapshot(snap) {
+    const uid = snap.key;
+    if (!uid) return;
+    delete allUsers[uid];
+    delete knownChatDocStates[uid];
+    if (chatPreviewState[uid]) {
+      const nextState = { ...chatPreviewState };
+      delete nextState[uid];
+      chatPreviewState = nextState;
+    }
+    if (activeChat === uid) {
+      updateCallButtonsState();
+    }
+    queueUsersListRender();
+  }
+  async function loadUsers() {
     if (unsubUsers) unsubUsers();
-    unsubUsers = db.ref('users').on('value', snap => {
-      allUsers = {};
-      snap.forEach(child => {
-        const u = child.val() || {};
-        u.uid = u.uid || child.key;
-        if (!u.uid) return;
-        if (u.uid === currentUser.uid) return;
-        allUsers[u.uid] = u;
-      });
-      renderUsersList(allUsers);
+    const usersRef = db.ref('users');
+    const initialSnap = await usersRef.once('value');
+    allUsers = {};
+    initialSnap.forEach((child) => {
+      const data = child.val() || {};
+      const uid = data.uid || child.key;
+      if (!uid || uid === currentUser?.uid) return;
+      allUsers[uid] = {
+        ...(allUsers[uid] || {}),
+        ...data,
+        uid,
+      };
     });
+    queueUsersListRender();
+
+    const knownUids = new Set(Object.keys(allUsers));
+    const handleAdded = (snap) => {
+      const data = snap.val() || {};
+      const uid = data.uid || snap.key;
+      if (!uid || uid === currentUser?.uid || knownUids.has(uid)) return;
+      knownUids.add(uid);
+      upsertUserFromSnapshot(snap);
+    };
+    const handleChanged = (snap) => {
+      const data = snap.val() || {};
+      const uid = data.uid || snap.key;
+      if (!uid || uid === currentUser?.uid) return;
+      knownUids.add(uid);
+      upsertUserFromSnapshot(snap);
+    };
+    const handleRemoved = (snap) => {
+      knownUids.delete(snap.key);
+      removeUserFromSnapshot(snap);
+    };
+
+    usersRef.on('child_added', handleAdded);
+    usersRef.on('child_changed', handleChanged);
+    usersRef.on('child_removed', handleRemoved);
+    unsubUsers = () => {
+      usersRef.off('child_added', handleAdded);
+      usersRef.off('child_changed', handleChanged);
+      usersRef.off('child_removed', handleRemoved);
+    };
   }
   function renderUsersList(users, filter = '') {
+    const recentSection = document.getElementById('recent-users-section');
+    const recentContainer = document.getElementById('recent-users-list');
+    const usersSection = document.getElementById('users-section');
     const container = document.getElementById('users-list');
     const q = (filter || '').toLowerCase();
     const filtered = Object.values(users).filter(u => {
@@ -1504,24 +3298,62 @@
     });
     if (!filtered.length) {
       const label = getFilterLabel(currentFilter).toLowerCase();
+      if (recentSection) recentSection.classList.add('hidden');
+      if (usersSection) usersSection.classList.remove('hidden');
       container.innerHTML = `<div class="users-empty">No ${label} found</div>`;
+      updateCallButtonsState();
       return;
     }
-    // Sort: online first, then by name
     filtered.sort((a, b) => {
-      if (a.online && !b.online) return -1;
-      if (!a.online && b.online) return 1;
+      const isActiveA = a.uid === activeChat ? 1 : 0;
+      const isActiveB = b.uid === activeChat ? 1 : 0;
+      const previewA = getPreviewForUser(a.uid) || {};
+      const previewB = getPreviewForUser(b.uid) || {};
+      const unreadA = Number(previewA.unreadCount) || 0;
+      const unreadB = Number(previewB.unreadCount) || 0;
+      const lastA = Number(previewA.lastTimestamp) || 0;
+      const lastB = Number(previewB.lastTimestamp) || 0;
+      if (lastA !== lastB) return lastB - lastA;
+      if (unreadA !== unreadB) return unreadB - unreadA;
+      if (isActiveA !== isActiveB) return isActiveB - isActiveA;
       return getUserName(a).localeCompare(getUserName(b));
     });
+    const recentUsers = filtered.filter((u) => {
+      const preview = getPreviewForUser(u.uid) || {};
+      return Number(preview.lastTimestamp) > 0;
+    });
+    const recentUserIds = new Set(recentUsers.map((u) => u.uid));
+    const otherUsers = filtered.filter((u) => !recentUserIds.has(u.uid));
+
+    if (recentContainer) {
+      recentContainer.innerHTML = '';
+      recentUsers.forEach((u) => {
+        recentContainer.appendChild(createUserItem(u));
+      });
+    }
+    if (recentSection) {
+      recentSection.classList.toggle('hidden', recentUsers.length === 0);
+    }
+
     container.innerHTML = '';
-    filtered.forEach(u => {
+    otherUsers.forEach(u => {
       const item = createUserItem(u);
       container.appendChild(item);
     });
+    if (usersSection) {
+      usersSection.classList.toggle('hidden', otherUsers.length === 0 && recentUsers.length > 0);
+    }
+    updateCallButtonsState();
     tryAutoOpenMentor();
   }
   function createUserItem(u) {
     const isActive = activeChat === u.uid;
+    const preview = getPreviewForUser(u.uid) || {};
+    const unreadCount = Number(preview.unreadCount) || 0;
+    const previewText = preview.lastText
+      ? ((preview.lastSenderId === currentUser.uid ? 'You: ' : '') + preview.lastText)
+      : (u.online ? 'Active now' : (u.lastSeen ? 'Last seen ' + formatTime(u.lastSeen) : 'Offline'));
+    const previewTime = preview.lastTimestamp ? formatTime(preview.lastTimestamp) : '';
     const div = document.createElement('div');
     div.className = `user-item${isActive ? ' active' : ''}`;
     div.id = `user-item-${u.uid}`;
@@ -1543,48 +3375,29 @@
       <div class="user-info">
         <div class="user-name">${escHtml(name)}</div>
         <div class="user-last-msg" id="last-msg-${u.uid}">
-          ${u.online ? 'Active now' : (u.lastSeen ? 'Last seen ' + formatTime(u.lastSeen) : 'Offline')}
+          ${escHtml(previewText)}
         </div>
       </div>
       <div class="user-meta">
-        <div class="user-time" id="last-time-${u.uid}"></div>
-        <div id="badge-${u.uid}"></div>
+        <div class="user-time" id="last-time-${u.uid}">${escHtml(previewTime)}</div>
+        <div id="badge-${u.uid}">${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}</div>
       </div>`;
+    const lastMsgEl = div.querySelector(`#last-msg-${u.uid}`);
+    if (lastMsgEl) lastMsgEl.classList.toggle('unread-preview', unreadCount > 0);
     loadLastMsgPreview(u.uid);
     bindAvatarImg(div.querySelector('.user-avatar img'));
     return div;
   }
-  function loadLastMsgPreview(peerUid) {
-    const chatId = getChatId(currentUser.uid, peerUid);
-    db.ref(`chats/${chatId}/messages`).orderByChild('timestamp').limitToLast(1)
-      .once('value', snap => {
-        snap.forEach(child => {
-          const msg = child.val();
-          const el  = document.getElementById(`last-msg-${peerUid}`);
-          const tel = document.getElementById(`last-time-${peerUid}`);
-          if (el) {
-            const isMe = msg.senderId === currentUser.uid;
-            el.textContent = (isMe ? 'You: ' : '') + msg.text;
-            el.classList.toggle('unread-preview', !isMe && !msg.read);
-          }
-          if (tel) tel.textContent = formatTime(msg.timestamp);
-          if (msg.senderId !== currentUser.uid && !msg.read) {
-            countUnread(peerUid);
-          }
-        });
-      });
+  function loadLastMsgPreview() {
+    return;
   }
   function countUnread(peerUid) {
-    const chatId = getChatId(currentUser.uid, peerUid);
-    db.ref(`chats/${chatId}/messages`).orderByChild('senderId').equalTo(peerUid)
-      .once('value', snap => {
-        let count = 0;
-        snap.forEach(child => { if (!child.val().read) count++; });
-        const badge = document.getElementById(`badge-${peerUid}`);
-        if (badge) {
-          badge.innerHTML = count > 0 ? `<div class="unread-badge">${count}</div>` : '';
-        }
-      });
+    const badge = document.getElementById(`badge-${peerUid}`);
+    const preview = getPreviewForUser(peerUid) || {};
+    const count = Number(preview.unreadCount) || 0;
+    if (badge) {
+      badge.innerHTML = count > 0 ? `<div class="unread-badge">${count}</div>` : '';
+    }
   }
   function filterUsers(val) {
     renderUsersList(allUsers, val);
@@ -1592,24 +3405,36 @@
   /* -----------------------------------------
      OPEN CHAT
   ----------------------------------------- */
-  function openChat(peerUid) {
-    if (activeChat === peerUid) return;
-    if (msgListener) {
-      db.ref(`chats/${activeChatId}/messages`).off('child_added', msgListener);
-      msgListener = null;
+  function detachMessageListeners() {
+    if (typeof msgListener === 'function') {
+      msgListener();
     }
-    if (msgChangedListener) {
-      db.ref(`chats/${activeChatId}/messages`).off('child_changed', msgChangedListener);
-      msgChangedListener = null;
+    msgListener = null;
+    msgChangedListener = null;
+    msgRemovedListener = null;
+  }
+  function detachTypingListener() {
+    if (typeof typingListener === 'function') {
+      typingListener();
     }
-    if (msgRemovedListener) {
-      db.ref(`chats/${activeChatId}/messages`).off('child_removed', msgRemovedListener);
-      msgRemovedListener = null;
+    typingListener = null;
+    const ind = document.getElementById('typing-indicator');
+    if (ind) ind.classList.remove('show');
+  }
+  async function openChat(peerUid) {
+    if (activeChat === peerUid) {
+      hideSidebarMobile();
+      const header = document.getElementById('chat-header');
+      const messages = document.getElementById('messages-wrap');
+      const input = document.getElementById('input-area');
+      if (header) header.classList.add('visible');
+      if (messages) messages.classList.add('visible');
+      if (input) input.classList.add('visible');
+      if (msgInput) msgInput.focus();
+      return;
     }
-    if (typingListener) {
-      db.ref(`chats/${activeChatId}/typing/${peerUid}`).off('value', typingListener);
-      typingListener = null;
-    }
+    detachMessageListeners();
+    detachTypingListener();
     detachActivePeerStatus();
     cancelEdit();
     activeChat  = peerUid;
@@ -1631,12 +3456,14 @@
     const avatarEl = document.getElementById('chat-header-avatar');
     renderAvatarEl(avatarEl, peerName, peer.uid, getUserAvatar(peer));
     updatePeerStatus(peer);
+    updateCallButtonsState();
     activePeerStatusRef = db.ref(`users/${peerUid}`);
     activePeerStatusListener = activePeerStatusRef.on('value', snap => {
       const data = snap.val();
       if (data) {
         allUsers[peerUid] = Object.assign({}, allUsers[peerUid] || {}, data, { uid: peerUid });
         updatePeerStatus(data);
+        updateCallButtonsState();
       }
     });
     // Show chat area
@@ -1648,8 +3475,10 @@
     // Clear messages
     const wrap = document.getElementById('messages-wrap');
     wrap.innerHTML = '';
+    await ensureChatDoc(peerUid).catch(() => {});
     // Mark all messages from peer as read
-    markAsRead(peerUid);
+    markAsRead(peerUid).catch(() => {});
+    markChatSummaryRead(peerUid).catch(() => {});
     // Attach message listener
     listenMessages(peerUid);
     listenTyping(peerUid);
@@ -1670,17 +3499,15 @@
   /* -----------------------------------------
      MESSAGES - LISTEN
   ----------------------------------------- */
-  function listenMessages(peerUid) {
-    const wrap   = document.getElementById('messages-wrap');
-    const ref    = db.ref(`chats/${activeChatId}/messages`).orderByChild('timestamp');
+  function renderMessagesSnapshot(peerUid, messages) {
+    const wrap = document.getElementById('messages-wrap');
+    wrap.innerHTML = '';
     let lastDate = null;
     let lastSender = null;
-    msgListener = ref.on('child_added', snap => {
-      const msg = snap.val();
-      msg._key = snap.key;
+    messages.forEach((msg) => {
       if (msg.deleted) return;
-      const msgDate = new Date(msg.timestamp).toDateString();
-      if (msgDate !== lastDate) {
+      const msgDate = msg.timestamp ? new Date(msg.timestamp).toDateString() : '';
+      if (msgDate && msgDate !== lastDate) {
         wrap.appendChild(createDayDivider(msg.timestamp));
         lastDate = msgDate;
         lastSender = null;
@@ -1689,41 +3516,33 @@
       const senderChanged = lastSender !== msg.senderId;
       wrap.appendChild(createMsgRow(msg, isMine, senderChanged));
       lastSender = msg.senderId;
-      scrollToBottom();
-      if (!isMine && !msg.read) {
-        db.ref(`chats/${activeChatId}/messages/${msg._key}`).update({ read: true });
-      }
-      const el = document.getElementById(`last-msg-${peerUid}`);
-      if (el) {
-        el.textContent = (isMine ? 'You: ' : '') + msg.text;
-        el.classList.remove('unread-preview');
-      }
-      const tel = document.getElementById(`last-time-${peerUid}`);
-      if (tel) tel.textContent = formatTime(msg.timestamp);
-      if (!isMine) {
-        maybeNotify(peerUid, msg);
-      }
     });
-    msgChangedListener = ref.on('child_changed', snap => {
-      const msg = snap.val();
-      msg._key = snap.key;
-      const row = wrap.querySelector(`[data-key="${msg._key}"]`);
-      if (msg.deleted) {
-        if (row) row.remove();
-        loadLastMsgPreview(peerUid);
-        return;
-      }
-      if (row) {
-        const mine = msg.senderId === currentUser.uid;
-        renderMsgContent(row, msg, mine);
-      }
-      loadLastMsgPreview(peerUid);
-    });
-    msgRemovedListener = ref.on('child_removed', snap => {
-      const row = wrap.querySelector(`[data-key="${snap.key}"]`);
-      if (row) row.remove();
-      loadLastMsgPreview(peerUid);
-    });
+    scrollToBottom();
+  }
+  function listenMessages(peerUid) {
+    if (!firestore || !activeChatId) return;
+    let hasBootstrapped = false;
+    msgListener = getChatMessagesCollection(activeChatId)
+      .orderBy('timestampMs')
+      .onSnapshot((snapshot) => {
+        const messages = snapshot.docs.map((doc) => normalizeMessageDoc(doc));
+        renderMessagesSnapshot(peerUid, messages);
+        markAsRead(peerUid).catch(() => {});
+
+        if (hasBootstrapped) {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type !== 'added') return;
+            const msg = normalizeMessageDoc(change.doc);
+            if (msg.senderId && msg.senderId !== currentUser.uid) {
+              maybeNotify(peerUid, msg);
+            }
+          });
+        } else {
+          hasBootstrapped = true;
+        }
+      }, () => {
+        showToast('Failed to load messages', 'error');
+      });
   }
   function maybeNotify(peerUid, msg) {
     if (!msg || !msg.timestamp) return;
@@ -1740,6 +3559,16 @@
     d.innerHTML = `<span>${formatDayDivider(ts)}</span>`;
     return d;
   }
+  function renderCallMessageHtml(msg) {
+    const title = escHtml(getCallHistoryTitle(msg, currentUser?.uid || ''));
+    const meta = escHtml(getCallHistoryMeta(msg, currentUser?.uid || ''));
+    return `
+      <div class="call-log-title">${title}</div>
+      <div class="call-log-meta">${meta}</div>`;
+  }
+  function canManageMessage(msg, isMine) {
+    return !!(msg && isMine && !msg.deleted && !isCallHistoryMessage(msg));
+  }
   function renderMsgContent(row, msg, isMine) {
     if (!row || !msg) return;
     if (msg.deleted) {
@@ -1747,22 +3576,30 @@
       return;
     }
     row.dataset.sender = msg.senderId || '';
-    row.dataset.text = msg.text || '';
+    row.dataset.text = isCallHistoryMessage(msg) ? '' : (msg.text || '');
     row.dataset.deleted = '0';
+    row.dataset.kind = isCallHistoryMessage(msg) ? 'call' : 'text';
     const bubble = row.querySelector('.msg-bubble');
     if (bubble) {
       bubble.classList.remove('deleted');
-      bubble.innerHTML = escHtml(msg.text || '');
+      bubble.classList.toggle('call-log', isCallHistoryMessage(msg));
+      bubble.classList.toggle('call-log-missed', msg.callStatus === 'missed');
+      bubble.classList.toggle('call-log-rejected', msg.callStatus === 'rejected');
+      bubble.classList.toggle('call-log-cancelled', msg.callStatus === 'cancelled');
+      bubble.classList.toggle('call-log-ended', msg.callStatus === 'ended');
+      bubble.innerHTML = isCallHistoryMessage(msg)
+        ? renderCallMessageHtml(msg)
+        : escHtml(msg.text || '');
     }
     const timeEl = row.querySelector('.msg-time');
     if (timeEl) {
-      const edited = msg.editedAt ? ' - edited' : '';
+      const edited = !isCallHistoryMessage(msg) && msg.editedAt ? ' - edited' : '';
       const readTick = isMine ? `<span class="read-tick">${msg.read ? '&#9679;' : '&#9675;'}</span>` : '';
       timeEl.innerHTML = `${formatMsgTime(msg.timestamp)}${edited}${readTick}`;
     }
     const actions = row.querySelector('.msg-actions');
     if (actions) {
-      actions.style.display = (isMine && !msg.deleted) ? 'flex' : 'none';
+      actions.style.display = canManageMessage(msg, isMine) ? 'flex' : 'none';
     }
   }
   function createMsgRow(msg, isMine, showAvatar) {
@@ -1781,12 +3618,12 @@
            ${photo ? `${initials}<img src="${photo}" alt="" />` : initials}
          </div>`
       : `<div class="msg-avatar-sm hidden"></div>`;
-    const actionsHtml = isMine
+    const actionsHtml = canManageMessage(msg, isMine)
       ? `<div class="msg-actions">
            <button class="msg-action edit" type="button" data-action="edit" title="Edit">
-             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-               <path d="M12 20h9"></path>
-               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
              </svg>
            </button>
            <button class="msg-action delete" type="button" data-action="delete" title="Delete">
@@ -1833,6 +3670,7 @@
     if (!row || !currentUser) return;
     if (row.dataset.sender !== currentUser.uid) return;
     if (row.dataset.deleted === '1') return;
+    if (row.dataset.kind !== 'text') return;
     const textVal = row.dataset.text || '';
     if (!textVal) return;
     editingMessageKey = row.dataset.key || null;
@@ -1855,11 +3693,13 @@
     if (!row || !currentUser) return;
     if (row.dataset.sender !== currentUser.uid) return;
     if (row.dataset.deleted === '1') return;
+    if (row.dataset.kind !== 'text') return;
     const key = row.dataset.key;
     if (!key || !activeChatId) return;
     if (!confirm('Delete this message...')) return;
     try {
-      await db.ref(`chats/${activeChatId}/messages/${key}`).remove();
+      await getChatMessagesCollection(activeChatId).doc(key).delete();
+      refreshChatIndexesForPair(activeChat).catch(() => {});
     } catch (e) {
       showToast('Failed to delete message', 'error');
     }
@@ -1896,18 +3736,30 @@
   /* -----------------------------------------
      MARK AS READ
   ----------------------------------------- */
-  function markAsRead(peerUid) {
-    db.ref(`chats/${activeChatId}/messages`)
-      .orderByChild('senderId').equalTo(peerUid)
-      .once('value', snap => {
-        const updates = {};
-        snap.forEach(child => {
-          if (!child.val().read) updates[`${child.key}/read`] = true;
-        });
-        if (Object.keys(updates).length) {
-          db.ref(`chats/${activeChatId}/messages`).update(updates);
-        }
+  async function markAsRead(peerUid) {
+    if (!firestore || !activeChatId || !currentUser) return;
+    const snapshot = await getChatMessagesCollection(activeChatId)
+      .where('recipientId', '==', currentUser.uid)
+      .get()
+      .catch(() => null);
+    if (!snapshot) return;
+
+    const unreadDocs = snapshot.docs.filter((doc) => {
+      const msg = normalizeMessageDoc(doc);
+      return !msg.read && msg.senderId === peerUid;
+    });
+    if (!unreadDocs.length) return;
+
+    const batch = firestore.batch();
+    const readAtMs = Date.now();
+    unreadDocs.forEach((doc) => {
+      batch.update(doc.ref, {
+        isRead: true,
+        readAtMs,
       });
+    });
+    await batch.commit().catch(() => {});
+    await markChatSummaryRead(peerUid);
   }
   /* -----------------------------------------
      SEND MESSAGE
@@ -1915,14 +3767,15 @@
   async function sendMessage() {
     const input = document.getElementById('msg-input');
     const text  = input.value.trim();
-    if (!text || !activeChat) return;
+    if (!text || !activeChat || !firestore) return;
     if (editingMessageKey) {
       try {
-        await db.ref(`chats/${activeChatId}/messages/${editingMessageKey}`).update({
+        await getChatMessagesCollection(activeChatId).doc(editingMessageKey).update({
           text: text,
           deleted: false,
-          editedAt: firebase.database.ServerValue.TIMESTAMP,
+          editedAtMs: Date.now(),
         });
+        refreshChatIndexesForPair(activeChat).catch(() => {});
       } catch (e) {
         showToast('Failed to edit message', 'error');
       }
@@ -1933,35 +3786,59 @@
     input.value = '';
     autoResize(input);
     clearTyping();
-    const msgRef = db.ref(`chats/${activeChatId}/messages`).push();
+    await ensureChatDoc(activeChat);
+    const msgRef = getChatMessagesCollection(activeChatId).doc();
+    const timestampMs = Date.now();
     await msgRef.set({
-      senderId:  currentUser.uid,
-      text:      text,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      read:      false,
+      senderId: currentUser.uid,
+      recipientId: activeChat,
+      text,
+      timestampMs,
+      isRead: false,
+      deleted: false,
     });
+    updateChatIndexesAfterSend(activeChat, {
+      senderId: currentUser.uid,
+      text,
+      timestamp: timestampMs,
+      read: false,
+    }).catch(() => {});
     input.focus();
   }
   /* -----------------------------------------
      TYPING INDICATOR
   ----------------------------------------- */
   function handleTyping() {
-    if (!activeChat) return;
-    db.ref(`chats/${activeChatId}/typing/${currentUser.uid}`).set(true);
+    if (!activeChat || !firestore) return;
+    ensureChatDoc(activeChat, {
+      typing: {
+        [currentUser.uid]: Date.now(),
+      },
+      updatedAtMs: Date.now(),
+    }).catch(() => {});
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(clearTyping, 2000);
   }
   function clearTyping() {
-    if (!activeChatId) return;
-    db.ref(`chats/${activeChatId}/typing/${currentUser.uid}`).set(false);
+    if (!activeChatId || !firestore || !currentUser || !activeChat) return;
+    getChatDocRef(activeChatId).set({
+      typing: {
+        [currentUser.uid]: 0,
+      },
+      updatedAtMs: Date.now(),
+    }, { merge: true }).catch(() => {});
   }
   function listenTyping(peerUid) {
+    if (!firestore || !activeChatId) return;
     const peer = allUsers[peerUid];
-    const ref  = db.ref(`chats/${activeChatId}/typing/${peerUid}`);
-    typingListener = ref.on('value', snap => {
+    typingListener = getChatDocRef(activeChatId).onSnapshot(async (snap) => {
+      const data = snap.exists ? (snap.data() || {}) : {};
+      const typing = data.typing || {};
+      const peerTypingAt = Number(typing[peerUid]) || 0;
+      const isTyping = peerTypingAt > 0 && (Date.now() - peerTypingAt) < 3500;
       const ind  = document.getElementById('typing-indicator');
       const text = document.getElementById('typing-text');
-      if (snap.val()) {
+      if (isTyping) {
         const peerName = getUserName(peer) || 'Someone';
         text.textContent = `${peerName} is typing...`;
         ind.classList.add('show');
@@ -1969,6 +3846,9 @@
       } else {
         ind.classList.remove('show');
       }
+      await syncIncomingCallFromChatDoc(data, peerUid);
+    }, (error) => {
+      console.error('chat typing listener failed', activeChatId, error);
     });
   }
   /* -----------------------------------------
@@ -2006,6 +3886,12 @@
       authScr.style.display === 'none' &&
       document.getElementById('chat-header')?.classList.contains('visible');
     if (user) {
+      firestore = firestore || await TU.getFirestore().catch(() => null);
+      if (!firestore) {
+        loading.style.display = 'none';
+        showToast('Firestore is unavailable right now', 'error');
+        return;
+      }
       currentUser = user;
       const ok = await TU.requireProfileCompletion(db, auth, { returnUrl: window.location.href });
       if (!ok) {
@@ -2025,33 +3911,37 @@
       const meName = getUserName(currentUserData) || getUserName(user) || 'User';
       myName.textContent = meName;
       renderAvatarEl(myAvatar, meName, user.uid, getUserAvatar(currentUserData) || getUserAvatar(user));
-      loadUsers();
+      watchCurrentUserPrivateCall();
+      subscribeChatIndex();
+      const loadUsersPromise = loadUsers();
+      updateCallButtonsState();
       loading.style.display = 'none';
       authScr.style.display = 'none';
       appEl.classList.add('visible');
+      await loadUsersPromise.catch(() => null);
+      await bootPrivateCallFromParams().catch(() => null);
     } else {
       if (forcedLayout) {
         loading.style.display = 'none';
         return;
       }
-      if (msgListener) {
-        db.ref(`chats/${activeChatId}/messages`).off('child_added', msgListener);
-      }
-      if (msgChangedListener) {
-        db.ref(`chats/${activeChatId}/messages`).off('child_changed', msgChangedListener);
-      }
-      if (msgRemovedListener) {
-        db.ref(`chats/${activeChatId}/messages`).off('child_removed', msgRemovedListener);
-      }
-      msgListener = null;
-      msgChangedListener = null;
-      msgRemovedListener = null;
-      typingListener = null;
+      detachMessageListeners();
+      detachTypingListener();
       detachActivePeerStatus();
+      unwatchCurrentUserPrivateCall();
+      unsubscribeChatIndex();
+      if (unsubUsers) {
+        unsubUsers();
+        unsubUsers = null;
+      }
+      clearTimeout(typingTimeout);
+      cleanupPrivateCallUi().catch(() => {});
       currentUser     = null;
       currentUserData = null;
+      allUsers        = {};
       activeChat      = null;
       activeChatId    = null;
+      updateCallButtonsState();
       loading.style.display = 'none';
       authScr.style.display = 'flex';
       appEl.classList.remove('visible');
@@ -2065,11 +3955,13 @@
       }
       if (activeChat) {
         activeChat = null;
+        activeChatId = null;
         document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
         document.getElementById('chat-header').classList.remove('visible');
         document.getElementById('messages-wrap').classList.remove('visible');
         document.getElementById('input-area').classList.remove('visible');
         document.getElementById('chat-empty').style.display = 'flex';
+        updateCallButtonsState();
         showSidebarMobile();
       }
     }

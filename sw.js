@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v3.7";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
@@ -41,11 +41,12 @@ const ASSETS = uniq([
   u("assets/club-index.css"),
   u("assets/auth-retro.css"),
   u("assets/private-chat-retro.css"),
+  u("assets/incoming.mp3"),
+  u("assets/outcoming.mp3"),
   u("assets/retro-scene.js"),
   u("assets/techers-sec.css"),
   u("assets/online-tech.css"),
   u("assets/offline-tech.css"),
-  u("favicon.ico"),
   u("ping.txt"),
   u("icon.png"),
   u("logo.png"),
@@ -120,13 +121,25 @@ self.addEventListener("notificationclick", (event) => {
   try { event.notification.close(); } catch (_) {}
   const url = (event.notification && event.notification.data && event.notification.data.url) || "/";
   const target = new URL(url, SCOPE).toString();
+  const targetUrl = new URL(target);
 
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientsArr) => {
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async (clientsArr) => {
       for (const client of clientsArr) {
-        if (client.url && client.url.startsWith(target)) {
-          return client.focus();
-        }
+        try {
+          if (!client.url) continue;
+          const clientUrl = new URL(client.url);
+          if (clientUrl.origin !== targetUrl.origin) continue;
+          if (client.url.startsWith(target)) {
+            return client.focus();
+          }
+          if (clientUrl.pathname === targetUrl.pathname) {
+            if (typeof client.navigate === "function" && client.url !== target) {
+              try { await client.navigate(target); } catch (_) {}
+            }
+            return client.focus();
+          }
+        } catch (_) {}
       }
       return self.clients.openWindow(target);
     })

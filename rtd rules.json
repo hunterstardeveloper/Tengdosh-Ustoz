@@ -1,0 +1,168 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')",
+        ".write": "auth != null && auth.uid === $uid",
+        "uid": {
+          ".validate": "newData.isString() && newData.val() === $uid"
+        },
+        "email": {
+          ".validate": "newData.val() === null || newData.isString()"
+        },
+        "displayName": {
+          ".validate": "newData.val() === null || (newData.isString() && newData.val().length <= 80)"
+        },
+        "surename": {
+          ".validate": "newData.val() === null || (newData.isString() && newData.val().length <= 80)"
+        },
+        "groupInUniversity": {
+          ".validate": "newData.val() === null || (newData.isString() && newData.val().length <= 40)"
+        },
+        "photoURL": {
+          ".validate": "newData.val() === null || newData.isString()"
+        },
+        "avatarURL": {
+          ".validate": "newData.val() === null || newData.isString()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "role": {
+          ".write": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+          ".validate": "newData.isString() && (newData.val() === 'user' || newData.val() === 'teacher' || newData.val() === 'admin')"
+        },
+        "teacherId": {
+          ".write": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+          ".validate": "newData.val() === null || (newData.isString() && newData.val().length <= 80)"
+        },
+        "banned": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')",
+          ".write": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+          ".validate": "newData.val() === null || newData.val() === true || (newData.hasChildren(['active']) && newData.child('active').isBoolean() && (!newData.hasChild('until') || newData.child('until').val() === null || newData.child('until').isNumber()) && (!newData.hasChild('reason') || newData.child('reason').val() === null || newData.child('reason').isString()))"
+        }
+      }
+    },
+    "teachers": {
+      ".read": true,
+      "$teacherId": {
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/role').val() === 'admin' || (root.child('users/' + auth.uid + '/role').val() === 'teacher' && root.child('users/' + auth.uid + '/teacherId').val() === $teacherId))"
+      }
+    },
+    "registered": {
+      "$teacherId": {
+        ".read": "auth != null && (root.child('users/' + auth.uid + '/role').val() === 'admin' || (root.child('users/' + auth.uid + '/role').val() === 'teacher' && root.child('users/' + auth.uid + '/teacherId').val() === $teacherId))",
+        "attendants": {
+          "$pushId": {
+            ".read": "auth != null && (root.child('users/' + auth.uid + '/role').val() === 'admin' || (root.child('users/' + auth.uid + '/role').val() === 'teacher' && root.child('users/' + auth.uid + '/teacherId').val() === $teacherId))",
+            ".write": "auth != null && ((root.child('users/' + auth.uid + '/role').val() === 'admin') || (!data.exists() && newData.child('uid').val() === auth.uid))",
+            ".validate": "newData.hasChildren(['uid','name','surename','timestamp']) && newData.child('uid').isString() && newData.child('uid').val().length > 0 && newData.child('name').isString() && newData.child('name').val().length <= 80 && newData.child('surename').isString() && newData.child('surename').val().length <= 80 && newData.child('timestamp').isNumber() && (!newData.hasChild('phone number') || newData.child('phone number').val() === null || newData.child('phone number').isString()) && (!newData.hasChild('groupInUniversity') || newData.child('groupInUniversity').val() === null || newData.child('groupInUniversity').isString()) && (!newData.hasChild('message') || newData.child('message').val() === null || newData.child('message').isString()) && (!newData.hasChild('regDate') || newData.child('regDate').val() === null || newData.child('regDate').isString())"
+          }
+        }
+      }
+    },
+    "subscriptions": {
+      "index": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid",
+          "$teacherId": {
+            ".validate": "newData.val() === null || (newData.hasChildren(['teacher','club','subscribedAt']) && newData.child('teacher').isString() && newData.child('teacher').val() === $teacherId && newData.child('club').isString() && newData.child('club').val().length > 0 && newData.child('subscribedAt').isNumber())"
+          }
+        }
+      },
+      "$teacherId": {
+        "attendants": {
+          "$uid": {
+            ".read": "auth != null",
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.val() === null || (newData.hasChildren(['uid','name','surename','timestamp']) && newData.child('uid').isString() && newData.child('uid').val() === $uid && newData.child('name').isString() && newData.child('name').val().length <= 80 && newData.child('surename').isString() && newData.child('surename').val().length <= 80 && newData.child('timestamp').isNumber() && (!newData.hasChild('phone number') || newData.child('phone number').val() === null || newData.child('phone number').isString()) && (!newData.hasChild('groupInUniversity') || newData.child('groupInUniversity').val() === null || newData.child('groupInUniversity').isString()) && (!newData.hasChild('message') || newData.child('message').val() === null || newData.child('message').isString()) && (!newData.hasChild('regDate') || newData.child('regDate').val() === null || newData.child('regDate').isString()))"
+          }
+        }
+      }
+    },
+    "feedbacks": {
+      ".read": true,
+      "$clubId": {
+        "$teacherId": {
+          "$courseKey": {
+            "$pushId": {
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['uid','displayName','message','createdAt','isAdmin','isTeacher']) && newData.child('uid').isString() && newData.child('uid').val() === auth.uid && newData.child('displayName').isString() && newData.child('displayName').val().length <= 120 && (!newData.hasChild('surename') || newData.child('surename').val() === null || (newData.child('surename').isString() && newData.child('surename').val().length <= 120)) && (!newData.hasChild('group') || newData.child('group').val() === null || (newData.child('group').isString() && newData.child('group').val().length <= 60)) && (!newData.hasChild('avatar') || newData.child('avatar').val() === null || newData.child('avatar').isString()) && newData.child('message').isString() && newData.child('message').val().length <= 1200 && newData.child('createdAt').isNumber() && newData.child('isAdmin').isBoolean() && newData.child('isTeacher').isBoolean() && (newData.child('isAdmin').val() === (root.child('users/' + auth.uid + '/role').val() === 'admin')) && (newData.child('isTeacher').val() === (root.child('users/' + auth.uid + '/role').val() === 'teacher'))"
+            }
+          }
+        }
+      }
+    },
+    "quoteLikes": {
+      ".read": true,
+      "$qid": {
+        "count": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    "userLikes": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "$qid": {
+          ".validate": "newData.val() === null || newData.val() === true"
+        }
+      }
+    },
+    "quoteMeta": {
+      ".read": true,
+      "$qid": {
+        ".write": "auth != null && (!data.exists() || root.child('users/' + auth.uid + '/role').val() === 'admin')",
+        ".validate": "newData.hasChildren(['text','author','createdAt']) && newData.child('text').isString() && newData.child('text').val().length <= 600 && (newData.child('author').val() === null || newData.child('author').isString()) && newData.child('createdAt').isNumber()"
+      }
+    },
+    "online": {
+      "$clubId": {
+        "$teacherKey": {
+          ".read": true,
+          ".write": "auth != null && (root.child('users/' + auth.uid + '/role').val() === 'admin' || (root.child('users/' + auth.uid + '/role').val() === 'teacher' && (root.child('users/' + auth.uid + '/teacherId').val() === $teacherKey || root.child('teachers/' + $teacherKey + '/classData/securityID').val() === root.child('users/' + auth.uid + '/teacherId').val())))"
+        }
+      }
+    },
+		"global_chat": {
+      "messages": {
+        ".read": true,
+        ".indexOn": ["createdAtMs"],
+        "$msgId": {
+          ".write": "auth != null && !data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['text','uid','name','createdAtMs']) && newData.child('uid').isString() && newData.child('name').isString() && newData.child('text').isString() && newData.child('text').val().length <= 500"
+        }
+      },
+      "typing": {
+        "$uid": {
+          ".read": true,
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "chats": {
+      ".read": false,
+      ".write": false
+    },
+    "privateChatIndex": {
+      ".read": false,
+      ".write": false
+    },
+    "privateCalls": {
+      ".read": false,
+      ".write": false
+    },
+    "banned": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')",
+        ".write": "auth != null && root.child('users/' + auth.uid + '/role').val() === 'admin'",
+        ".validate": "newData.val() === null || newData.val() === true || (newData.hasChildren(['active']) && newData.child('active').isBoolean() && (!newData.hasChild('until') || newData.child('until').val() === null || newData.child('until').isNumber()) && (!newData.hasChild('reason') || newData.child('reason').val() === null || newData.child('reason').isString()))"
+      }
+    }
+  }
+}
