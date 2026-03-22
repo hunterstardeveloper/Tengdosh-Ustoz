@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "v3.7";
+const CACHE_VERSION = "v3.8";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
@@ -9,7 +9,7 @@ const uniq = (arr) => Array.from(new Set(arr));
 
 const OFFLINE_FALLBACK = u("index.html");
 
-const STATIC_EXT = /\.(?:js|css|mjs|png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|otf)$/i;
+const STATIC_EXT = /\.(?:js|css|mjs|png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|otf|webmanifest|json|txt)$/i;
 const LIVE_UPDATE_EXT = /\.(?:js|css|mjs|json)$/i;
 
 const ASSETS = uniq([
@@ -48,6 +48,11 @@ const ASSETS = uniq([
   u("assets/online-tech.css"),
   u("assets/offline-tech.css"),
   u("ping.txt"),
+  u("manifest.webmanifest"),
+  u("assets/pwa-install.js"),
+  u("assets/pwa-icon-180.png"),
+  u("assets/pwa-icon-192.png"),
+  u("assets/pwa-icon-512.png"),
   u("icon.png"),
   u("logo.png"),
 ]);
@@ -266,6 +271,11 @@ self.addEventListener("fetch", (event) => {
   }
 
   const pathname = url.pathname || "";
+
+  if (req.destination === "manifest" || /\.webmanifest$/i.test(pathname)) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
   const isStatic = STATIC_EXT.test(pathname);
   const isHtml = isHtmlRequest(req);
   const isLiveUpdateAsset = url.origin === self.location.origin && LIVE_UPDATE_EXT.test(pathname);

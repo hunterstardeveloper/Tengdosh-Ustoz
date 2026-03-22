@@ -11,8 +11,35 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" href="/icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/pwa-icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tengdosh Ustoz">
 </head>
 <body class="has-page-shell">
+
+  <aside class="pwa-promo glass" id="pwaPromo" hidden aria-live="polite" aria-label="App install promotion" data-i18n-aria-label="pwa_promo_aria">
+    <button class="pwa-promo-close" id="pwaPromoClose" type="button" aria-label="Close install promotion" data-i18n-aria-label="pwa_promo_close_aria" data-i18n-title="pwa_promo_close_aria">×</button>
+    <div class="pwa-promo-media" aria-hidden="true">
+      <img src="/logo.png" alt="" width="64" height="64" decoding="async">
+    </div>
+    <div class="pwa-promo-copy">
+      <p class="pwa-promo-eyebrow" id="pwaPromoEyebrow" data-i18n="pwa_promo_install_eyebrow">Install available</p>
+      <h3 class="pwa-promo-title" id="pwaPromoTitle" data-i18n="pwa_promo_install_title">Get the Tengdosh Ustoz app</h3>
+      <p class="pwa-promo-text" id="pwaPromoText" data-i18n="pwa_promo_install_text">Install the app for quicker launch, cleaner full-screen use, and easier returning access.</p>
+      <div class="pwa-promo-chips" aria-hidden="true">
+        <span class="pwa-promo-chip" id="pwaPromoChipOne" data-i18n="pwa_promo_chip_fast_launch">Fast launch</span>
+        <span class="pwa-promo-chip" id="pwaPromoChipTwo" data-i18n="pwa_promo_chip_home_screen">Home screen access</span>
+        <span class="pwa-promo-chip" id="pwaPromoChipThree" data-i18n="pwa_promo_chip_cleaner_view">Cleaner view</span>
+      </div>
+      <div class="pwa-promo-actions">
+        <button class="pwa-promo-primary" id="pwaPromoAction" type="button" data-i18n="pwa_promo_action_download">Download app</button>
+        <button class="pwa-promo-secondary" id="pwaPromoSecondary" type="button" data-i18n="pwa_promo_action_later">Later</button>
+      </div>
+    </div>
+  </aside>
+
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -344,18 +371,18 @@
       <div class="card-img-container">
         <img src="/assets/home/prodev.webp" alt="ProDev course" width="900" height="365" loading="lazy" decoding="async" draggable="false">
       </div>
-      <h3>ProDev�s Master Course</h3>
+      <h3>ProDev&#39;s Master Course</h3>
       <div class="card-content">
         <p>Bu kurs kamida bitta programming language, bitta database va bitta framework biladigan talabalar uchun.</p>
         <div id="more-text" style="display: none;">
           <p>
-            Kurs davomida siz quyidagilarni o�rganashingiz mumkin: <br>
-            � Architecture: Monolith, Modular Monolith, Microservices <br>
-            � System Design va production-level engineering thinking <br>
-            � Design Patterns, scalability, real backend architecture <br>
-            � Docker, Kubernetes va infrastructure fundamentals <br>
-            � AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
-            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o�rganamiz.
+            Kurs davomida siz quyidagilarni o'rganishingiz mumkin: <br>
+            &bull; Architecture: Monolith, Modular Monolith, Microservices <br>
+            &bull; System Design va production-level engineering thinking <br>
+            &bull; Design Patterns, scalability, real backend architecture <br>
+            &bull; Docker, Kubernetes va infrastructure fundamentals <br>
+            &bull; AI systems concepts: Prompt Engineering, LLM, RAG, fine tuning (theory) <br><br>
+            Maqsad: Coder darajasidan professional Software Engineer va AI Engineer darajasini birgalikda o'rganamiz.
           </p>
         </div>
         <button onclick="toggleReadMore(event)" id="read-more-btn" type="button">Read More...</button>
@@ -390,7 +417,7 @@
           <img src="/assets/home/mathematics.webp" alt="Mathematics" width="480" height="320" loading="lazy" decoding="async" draggable="false">
         </div>
         <h3 data-i18n="card_math">Mathematics</h3>
-        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs�perfect for olympiad-style thinking and STEM success.</p>
+        <p data-i18n="card_math_desc">Level up with functions, limits, derivatives, integrals, and proofs&mdash;perfect for olympiad-style thinking and STEM success.</p>
         <a href="/clubs/mathematics/teachers-sec-mathematic.html" data-i18n="card_view">View Club</a>
       </div>
     </div>
@@ -472,5 +499,6 @@
   <script src="/assets/i18n.js" defer></script>
   <script src="/assets/home-page.js?v=11" defer></script>
   <script src="/assets/UI.js?v=10" defer></script>
+  <script src="/assets/pwa-install.js?v=1" defer></script>
 </body>
 </html>
