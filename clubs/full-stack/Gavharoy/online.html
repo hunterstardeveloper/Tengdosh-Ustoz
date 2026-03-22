@@ -63,15 +63,6 @@
     <div id="tab5" class="content">
       <div class="content-card">
         <h4>Fikr qoldirish</h4>
-        <div class="avatar-selection-wrapper">
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Profil rasmini tanlang:</p>
-          <div class="avatar-grid" id="avatarPicker" data-generated-picker="true">
-            <!-- Optimized avatar choices are injected by /assets/online-enhancements.js -->
-          </div>
-          <button type="button" id="toggleAvatarsBtn" onclick="toggleAvatars()" style="margin:15px 0; padding: 5px 0;">
-            Ko'proq ko'rish...
-          </button>
-        </div>
         <div id="identity-section">
           <input type="text" id="fb-name" placeholder="Ismingiz" class="input-field">
           <input type="text" id="fb-surname" placeholder="Familyangiz" class="input-field">
@@ -123,11 +114,15 @@ async function pickAvatar(el) {
 }
 TU.init();
 function safeAssetUrl(u){
-  const s = String(u||'').trim();
-  if(!s) return '';
-  if(/^https?:\/\//i.test(s)) return s;
-  if(s.startsWith('/')) return s;
+  const s = String(u || '').trim();
+  if (!s) return '';
+  if (/^(https?:\/\/|data:|blob:|\/\/)/i.test(s)) return s;
+  if (s.startsWith('/')) return s;
   return '/' + s;
+}
+function resolveAvatarUrl(value) {
+  const normalized = safeAssetUrl(value);
+  return normalized || 'https://cdn-icons-png.flaticon.com/512/8241/8241956.png';
 }
 function checkSavedUser(){
   return true;
@@ -256,13 +251,19 @@ function loadFeedbacks() {
       return;
     }
     Object.values(data).reverse().forEach(fb => {
-      const specialClass = fb.isAdmin ? 'admin-comment' : '';
+      const specialClass = fb.isAdmin ? 'admin-comment' : (fb.isTeacher ? 'teacher-comment' : '');
+      const roleBadge = fb.isAdmin
+        ? '<span class="comment-role-badge admin-badge">Admin</span>'
+        : (fb.isTeacher ? '<span class="comment-role-badge teacher-badge">Ustoz</span>' : '');
       list.innerHTML += `
       <div class="content-card ${specialClass}">
         <div class="comment-user-box">
-          <img src="${(/^https?:\/\//.test(fb.avatar||"") ? (fb.avatar||"") : (String(fb.avatar||"").startsWith("/") ? (fb.avatar||"") : ("/"+(fb.avatar||"")))) ||'https://cdn-icons-png.flaticon.com/512/8241/8241956.png'}" class="comment-avatar">
-          <div style="flex-grow:1;">
-            <strong>${(fb.displayName || ((fb.name||"") + " " + (fb.surename||""))).trim()} ${fb.group ? '<small>(' + fb.group + ')</small>' : ''}</strong>
+          <img src="${resolveAvatarUrl(fb.avatar)}" class="comment-avatar" alt="${(fb.displayName || 'User').trim()} avatar" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/8241/8241956.png';">
+          <div class="comment-meta">
+            <div class="comment-name-row">
+              <strong>${(fb.displayName || ((fb.name||"") + " " + (fb.surename||""))).trim()} ${fb.group ? '<small>(' + fb.group + ')</small>' : ''}</strong>
+              ${roleBadge}
+            </div>
           </div>
         </div>
         <p style="margin-left: 52px;">${fb.message}</p>
@@ -336,7 +337,7 @@ function updateFeedbackUI() {
   if (welcome) {
     const g = currentUserProfile.group ? ` <small>(${currentUserProfile.group})</small>` : '';
     welcome.innerHTML = `
-      <img src="${safeAssetUrl(currentUserProfile.avatar)}" style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:10px;border: 2px solid var(--primary);">
+      <img src="${resolveAvatarUrl(currentUserProfile.avatar)}" alt="${currentUserProfile.displayName} avatar" style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:10px;border: 2px solid var(--primary);object-fit:cover;" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://cdn-icons-png.flaticon.com/512/8241/8241956.png';">
       <span>Fikr qoldiruvchi: <strong>${currentUserProfile.displayName}</strong>${g}</span>
     `;
     welcome.style.display = 'flex';
