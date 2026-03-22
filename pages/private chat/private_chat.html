@@ -1142,6 +1142,11 @@
       border-color: rgba(239,68,68,0.34);
       color: #fecaca;
     }
+    .call-control-btn.active {
+      background: rgba(34,197,94,0.16);
+      border-color: rgba(34,197,94,0.34);
+      color: #bbf7d0;
+    }
     .call-control-btn.accept {
       background: rgba(34,197,94,0.16);
       border-color: rgba(34,197,94,0.34);
@@ -1370,6 +1375,13 @@
           <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
         </svg>
       </button>
+      <button class="call-control-btn" id="call-screen-share-btn" type="button" title="Share your screen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+          <path d="M8 20h8"></path>
+          <path d="M12 16v4"></path>
+        </svg>
+      </button>
       <button class="call-control-btn end" id="call-end-btn" type="button" title="End call">End Call</button>
     </div>
   </div>
@@ -1456,6 +1468,10 @@
   let privateCallPc = null;
   let privateCallLocalStream = null;
   let privateCallRemoteStream = null;
+  let privateCallDisplayStream = null;
+  let privateCallDisplayTrack = null;
+  let privateCallVideoSender = null;
+  let privateCallPlaceholderVideoTrack = null;
   let privateCallSignalRef = null;
   let privateCallSignalListener = null;
   let privateCallStateRef = null;
@@ -2308,6 +2324,7 @@
   const callEndBtn = document.getElementById('call-end-btn');
   const callMuteBtn = document.getElementById('call-mute-btn');
   const callCameraBtn = document.getElementById('call-camera-btn');
+  const callScreenShareBtn = document.getElementById('call-screen-share-btn');
   function updateCallButtonsState() {
     const peer = activeChat ? allUsers[activeChat] : null;
     const externalCallActive = !!(externalPrivateCallState && !isTerminalCallStatus(externalPrivateCallState.status));
@@ -2392,6 +2409,7 @@
       toUid: callToUid,
       startedAtMs: Number(callInfo.startedAtMs || 0),
       endedBy: callInfo.endedBy || '',
+      screenSharingBy: String(callInfo.screenSharingBy || ''),
       ...overrides,
     };
   }
@@ -2409,14 +2427,68 @@
       callRemoteAudio.srcObject = null;
     }
   }
+  function createCallPlaceholderVideoTrack() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 640;
+    canvas.height = 360;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#050816';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.font = 'bold 24px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Screen sharing ready', canvas.width / 2, canvas.height / 2);
+    }
+    const stream = canvas.captureStream(1);
+    const track = stream.getVideoTracks()[0] || null;
+    if (track) {
+      track.enabled = false;
+      track.__tuPlaceholder = true;
+    }
+    return track;
+  }
+  function getOrCreatePlaceholderVideoTrack() {
+    if (privateCallPlaceholderVideoTrack && privateCallPlaceholderVideoTrack.readyState === 'live') {
+      return privateCallPlaceholderVideoTrack;
+    }
+    privateCallPlaceholderVideoTrack = createCallPlaceholderVideoTrack();
+    return privateCallPlaceholderVideoTrack;
+  }
+  function getActiveOutgoingVideoTrack(mode) {
+    if (privateCallDisplayTrack && privateCallDisplayTrack.readyState === 'live') {
+      return privateCallDisplayTrack;
+    }
+    const cameraTrack = privateCallLocalStream?.getVideoTracks?.()[0] || null;
+    if (mode === 'video' && cameraTrack) return cameraTrack;
+    return getOrCreatePlaceholderVideoTrack();
+  }
+  function getCurrentScreenSharingUid() {
+    const activeInfo = currentPrivateCall || incomingPrivateCall;
+    return String(activeInfo?.screenSharingBy || '').trim();
+  }
+  function isLocalScreenSharing() {
+    return !!(currentUser && getCurrentScreenSharingUid() === currentUser.uid && privateCallDisplayTrack);
+  }
+  function shouldShowVisualStage(callInfo) {
+    return !!(callInfo && (callInfo.mode === 'video' || !!String(callInfo.screenSharingBy || '').trim()));
+  }
   function updateCallControlButtons() {
     if (callMuteBtn) {
       callMuteBtn.classList.toggle('active', !callMuteEnabled);
       callMuteBtn.title = callMuteEnabled ? 'Mute microphone' : 'Unmute microphone';
     }
     if (callCameraBtn) {
-      callCameraBtn.classList.toggle('active', !callCameraEnabled);
+      const hasCamera = !!(privateCallLocalStream && privateCallLocalStream.getVideoTracks().length);
+      callCameraBtn.classList.toggle('active', hasCamera && !callCameraEnabled);
       callCameraBtn.title = callCameraEnabled ? 'Turn camera off' : 'Turn camera on';
+      callCameraBtn.disabled = isLocalScreenSharing();
+    }
+    if (callScreenShareBtn) {
+      const localSharing = isLocalScreenSharing();
+      callScreenShareBtn.classList.toggle('active', localSharing);
+      callScreenShareBtn.title = localSharing ? 'Stop sharing your screen' : 'Share your screen';
     }
   }
   function updateCallStagePlaceholder(text) {
@@ -2424,18 +2496,31 @@
   }
   function refreshCallMediaUi() {
     const callInfo = currentPrivateCall || incomingPrivateCall;
-    const mode = callInfo?.mode || 'audio';
-    const hasLocalVideo = !!(privateCallLocalStream && privateCallLocalStream.getVideoTracks().length);
-    const hasRemoteVideo = !!(privateCallRemoteStream && privateCallRemoteStream.getVideoTracks().length);
-    setCallStageMode(mode);
+    const visualMode = shouldShowVisualStage(callInfo);
+    const localVisualStream = privateCallDisplayStream || ((callInfo?.mode === 'video' && privateCallLocalStream?.getVideoTracks?.().length) ? privateCallLocalStream : null);
+    const hasLocalVisual = !!(localVisualStream && localVisualStream.getVideoTracks().length);
+    const hasRemoteVisual = !!(visualMode && privateCallRemoteStream && privateCallRemoteStream.getVideoTracks().length);
+    setCallStageMode(visualMode ? 'video' : 'audio');
     if (callLocalVideo) {
-      callLocalVideo.style.display = mode === 'video' && hasLocalVideo ? 'block' : 'none';
+      if (hasLocalVisual && callLocalVideo.srcObject !== localVisualStream) {
+        callLocalVideo.srcObject = localVisualStream;
+        safePlay(callLocalVideo);
+      }
+      callLocalVideo.style.display = hasLocalVisual ? 'block' : 'none';
     }
     if (callRemoteVideo) {
-      callRemoteVideo.style.display = mode === 'video' && hasRemoteVideo ? 'block' : 'none';
+      if (privateCallRemoteStream && callRemoteVideo.srcObject !== privateCallRemoteStream) {
+        callRemoteVideo.srcObject = privateCallRemoteStream;
+        safePlay(callRemoteVideo);
+      }
+      callRemoteVideo.style.display = hasRemoteVisual ? 'block' : 'none';
+    }
+    if (callRemoteAudio && privateCallRemoteStream && callRemoteAudio.srcObject !== privateCallRemoteStream) {
+      callRemoteAudio.srcObject = privateCallRemoteStream;
+      safePlay(callRemoteAudio);
     }
     if (callStagePlaceholder) {
-      const shouldHidePlaceholder = mode === 'video' && hasRemoteVideo;
+      const shouldHidePlaceholder = hasRemoteVisual;
       callStagePlaceholder.classList.toggle('hidden', shouldHidePlaceholder);
     }
     updateCallControlButtons();
@@ -2443,12 +2528,27 @@
   function populateCallPeer(peerUid, mode, statusText, metaText) {
     const peer = allUsers[peerUid] || {};
     const peerName = getUserName(peer) || 'User';
-    if (callModeBadge) callModeBadge.textContent = mode === 'video' ? 'Video Call' : 'Voice Call';
+    const sharingUid = getCurrentScreenSharingUid();
+    const sharingActive = !!sharingUid;
+    const localSharing = !!(currentUser && sharingUid === currentUser.uid);
+    if (callModeBadge) {
+      callModeBadge.textContent = sharingActive
+        ? (mode === 'video' ? 'Video + Screen' : 'Voice + Screen')
+        : (mode === 'video' ? 'Video Call' : 'Voice Call');
+    }
     if (callStatusEl) callStatusEl.textContent = statusText || 'Preparing call...';
     if (callPeerNameEl) callPeerNameEl.textContent = peerName;
-    if (callPeerMetaEl) callPeerMetaEl.textContent = metaText || '';
+    if (callPeerMetaEl) {
+      callPeerMetaEl.textContent = sharingActive
+        ? (localSharing ? 'You are sharing your screen' : `${peerName} is sharing the screen`)
+        : (metaText || '');
+    }
     if (callPeerAvatar) renderAvatarEl(callPeerAvatar, peerName, peerUid, getUserAvatar(peer));
-    updateCallStagePlaceholder(mode === 'video' ? 'Waiting for video...' : 'Voice call in progress');
+    updateCallStagePlaceholder(
+      sharingActive
+        ? (localSharing ? 'Sharing your screen…' : 'Waiting for shared screen…')
+        : (mode === 'video' ? 'Waiting for video...' : 'Voice call in progress')
+    );
     refreshCallMediaUi();
   }
   function showIncomingCallUi(callInfo) {
@@ -2489,6 +2589,7 @@
         toUid: state.toUid || currentUser?.uid || '',
         createdAtMs: Number(state.createdAtMs || 0),
         updatedAtMs: Number(state.updatedAtMs || 0),
+        screenSharingBy: String(state.screenSharingBy || ''),
       };
       pendingCallOffer = null;
       pendingIceCandidates = [];
@@ -2557,6 +2658,7 @@
       try { privateCallPc.close(); } catch (e) {}
     }
     privateCallPc = null;
+    privateCallVideoSender = null;
   }
   async function cleanupPrivateCallUi() {
     clearTimeout(callRingTimer);
@@ -2565,8 +2667,15 @@
     detachPrivateCallListeners();
     closePrivateCallPc();
     stopStreamTracks(privateCallLocalStream);
+    stopStreamTracks(privateCallDisplayStream);
+    if (privateCallPlaceholderVideoTrack) {
+      try { privateCallPlaceholderVideoTrack.stop(); } catch (e) {}
+    }
     privateCallLocalStream = null;
     privateCallRemoteStream = null;
+    privateCallDisplayStream = null;
+    privateCallDisplayTrack = null;
+    privateCallPlaceholderVideoTrack = null;
     pendingCallOffer = null;
     pendingIceCandidates = [];
     clearCallMediaElements();
@@ -2607,6 +2716,14 @@
     if (patch.endedAtMs) next.endedAtMs = Number(patch.endedAtMs || 0);
     if (patch.endedBy) next.endedBy = String(patch.endedBy || '');
     if (patch.callDurationMs) next.callDurationMs = Number(patch.callDurationMs || 0);
+    if ('screenSharingBy' in patch || activeInfo.screenSharingBy) {
+      next.screenSharingBy = 'screenSharingBy' in patch
+        ? String(patch.screenSharingBy || '')
+        : String(activeInfo.screenSharingBy || '');
+    }
+    if (patch.screenShareStartedAtMs) {
+      next.screenShareStartedAtMs = Number(patch.screenShareStartedAtMs || 0);
+    }
     return next;
   }
   async function writeChatCallState(callId, patch) {
@@ -2641,6 +2758,118 @@
     }, { merge: true });
     await writeChatCallState(callId, patch);
   }
+  async function syncPrivateCallVideoSender(modeOverride) {
+    if (!privateCallPc) return;
+    const mode = modeOverride || currentPrivateCall?.mode || incomingPrivateCall?.mode || 'audio';
+    const nextTrack = getActiveOutgoingVideoTrack(mode);
+    if (!nextTrack) return;
+    const existingSender = privateCallVideoSender || privateCallPc.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+    if (existingSender) {
+      await existingSender.replaceTrack(nextTrack);
+      privateCallVideoSender = existingSender;
+      return;
+    }
+    privateCallVideoSender = privateCallPc.addTrack(nextTrack, new MediaStream([nextTrack]));
+  }
+  async function renegotiatePrivateCall(receiverId) {
+    if (!privateCallPc || !currentPrivateCall || !receiverId) return;
+    const offer = await privateCallPc.createOffer();
+    await privateCallPc.setLocalDescription(offer);
+    await sendPrivateCallSignal(currentPrivateCall.callId, receiverId, 'renegotiate-offer', {
+      type: offer.type,
+      sdp: offer.sdp,
+    });
+  }
+  async function stopPrivateCallScreenShare(options = {}) {
+    const { remoteSync = false } = options;
+    if (privateCallDisplayTrack) privateCallDisplayTrack.onended = null;
+    stopStreamTracks(privateCallDisplayStream);
+    privateCallDisplayStream = null;
+    privateCallDisplayTrack = null;
+    if (currentPrivateCall?.callId) currentPrivateCall.screenSharingBy = '';
+    if (incomingPrivateCall?.callId) incomingPrivateCall.screenSharingBy = '';
+    if (privateCallPc) {
+      await syncPrivateCallVideoSender();
+      if (remoteSync && currentPrivateCall) {
+        await renegotiatePrivateCall(currentPrivateCall.peerUid);
+      }
+    }
+    if (currentPrivateCall?.callId && remoteSync) {
+      await writePrivateCallState(currentPrivateCall.callId, { screenSharingBy: '' }).catch(() => {});
+    }
+    if (callLocalVideo && currentPrivateCall?.mode === 'video' && privateCallLocalStream) {
+      callLocalVideo.srcObject = privateCallLocalStream;
+      safePlay(callLocalVideo);
+    }
+    refreshCallMediaUi();
+    const activeInfo = currentPrivateCall || incomingPrivateCall;
+    if (activeInfo) {
+      showLiveCallUi(
+        activeInfo,
+        activeInfo.status === 'active' ? 'Call active' : 'Connecting...',
+        activeInfo.mode === 'video' ? 'Video call in progress' : 'Voice call in progress'
+      );
+    }
+  }
+  async function startPrivateCallScreenShare() {
+    if (!currentPrivateCall || !privateCallPc) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      showToast('Screen sharing is not supported in this browser', 'error');
+      return;
+    }
+    try {
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          frameRate: { ideal: 24, max: 30 },
+          cursor: 'always',
+        },
+        audio: false,
+      });
+      const displayTrack = displayStream.getVideoTracks()[0] || null;
+      if (!displayTrack) {
+        stopStreamTracks(displayStream);
+        showToast('No screen video track was selected', 'error');
+        return;
+      }
+      if (privateCallDisplayTrack) {
+        await stopPrivateCallScreenShare();
+      }
+      privateCallDisplayStream = displayStream;
+      privateCallDisplayTrack = displayTrack;
+      privateCallDisplayTrack.onended = () => {
+        stopPrivateCallScreenShare({ remoteSync: true }).catch(() => {});
+      };
+      currentPrivateCall.screenSharingBy = currentUser?.uid || '';
+      await syncPrivateCallVideoSender(currentPrivateCall.mode);
+      await renegotiatePrivateCall(currentPrivateCall.peerUid);
+      await writePrivateCallState(currentPrivateCall.callId, {
+        screenSharingBy: currentUser?.uid || '',
+        screenShareStartedAtMs: Date.now(),
+      });
+      if (callLocalVideo) {
+        callLocalVideo.srcObject = displayStream;
+        safePlay(callLocalVideo);
+      }
+      showLiveCallUi(currentPrivateCall, 'Call active', 'You are sharing your screen');
+      showToast('Screen sharing started', 'success');
+    } catch (e) {
+      console.error('Failed to start screen sharing', e);
+      if (e && (e.name === 'NotAllowedError' || e.name === 'AbortError')) {
+        showToast('Screen sharing was cancelled', 'error');
+      } else {
+        showToast('Could not start screen sharing', 'error');
+      }
+    }
+  }
+  async function togglePrivateCallScreenShare() {
+    if (!currentPrivateCall || currentPrivateCall.status === 'ringing') return;
+    if (isLocalScreenSharing()) {
+      await stopPrivateCallScreenShare({ remoteSync: true });
+      showToast('Screen sharing stopped', 'success');
+      return;
+    }
+    await startPrivateCallScreenShare();
+  }
   async function flushPendingIceCandidates() {
     if (!privateCallPc || !privateCallPc.remoteDescription) return;
     const queued = [...pendingIceCandidates];
@@ -2655,21 +2884,33 @@
     const peerUid = callInfo.peerUid;
     const callId = callInfo.callId;
     const pc = new RTCPeerConnection(CALL_ICE_SERVERS);
+    privateCallRemoteStream = new MediaStream();
     if (privateCallLocalStream) {
-      privateCallLocalStream.getTracks().forEach(track => {
+      privateCallLocalStream.getAudioTracks().forEach(track => {
         pc.addTrack(track, privateCallLocalStream);
       });
     }
+    const initialVideoTrack = getActiveOutgoingVideoTrack(callInfo.mode);
+    if (initialVideoTrack) {
+      privateCallVideoSender = pc.addTrack(initialVideoTrack, new MediaStream([initialVideoTrack]));
+    }
     pc.ontrack = (event) => {
-      const [stream] = event.streams;
-      if (!stream) return;
-      privateCallRemoteStream = stream;
-      if (callInfo.mode === 'video' && callRemoteVideo) {
-        callRemoteVideo.srcObject = stream;
-        safePlay(callRemoteVideo);
-      } else if (callRemoteAudio) {
-        callRemoteAudio.srcObject = stream;
+      const track = event.track;
+      if (!track) return;
+      const alreadyAdded = privateCallRemoteStream.getTracks().some(existing => existing.id === track.id);
+      if (!alreadyAdded) {
+        privateCallRemoteStream.addTrack(track);
+      }
+      track.onended = () => {
+        refreshCallMediaUi();
+      };
+      if (callRemoteAudio && callRemoteAudio.srcObject !== privateCallRemoteStream) {
+        callRemoteAudio.srcObject = privateCallRemoteStream;
         safePlay(callRemoteAudio);
+      }
+      if (callRemoteVideo && callRemoteVideo.srcObject !== privateCallRemoteStream) {
+        callRemoteVideo.srcObject = privateCallRemoteStream;
+        safePlay(callRemoteVideo);
       }
       if (callPeerMetaEl) callPeerMetaEl.textContent = 'Connected';
       if (callStatusEl) callStatusEl.textContent = 'Call active';
@@ -2696,6 +2937,7 @@
           status: 'ended',
           endedBy: currentUser?.uid || '',
           endedAtMs,
+          screenSharingBy: '',
         };
         if (startedAtMs > 0) {
           patch.startedAtMs = startedAtMs;
@@ -2737,6 +2979,7 @@
         for (const change of changes) {
           if (change.type !== 'added') continue;
           const signal = change.doc.data() || {};
+          const activeInfo = currentPrivateCall || incomingPrivateCall;
           try {
             if (signal.type === 'offer') {
               pendingCallOffer = signal.data || null;
@@ -2752,6 +2995,33 @@
                 await flushPendingIceCandidates();
                 stopCallTone();
                 showLiveCallUi(currentPrivateCall, 'Connecting...', currentPrivateCall?.mode === 'video' ? 'Video call accepted' : 'Voice call accepted');
+              }
+            } else if (signal.type === 'renegotiate-offer') {
+              if (!privateCallPc && currentPrivateCall) {
+                createPrivateCallPeerConnection(currentPrivateCall);
+              }
+              if (privateCallPc) {
+                await privateCallPc.setRemoteDescription(new RTCSessionDescription({
+                  type: signal.data?.type,
+                  sdp: signal.data?.sdp,
+                }));
+                const answer = await privateCallPc.createAnswer();
+                await privateCallPc.setLocalDescription(answer);
+                await sendPrivateCallSignal(callId, activeInfo?.peerUid || signal.sender, 'renegotiate-answer', {
+                  type: answer.type,
+                  sdp: answer.sdp,
+                });
+                await flushPendingIceCandidates();
+                refreshCallMediaUi();
+              }
+            } else if (signal.type === 'renegotiate-answer') {
+              if (privateCallPc) {
+                await privateCallPc.setRemoteDescription(new RTCSessionDescription({
+                  type: signal.data?.type,
+                  sdp: signal.data?.sdp,
+                }));
+                await flushPendingIceCandidates();
+                refreshCallMediaUi();
               }
             } else if (signal.type === 'ice') {
               if (privateCallPc && privateCallPc.remoteDescription) {
@@ -2785,6 +3055,9 @@
         }
         return;
       }
+      const sharingUid = String(state.screenSharingBy || '');
+      if (currentPrivateCall) currentPrivateCall.screenSharingBy = sharingUid;
+      if (incomingPrivateCall) incomingPrivateCall.screenSharingBy = sharingUid;
       if (state.status === 'active' || state.status === 'connecting') {
         clearTimeout(callRingTimer);
         stopCallTone();
@@ -2798,6 +3071,7 @@
           incomingPrivateCall.status = state.status;
           if (startedAtMs > 0) incomingPrivateCall.startedAtMs = startedAtMs;
         }
+        refreshCallMediaUi();
         return;
       }
       if (isTerminalCallStatus(state.status)) {
@@ -2851,9 +3125,11 @@
     }
     if (incomingPrivateCall && incomingPrivateCall.callId === callId) {
       incomingPrivateCall.status = state.status || incomingPrivateCall.status;
+      incomingPrivateCall.screenSharingBy = String(state.screenSharingBy || incomingPrivateCall.screenSharingBy || '');
     }
     if (currentPrivateCall && currentPrivateCall.callId === callId) {
       currentPrivateCall.status = state.status || currentPrivateCall.status;
+      currentPrivateCall.screenSharingBy = String(state.screenSharingBy || currentPrivateCall.screenSharingBy || '');
     }
     updateCallButtonsState();
   }
@@ -2910,6 +3186,7 @@
       fromUid: currentUser.uid,
       toUid: activeChat,
       createdAtMs,
+      screenSharingBy: '',
     };
     pendingCallOffer = null;
     pendingIceCandidates = [];
@@ -2938,7 +3215,7 @@
       await attachPrivateCallListeners(callId);
       const offer = await privateCallPc.createOffer({
         offerToReceiveAudio: true,
-        offerToReceiveVideo: mode === 'video',
+        offerToReceiveVideo: true,
       });
       await privateCallPc.setLocalDescription(offer);
       await sendPrivateCallSignal(callId, activeChat, 'offer', {
@@ -2963,6 +3240,7 @@
       ...incomingPrivateCall,
       accepted: true,
       status: 'connecting',
+      screenSharingBy: String(incomingPrivateCall.screenSharingBy || ''),
     };
     incomingPrivateCall = null;
     try {
@@ -3049,6 +3327,7 @@
       status,
       endedBy: currentUser.uid,
       endedAtMs,
+      screenSharingBy: '',
     };
     if (startedAtMs > 0) {
       patch.startedAtMs = startedAtMs;
@@ -3067,7 +3346,7 @@
     updateCallControlButtons();
   }
   function togglePrivateCallCamera() {
-    if (!privateCallLocalStream) return;
+    if (!privateCallLocalStream || isLocalScreenSharing()) return;
     const videoTracks = privateCallLocalStream.getVideoTracks();
     if (!videoTracks.length) return;
     callCameraEnabled = !callCameraEnabled;
@@ -3083,6 +3362,7 @@
   if (callEndBtn) callEndBtn.addEventListener('click', () => endPrivateCall(currentPrivateCall?.status === 'ringing' ? 'cancelled' : 'ended'));
   if (callMuteBtn) callMuteBtn.addEventListener('click', togglePrivateCallMute);
   if (callCameraBtn) callCameraBtn.addEventListener('click', togglePrivateCallCamera);
+  if (callScreenShareBtn) callScreenShareBtn.addEventListener('click', togglePrivateCallScreenShare);
   function shouldNotify() {
     if (!notificationsEnabled) return false;
     if (!isNotificationSupported()) return false;
