@@ -267,7 +267,11 @@
     const scope = computeScopeFromSwUrl(swUrl);
 
     try {
-      const reg = await navigator.serviceWorker.register(swUrl, { scope });
+      const reg = await navigator.serviceWorker.register(swUrl, {
+        scope,
+        updateViaCache: "none",
+      });
+      reg.update().catch(() => {});
 
       if (reg.waiting) {
         log("Update waiting → telling it to SKIP_WAITING");

@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_VERSION = "tengdosh-ustoz-bigupdate 1version";
+const CACHE_VERSION = "v3";
 const PRECACHE = `tengdosh-precache-${CACHE_VERSION}`;
 const RUNTIME = `tengdosh-runtime-${CACHE_VERSION}`;
 
@@ -10,6 +10,7 @@ const uniq = (arr) => Array.from(new Set(arr));
 const OFFLINE_FALLBACK = u("index.html");
 
 const STATIC_EXT = /\.(?:js|css|mjs|png|jpg|jpeg|webp|gif|svg|ico|woff2?|ttf|otf)$/i;
+const LIVE_UPDATE_EXT = /\.(?:js|css|mjs|json)$/i;
 
 const ASSETS = uniq([
   u(""),
@@ -60,6 +61,23 @@ function isFirebaseApi(url) {
     h.includes("identitytoolkit.googleapis.com") ||
     h.includes("securetoken.googleapis.com")
   );
+}
+
+function shouldBypassBrowserCache(req) {
+  try {
+    const url = new URL(req.url);
+    return url.origin === self.location.origin && (isHtmlRequest(req) || LIVE_UPDATE_EXT.test(url.pathname || ""));
+  } catch (_) {
+    return false;
+  }
+}
+
+function fetchFresh(req) {
+  try {
+    return fetch(new Request(req, { cache: "no-store" }));
+  } catch (_) {
+    return fetch(req);
+  }
 }
 
 self.addEventListener("install", (event) => {
@@ -135,7 +153,7 @@ async function cacheFirst(req) {
 
 async function networkFirst(req) {
   try {
-    const res = await fetch(req);
+    const res = await (shouldBypassBrowserCache(req) ? fetchFresh(req) : fetch(req));
     if (res && res.status === 200) {
       const copy = res.clone();
       caches.open(RUNTIME).then((cache) => cache.put(req, copy)).catch(() => {});
@@ -235,29 +253,17 @@ self.addEventListener("fetch", (event) => {
   }
 
   const pathname = url.pathname || "";
-  if (pathname === "/pages/contact/contact.js") {
-    event.respondWith(networkFirst(req));
-    return;
-  }
-
-  if (
-    pathname === "/assets/UI.js" ||
-    pathname === "/assets/retro-scene.js" ||
-    pathname === "/assets/tu-firebase.js"
-  ) {
-    event.respondWith(networkFirst(req));
-    return;
-  }
   const isStatic = STATIC_EXT.test(pathname);
   const isHtml = isHtmlRequest(req);
+  const isLiveUpdateAsset = url.origin === self.location.origin && LIVE_UPDATE_EXT.test(pathname);
+
+  if (isHtml || isLiveUpdateAsset) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
 
   if (isStatic) {
     event.respondWith(cacheFirst(req));
-    return;
-  }
-
-  if (isHtml) {
-    event.respondWith(networkFirst(req));
     return;
   }
 
